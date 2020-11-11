@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\YetAnotherTodoApp.Application\YetAnotherTodoApp.Application.csproj" />
+    <ProjectReference Include="..\YetAnotherTodoApp.Infrastructure\YetAnotherTodoApp.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+
+</Project>
