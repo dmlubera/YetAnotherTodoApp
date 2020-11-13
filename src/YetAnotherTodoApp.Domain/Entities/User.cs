@@ -1,5 +1,5 @@
 using System;
-using YetAnotherTodoApp.Domain.Extensions;
+using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Domain.Entities
 {
@@ -25,22 +25,30 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         public void SetUsername(string username)
         {
-            username.IsEmpty();
+            if (string.IsNullOrWhiteSpace(username))
+                throw new DomainException(DomainErrorCodes.InvalidUsername, "Username cannot be empty.");
             Username = username;
+            LastModifiedAt = DateTime.UtcNow;
         }
 
         public void SetEmail(string email)
         {
-            email.IsEmpty();
+            if (string.IsNullOrWhiteSpace(email))
+                throw new DomainException(DomainErrorCodes.InvalidUsername, "Email connot be empty.");
             Email = email;
+            LastModifiedAt = DateTime.UtcNow;
         }
         
         public void SetPassword(string password, string salt)
         {
-            password.IsEmpty();
-            salt.IsEmpty();
+            if (string.IsNullOrWhiteSpace(password))
+                throw new DomainException(DomainErrorCodes.InvalidPassword, "Password cannot be empty.");
+            if (string.IsNullOrWhiteSpace(salt))
+                throw new DomainException(DomainErrorCodes.InvalidPassword, "Salt cannot be empty.");
+
             Password = password;
             Salt = salt;
+            LastModifiedAt = DateTime.UtcNow;
         }
     }
 }

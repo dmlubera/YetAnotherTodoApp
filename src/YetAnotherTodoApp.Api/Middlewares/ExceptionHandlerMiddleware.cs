@@ -4,6 +4,7 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Api.Middlewares
 {
@@ -33,6 +34,16 @@ namespace YetAnotherTodoApp.Api.Middlewares
             var errorCode = "internal_server_error";
             var statusCode = HttpStatusCode.InternalServerError;
             var message = "Oops, something went wrong.";
+
+            switch(ex)
+            {
+                case DomainException e when ex.GetType() == typeof(DomainException):
+                    errorCode = e.Code;
+                    statusCode = HttpStatusCode.BadRequest;
+                    message = e.Message;
+                    break;
+                default: break;
+            }
 
             var response = new { code = errorCode, message = message };
             var payload = JsonConvert.SerializeObject(response);
