@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using YetAnotherTodoApp.Api.Configurations;
 using YetAnotherTodoApp.Api.Middlewares;
 using YetAnotherTodoApp.Api.Options;
+using YetAnotherTodoApp.Infrastructure.DAL.DI;
 
 namespace YetAnotherTodoApp.Api
 {
@@ -23,6 +23,7 @@ namespace YetAnotherTodoApp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddYetAnotherTodoAppDbContext(Configuration.GetConnectionString("DefaultConnection"));
             services.AddControllers();
             services.AddSwaggerConfiguration(_swaggerOptions);
         }
