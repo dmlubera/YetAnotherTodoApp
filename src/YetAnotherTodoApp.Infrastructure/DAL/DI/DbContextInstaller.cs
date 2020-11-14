@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace YetAnotherTodoApp.Infrastructure.DAL.DI
 {
-    public static class DbContextHelper
+    public static class DbContextInstaller
     {
         public static void AddYetAnotherTodoAppDbContext(this IServiceCollection services, string connectionString)
         {
