@@ -2,20 +2,20 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using YetAnotherTodoApp.Api.Options;
+using YetAnotherTodoApp.Api.Settings;
 
 namespace YetAnotherTodoApp.Api.Configurations
 {
     public static class SwaggerConfiguration
     {
-        public static void AddSwaggerConfiguration(this IServiceCollection services, SwaggerOptions swaggerOptions)
+        public static void AddSwaggerConfiguration(this IServiceCollection services, SwaggerSettings swaggerSettings)
         {
             services.AddSwaggerGen(opts =>
             {
                 opts.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = swaggerOptions.Name
+                    Title = swaggerSettings.Name
                 });
 
                 opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -43,10 +43,10 @@ namespace YetAnotherTodoApp.Api.Configurations
             });
         }
 
-        public static void AddSwaggerMiddleware(this IApplicationBuilder app, SwaggerOptions swaggerOptions)
+        public static void AddSwaggerMiddleware(this IApplicationBuilder app, SwaggerSettings swaggerSettings)
         {
             app.UseSwagger();
-            app.UseSwaggerUI(opts => opts.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Name));
+            app.UseSwaggerUI(opts => opts.SwaggerEndpoint(swaggerSettings.UIEndpoint, swaggerSettings.Name));
         }
     }
 }

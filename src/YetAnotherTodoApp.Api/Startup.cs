@@ -7,8 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using YetAnotherTodoApp.Api.Configurations;
 using YetAnotherTodoApp.Api.Middlewares;
-using YetAnotherTodoApp.Api.Options;
+using YetAnotherTodoApp.Api.Settings;
 using YetAnotherTodoApp.Application.DI;
+using YetAnotherTodoApp.Infrastructure.Auth.Settings;
 using YetAnotherTodoApp.Infrastructure.DAL.DI;
 
 namespace YetAnotherTodoApp.Api
@@ -18,18 +19,20 @@ namespace YetAnotherTodoApp.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Configuration.GetSection(nameof(SwaggerOptions)).Bind(_swaggerOptions);
-            Configuration.GetSection(nameof(JwtOptions)).Bind(_jwtOptions);
+            Configuration.GetSection(nameof(SwaggerSettings)).Bind(_swaggerOptions);
+            Configuration.GetSection(nameof(JwtSettings)).Bind(_jwtOptions);
         }
 
         public IConfiguration Configuration { get; }
-        private readonly SwaggerOptions _swaggerOptions = new SwaggerOptions();
-        private readonly JwtOptions _jwtOptions = new JwtOptions();
+        private readonly SwaggerSettings _swaggerOptions = new SwaggerSettings();
+        private readonly JwtSettings _jwtOptions = new JwtSettings();
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddYetAnotherTodoAppDbContext(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddOptions<SwaggerSettings>();
+            services.AddOptions<JwtSettings>();
             services.AddControllers();
             services.AddSwaggerConfiguration(_swaggerOptions);
             services.RegisterRepositoriesModule();
