@@ -29,6 +29,7 @@ namespace YetAnotherTodoApp.Api
             services.AddSwaggerConfiguration(_swaggerOptions);
             services.RegisterRepositoriesModule();
             services.RegisterCommandsModule();
+            services.RegisterHelpersModule();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
