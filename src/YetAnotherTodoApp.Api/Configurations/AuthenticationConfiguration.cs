@@ -11,10 +11,11 @@ namespace YetAnotherTodoApp.Api.Configurations
     {
         public static void AddAuthenticationConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            var jwtSection = configuration.GetSection(nameof(JwtSettings));
             var jwtSettings = new JwtSettings();
-            configuration.GetSection(nameof(JwtSettings)).Bind(jwtSettings);
+            jwtSection.Bind(jwtSettings);
 
-            services.AddOptions<JwtSettings>();
+            services.Configure<JwtSettings>(jwtSection);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(opts =>

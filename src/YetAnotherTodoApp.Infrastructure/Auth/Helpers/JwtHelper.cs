@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using YetAnotherTodoApp.Infrastructure.Auth.DTO;
 using YetAnotherTodoApp.Infrastructure.Auth.Settings;
@@ -12,9 +13,9 @@ namespace YetAnotherTodoApp.Infrastructure.Auth.Helpers
     {
         private readonly JwtSettings _jwtOptions;
 
-        public JwtHelper(JwtSettings jwtOptions)
+        public JwtHelper(IOptions<JwtSettings> options)
         {
-            _jwtOptions = jwtOptions;
+            _jwtOptions = options.Value;
         }
 
         public JwtDto GenerateJwtToken(Guid userId)

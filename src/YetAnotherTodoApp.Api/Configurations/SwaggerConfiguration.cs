@@ -13,7 +13,7 @@ namespace YetAnotherTodoApp.Api.Configurations
         {
             var swaggerSettings = GetSwaggerSettings(configuration);
 
-            services.AddOptions<SwaggerSettings>();
+            services.Configure<SwaggerSettings>(GetSwaggerSection(configuration));
 
             services.AddSwaggerGen(opts =>
             {
@@ -55,12 +55,10 @@ namespace YetAnotherTodoApp.Api.Configurations
             app.UseSwaggerUI(opts => opts.SwaggerEndpoint(swaggerSettings.UIEndpoint, swaggerSettings.Name));
         }
 
+        private static IConfigurationSection GetSwaggerSection(IConfiguration configuration)
+            => configuration.GetSection(nameof(SwaggerSettings));
+        
         private static SwaggerSettings GetSwaggerSettings(IConfiguration configuration)
-        {
-            var swaggerSettings = new SwaggerSettings();
-            configuration.GetSection(nameof(SwaggerSettings)).Bind(swaggerSettings);
-
-            return swaggerSettings;
-        }
+            => GetSwaggerSection(configuration).Get<SwaggerSettings>();
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using YetAnotherTodoApp.Api.Configurations;
 using YetAnotherTodoApp.Api.Middlewares;
 using YetAnotherTodoApp.Application.DI;
+using YetAnotherTodoApp.Infrastructure.Auth.DI;
 using YetAnotherTodoApp.Infrastructure.DAL.DI;
 
 namespace YetAnotherTodoApp.Api
@@ -23,11 +24,14 @@ namespace YetAnotherTodoApp.Api
         {
             services.AddYetAnotherTodoAppDbContext(Configuration.GetConnectionString("DefaultConnection"));
             services.AddControllers();
+            services.AddOptions();
             services.AddSwaggerConfiguration(Configuration);
             services.AddAuthenticationConfiguration(Configuration);
+            services.AddMemoryCache();
             services.RegisterRepositoriesModule();
             services.RegisterCommandsModule();
             services.RegisterHelpersModule();
+            services.RegisterAuthModule();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
