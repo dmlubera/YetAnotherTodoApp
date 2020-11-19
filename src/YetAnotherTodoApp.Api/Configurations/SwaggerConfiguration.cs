@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using YetAnotherTodoApp.Api.Settings;
@@ -8,8 +9,12 @@ namespace YetAnotherTodoApp.Api.Configurations
 {
     public static class SwaggerConfiguration
     {
-        public static void AddSwaggerConfiguration(this IServiceCollection services, SwaggerSettings swaggerSettings)
+        public static void AddSwaggerConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            var swaggerSettings = GetSwaggerSettings(configuration);
+
+            services.AddOptions<SwaggerSettings>();
+
             services.AddSwaggerGen(opts =>
             {
                 opts.SwaggerDoc("v1", new OpenApiInfo
@@ -43,10 +48,19 @@ namespace YetAnotherTodoApp.Api.Configurations
             });
         }
 
-        public static void AddSwaggerMiddleware(this IApplicationBuilder app, SwaggerSettings swaggerSettings)
+        public static void AddSwaggerMiddleware(this IApplicationBuilder app, IConfiguration configuration)
         {
+            var swaggerSettings = GetSwaggerSettings(configuration);
             app.UseSwagger();
             app.UseSwaggerUI(opts => opts.SwaggerEndpoint(swaggerSettings.UIEndpoint, swaggerSettings.Name));
+        }
+
+        private static SwaggerSettings GetSwaggerSettings(IConfiguration configuration)
+        {
+            var swaggerSettings = new SwaggerSettings();
+            configuration.GetSection(nameof(SwaggerSettings)).Bind(swaggerSettings);
+
+            return swaggerSettings;
         }
     }
 }
