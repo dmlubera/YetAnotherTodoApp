@@ -1,6 +1,6 @@
-namespace YetAnotherTodoApp.Api.Options
+namespace YetAnotherTodoApp.Api.Settings
 {
-    public class SwaggerOptions
+    public class SwaggerSettings
     {
         public string Name { get; set; }
         public string UIEndpoint { get; set; }

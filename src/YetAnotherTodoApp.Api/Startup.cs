@@ -4,8 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using YetAnotherTodoApp.Api.Configurations;
 using YetAnotherTodoApp.Api.Middlewares;
-using YetAnotherTodoApp.Api.Options;
 using YetAnotherTodoApp.Application.DI;
+using YetAnotherTodoApp.Infrastructure.Auth.DI;
 using YetAnotherTodoApp.Infrastructure.DAL.DI;
 
 namespace YetAnotherTodoApp.Api
@@ -15,21 +15,23 @@ namespace YetAnotherTodoApp.Api
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Configuration.GetSection(nameof(SwaggerOptions)).Bind(_swaggerOptions);
         }
 
         public IConfiguration Configuration { get; }
-        private readonly SwaggerOptions _swaggerOptions = new SwaggerOptions();
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddYetAnotherTodoAppDbContext(Configuration.GetConnectionString("DefaultConnection"));
             services.AddControllers();
-            services.AddSwaggerConfiguration(_swaggerOptions);
+            services.AddOptions();
+            services.AddSwaggerConfiguration(Configuration);
+            services.AddAuthenticationConfiguration(Configuration);
+            services.AddMemoryCache();
             services.RegisterRepositoriesModule();
             services.RegisterCommandsModule();
             services.RegisterHelpersModule();
+            services.RegisterAuthModule();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,11 +39,13 @@ namespace YetAnotherTodoApp.Api
         {
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-            app.AddSwaggerMiddleware(_swaggerOptions);
+            app.AddSwaggerMiddleware(Configuration);
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

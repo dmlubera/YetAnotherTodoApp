@@ -1,25 +1,64 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using YetAnotherTodoApp.Api.Options;
+using YetAnotherTodoApp.Api.Settings;
 
 namespace YetAnotherTodoApp.Api.Configurations
 {
     public static class SwaggerConfiguration
     {
-        public static void AddSwaggerConfiguration(this IServiceCollection services, SwaggerOptions swaggerOptions)
+        public static void AddSwaggerConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSwaggerGen(opts => opts.SwaggerDoc("v1", new OpenApiInfo
+            var swaggerSettings = GetSwaggerSettings(configuration);
+
+            services.Configure<SwaggerSettings>(GetSwaggerSection(configuration));
+
+            services.AddSwaggerGen(opts =>
             {
-                Version = "v1",
-                Title = swaggerOptions.Name
-            }));
+                opts.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = swaggerSettings.Name
+                });
+
+                opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Description = "JWT Authorization header using Bearer scheme.",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new List<string>()
+                    }
+                });
+            });
         }
 
-        public static void AddSwaggerMiddleware(this IApplicationBuilder app, SwaggerOptions swaggerOptions)
+        public static void AddSwaggerMiddleware(this IApplicationBuilder app, IConfiguration configuration)
         {
+            var swaggerSettings = GetSwaggerSettings(configuration);
             app.UseSwagger();
-            app.UseSwaggerUI(opts => opts.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Name));
+            app.UseSwaggerUI(opts => opts.SwaggerEndpoint(swaggerSettings.UIEndpoint, swaggerSettings.Name));
         }
+
+        private static IConfigurationSection GetSwaggerSection(IConfiguration configuration)
+            => configuration.GetSection(nameof(SwaggerSettings));
+        
+        private static SwaggerSettings GetSwaggerSettings(IConfiguration configuration)
+            => GetSwaggerSection(configuration).Get<SwaggerSettings>();
     }
 }

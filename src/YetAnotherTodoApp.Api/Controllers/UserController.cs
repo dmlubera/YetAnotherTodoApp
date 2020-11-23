@@ -1,7 +1,10 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Infrastructure.Auth.Commands.Models;
 
 namespace YetAnotherTodoApp.Api.Controllers
 {
@@ -9,15 +12,25 @@ namespace YetAnotherTodoApp.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
+        private readonly IMemoryCache _cache;
 
-        public UserController(ICommandDispatcher commandDispatcher)
+        public UserController(ICommandDispatcher commandDispatcher, IMemoryCache cache)
         {
             _commandDispatcher = commandDispatcher;
+            _cache = cache;
         }
 
         [HttpPost]
         public async Task RegisterUserAsync([FromBody] RegisterUserCommand command)
             => await _commandDispatcher.DispatchAsync(command);
+
+        [HttpPost("auth")]
+        public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserCommand command)
+        {
+            command.TokenId = Guid.NewGuid();
+            await _commandDispatcher.DispatchAsync(command);
+            return Ok(_cache.Get(command.TokenId));
+        }
 
     }
 }
