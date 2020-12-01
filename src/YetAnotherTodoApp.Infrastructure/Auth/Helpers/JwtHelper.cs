@@ -24,6 +24,7 @@ namespace YetAnotherTodoApp.Infrastructure.Auth.Helpers
             var claims = new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, userId.ToString()), 
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 

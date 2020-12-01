@@ -12,16 +12,17 @@ namespace YetAnotherTodoApp.Domain.Entities
         public DateTime FinishDate { get; private set; }
         public TodoStatus Status { get; private set; }
         public TodoPriority Priority { get; private set; }
+        public virtual TodoList TodoList { get; private set; }
         public virtual IReadOnlyCollection<Step> Steps => _steps.AsReadOnly();
 
-        private Todo() { }
+        protected Todo() { }
 
-        public Todo(string name, DateTime finishDate, TodoPriority priority)
+        public Todo(string name, DateTime finishDate)
         {
             Id = Guid.NewGuid();
             SetName(name);
             SetFinishDate(finishDate);
-            SetPriority(priority);
+            SetPriority(TodoPriority.Normal);
             CreatedAt = DateTime.UtcNow;
         }
 

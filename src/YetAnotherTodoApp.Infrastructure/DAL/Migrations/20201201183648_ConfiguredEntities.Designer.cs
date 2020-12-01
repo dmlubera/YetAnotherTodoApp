@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YetAnotherTodoApp.Infrastructure.DAL;
 
 namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
 {
     [DbContext(typeof(YetAnotherTodoAppDbContext))]
-    partial class YetAnotherTodoAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201201183648_ConfiguredEntities")]
+    partial class ConfiguredEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

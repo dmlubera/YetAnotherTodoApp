@@ -1,7 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Domain.Repostiories;
+using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
 {
@@ -22,5 +23,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
 
         public async Task<User> GetByEmailAsync(string email)
             => await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+
+        public async Task<User> GetByIdAsync(Guid id)
+            => await _dbContext.Users.FindAsync(id);
+
+        public async Task SaveChangesAsync()
+            => await _dbContext.SaveChangesAsync();
     }
 }

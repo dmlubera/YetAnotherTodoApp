@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using YetAnotherTodoApp.Domain.Entities;
 
@@ -14,6 +15,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL
             : base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using YetAnotherTodoApp.Domain.Repostiories;
+using YetAnotherTodoApp.Domain.Repositories;
 using YetAnotherTodoApp.Infrastructure.DAL.Repositories;
 
 namespace YetAnotherTodoApp.Infrastructure.DAL.DI

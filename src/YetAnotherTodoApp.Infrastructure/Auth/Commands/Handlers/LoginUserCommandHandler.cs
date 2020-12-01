@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Helpers;
-using YetAnotherTodoApp.Domain.Repostiories;
+using YetAnotherTodoApp.Domain.Repositories;
 using YetAnotherTodoApp.Infrastructure.Auth.Commands.Models;
 using YetAnotherTodoApp.Infrastructure.Auth.Helpers;
 

@@ -7,7 +7,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.DI
     {
         public static void AddYetAnotherTodoAppDbContext(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<YetAnotherTodoAppDbContext>(opts => opts.UseSqlServer(connectionString));
+            services.AddDbContext<YetAnotherTodoAppDbContext>(opts =>
+            {
+                opts.UseSqlServer(connectionString);
+                opts.UseLazyLoadingProxies();
+            });
         }
     }
 }

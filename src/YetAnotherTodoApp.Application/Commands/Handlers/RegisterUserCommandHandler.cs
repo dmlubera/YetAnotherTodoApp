@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Domain.Repostiories;
+using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers
 {

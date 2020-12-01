@@ -7,8 +7,9 @@ namespace YetAnotherTodoApp.Domain.Entities
         public string Name { get; private set; }
         public string Description { get; private set; }
         public bool IsFinished { get; private set; }
+        public virtual Todo Todo { get; private set; }
 
-        private Step() { }
+        protected Step() { }
 
         public Step(string name)
         {
