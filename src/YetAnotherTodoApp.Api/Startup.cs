@@ -30,6 +30,7 @@ namespace YetAnotherTodoApp.Api
             services.AddMemoryCache();
             services.RegisterRepositoriesModule();
             services.RegisterCommandsModule();
+            services.RegisterQueriesModule();
             services.RegisterHelpersModule();
             services.RegisterAuthModule();
         }
@@ -37,7 +38,9 @@ namespace YetAnotherTodoApp.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
+            //app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+            app.UseDeveloperExceptionPage();
 
             app.AddSwaggerMiddleware(Configuration);
 
