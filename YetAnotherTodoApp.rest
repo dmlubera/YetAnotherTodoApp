@@ -1,0 +1,28 @@
+@api = https://localhost:5001/api
+
+### Create account
+POST {{api}}/users
+Content-Type: application/json
+
+{
+    "username": "test",
+    "email": "test@test.com",
+    "password": "test123"
+}
+
+### Sign-in
+# @name sign_in
+POST {{api}}/users/auth
+Content-Type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test123"
+}
+
+###
+@accessToken = {{sign_in.response.body.$.token}}
+
+### Get todos
+GET {{api}}/todo
+Authorization: Bearer {{accessToken}}
