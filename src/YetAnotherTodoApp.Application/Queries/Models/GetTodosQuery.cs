@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using YetAnotherTodoApp.Domain.Entities;
+using YetAnotherTodoApp.Application.DTOs;
 
 namespace YetAnotherTodoApp.Application.Queries.Models
 {
-    public class GetTodosQuery : IQuery<IEnumerable<Todo>>
+    public class GetTodosQuery : IQuery<IEnumerable<TodoDto>>
     {
         public Guid UserId { get; set; }
     }

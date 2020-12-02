@@ -1,25 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using AutoMapper;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Queries.Models;
-using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Queries.Handlers
 {
-    public class GetTodosQueryHandler : IQueryHandler<GetTodosQuery, IEnumerable<Todo>>
+    public class GetTodosQueryHandler : IQueryHandler<GetTodosQuery, IEnumerable<TodoDto>>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public GetTodosQueryHandler(IUserRepository userRepository)
+        public GetTodosQueryHandler(IUserRepository userRepository, IMapper mapper)
         {
-            this._userRepository = userRepository;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Todo>> HandleAsync(GetTodosQuery query)
+        public async Task<IEnumerable<TodoDto>> HandleAsync(GetTodosQuery query)
         {
             var user = await _userRepository.GetByIdAsync(query.UserId);
-            return user.TodoLists.SelectMany(x => x.Todos).ToList();
+            return _mapper.Map<IEnumerable<TodoDto>>(user.TodoLists.SelectMany(x => x.Todos).ToList());
         }
     }
 }

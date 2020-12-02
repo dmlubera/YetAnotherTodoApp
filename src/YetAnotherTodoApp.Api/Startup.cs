@@ -33,6 +33,7 @@ namespace YetAnotherTodoApp.Api
             services.RegisterQueriesModule();
             services.RegisterHelpersModule();
             services.RegisterAuthModule();
+            services.RegisterAutoMapperModule();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
