@@ -30,7 +30,7 @@ namespace YetAnotherTodoApp.Domain.Entities
         public void SetUsername(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
-                throw new DomainException(DomainErrorCodes.InvalidUsername, "Username cannot be empty.");
+                throw new InvalidUsernameException(username);
             Username = username;
             LastModifiedAt = DateTime.UtcNow;
         }
@@ -38,7 +38,7 @@ namespace YetAnotherTodoApp.Domain.Entities
         public void SetEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
-                throw new DomainException(DomainErrorCodes.InvalidUsername, "Email connot be empty.");
+                throw new InvalidEmailFormatException(email);
             Email = email;
             LastModifiedAt = DateTime.UtcNow;
         }
@@ -46,9 +46,7 @@ namespace YetAnotherTodoApp.Domain.Entities
         public void SetPassword(string password, string salt)
         {
             if (string.IsNullOrWhiteSpace(password))
-                throw new DomainException(DomainErrorCodes.InvalidPassword, "Password cannot be empty.");
-            if (string.IsNullOrWhiteSpace(salt))
-                throw new DomainException(DomainErrorCodes.InvalidPassword, "Salt cannot be empty.");
+                throw new InvalidPasswordException(password);
 
             Password = password;
             Salt = salt;
