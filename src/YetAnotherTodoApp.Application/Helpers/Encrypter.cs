@@ -23,9 +23,9 @@ namespace YetAnotherTodoApp.Application.Helpers
         public string GetHash(string value, string salt)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Cannot generate hash from an empty value.");
+                throw new ArgumentException("Cannot generate a hash from an empty value.");
             if (string.IsNullOrEmpty(salt))
-                throw new ArgumentException("Cannot use empty an empty salt for hashing value.");
+                throw new ArgumentException("Cannot use an empty salt to hashing value.");
 
             var rfc2898 = new Rfc2898DeriveBytes(value, Encoding.ASCII.GetBytes(salt),
             _deriveBytesIterationsCount, HashAlgorithmName.SHA256);
