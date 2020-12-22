@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Domain.ValueObjects
 {
@@ -6,10 +8,8 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
     {
         public string Value { get; private set; }
 
-        public Email(string value)
-        {
-            Value = value;
-        }
+        protected Email(string value)
+            => Value = value;
 
         public bool Equals(Email other)
         {
@@ -29,6 +29,15 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public override int GetHashCode()
         {
             return (Value != null ? Value.GetHashCode() : 0);
+        }
+
+        public static Email Create(string email)
+        {
+            var regexPattern = @"^(\w[a-zA-Z0-9]|(\w[a-zA-Z0-9._][a-zA-Z0-9]))+@[a-zA-Z0-9.-]+\w+\.[a-zA-Z0-9]{2,6}$";
+            if (!Regex.IsMatch(email, regexPattern))
+                throw new InvalidEmailFormatException(email);
+
+            return new Email(email);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Domain.ValueObjects
 {
@@ -6,10 +8,8 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
     {
         public string Value { get; }
 
-        public Username(string value)
-        {
-            Value = value;
-        }
+        protected Username(string value)
+            => Value = value;
 
         public bool Equals(Username other)
         {
@@ -29,6 +29,15 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public override int GetHashCode()
         {
             return (Value != null ? Value.GetHashCode() : 0);
+        }
+
+        public static Username Create(string username)
+        {
+            var regexPattern = @"^\w[a-zA-Z0-9_]+\w{5,}$";
+            if (!Regex.IsMatch(username, regexPattern))
+                throw new InvalidUsernameException(username);
+
+            return new Username(username);
         }
     }
 }

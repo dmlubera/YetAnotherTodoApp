@@ -1,4 +1,5 @@
 ﻿using System;
+using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Domain.ValueObjects
 {
@@ -7,7 +8,7 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public string Hash { get; private set; }
         public string Salt { get; private set; }
 
-        public Password(string hash, string salt)
+        protected Password(string hash, string salt)
         {
             Hash = hash;
             Salt = salt;
@@ -31,6 +32,16 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public override int GetHashCode()
         {
             return HashCode.Combine(Hash, Salt);
+        }
+
+        public static Password Create(string hash, string salt)
+        {
+            if (string.IsNullOrWhiteSpace(hash))
+                throw new InvalidPasswordHashException(hash);
+            if (string.IsNullOrWhiteSpace(salt))
+                throw new InvalidPasswordSaltException(salt);
+
+            return new Password(hash, salt);
         }
     }
 }

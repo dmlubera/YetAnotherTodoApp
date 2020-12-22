@@ -4,7 +4,8 @@
     {
         public override string Code => "invalid_email_format";
 
-        public InvalidEmailFormatException(string email) : base($"Email {email} has invalid format.")
+        public InvalidEmailFormatException(string email)
+            : base($"Email: {email} has invalid format.")
         {
         }
     }

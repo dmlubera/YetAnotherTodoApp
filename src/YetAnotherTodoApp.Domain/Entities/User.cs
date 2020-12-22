@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
@@ -19,9 +18,9 @@ namespace YetAnotherTodoApp.Domain.Entities
         public User(string username, string email, string password, string salt)
         {
             Id = Guid.NewGuid();
-            Username = new Username(username);
-            Email = new Email(email);
-            Password = new Password(password, salt);
+            Username = Username.Create(username);
+            Email = Email.Create(email);
+            Password = Password.Create(password, salt);
             AddTodoList(new TodoList("Inbox"));
             CreatedAt = DateTime.UtcNow;
         }
