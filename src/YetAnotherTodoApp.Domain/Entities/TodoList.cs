@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
 {
     public class TodoList : BaseEntity
     {
         private readonly List<Todo> _todos = new List<Todo>();
-        public string Name { get; private set; }
+        public Title Title { get; private set; }
         public virtual User User { get; private set; }
         public virtual IReadOnlyCollection<Todo> Todos => _todos.AsReadOnly();
 
@@ -15,16 +16,13 @@ namespace YetAnotherTodoApp.Domain.Entities
         public TodoList(string name)
         {
             Id = Guid.NewGuid();
-            SetName(name);
+            SetTitle(name);
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void SetName(string name)
+        public void SetTitle(string title)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Value cannot be empty.");
-
-            Name = name;
+            Title = Title.Create(title);
             LastModifiedAt = DateTime.UtcNow;
         }
 

@@ -1,10 +1,11 @@
 using System;
+using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
 {
     public class Step : BaseEntity
     {
-        public string Name { get; private set; }
+        public Title Title { get; private set; }
         public string Description { get; private set; }
         public bool IsFinished { get; private set; }
         public virtual Todo Todo { get; private set; }
@@ -18,11 +19,9 @@ namespace YetAnotherTodoApp.Domain.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void SetName(string name)
+        public void SetName(string title)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Value cannot be empty.");
-            Name = name;
+            Title = Title.Create(title);
             LastModifiedAt = DateTime.UtcNow;
         }
     }

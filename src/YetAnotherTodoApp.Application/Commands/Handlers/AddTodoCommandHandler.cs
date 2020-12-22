@@ -20,11 +20,11 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
             var user = await _userRepository.GetByIdAsync(command.UserId);
             var todo = new Todo(command.Title, command.FinishDate);
             if (string.IsNullOrWhiteSpace(command.Project))
-                user.TodoLists.FirstOrDefault(x => x.Name == "Inbox")
+                user.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox")
                     ?.AddTodo(todo);
             else
             {
-                var todoList = user.TodoLists.FirstOrDefault(x => x.Name == command.Project);
+                var todoList = user.TodoLists.FirstOrDefault(x => x.Title.Value == command.Project);
                 if(todoList != null)
                     todoList.AddTodo(todo);
                 else
