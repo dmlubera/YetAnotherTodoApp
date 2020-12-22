@@ -29,7 +29,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> GetTodosAsync()
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var todos = await _queryDispatcher.HandleAsync<GetTodosQuery, IEnumerable<TodoDto>>(new GetTodosQuery { UserId = userId });
+            var todos = await _queryDispatcher.HandleAsync<GetTodosQuery, IEnumerable<TodoDto>>(new GetTodosQuery(userId));
             return Ok(todos);
         }
 
