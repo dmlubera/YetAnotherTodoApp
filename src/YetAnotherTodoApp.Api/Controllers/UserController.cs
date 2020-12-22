@@ -24,12 +24,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         [HttpPost]
         public async Task RegisterUserAsync([FromBody] RegisterUserRequest request)
         {
-            var command = new RegisterUserCommand
-            {
-                Username = request.Username,
-                Email = request.Email,
-                Password = request.Password
-            };
+            var command = new RegisterUserCommand(request.Username, request.Email, request.Password);
             await _commandDispatcher.DispatchAsync(command);
         }
 

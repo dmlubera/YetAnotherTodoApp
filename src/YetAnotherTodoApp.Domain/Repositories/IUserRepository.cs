@@ -8,6 +8,8 @@ namespace YetAnotherTodoApp.Domain.Repositories
     {
         Task AddAsync(User user);
         Task<User> GetByEmailAsync(string email);
+        Task<bool> CheckIfEmailIsInUseAsync(string email);
+        Task<bool> CheckIfUsernameIsInUseAsync(string username);
         Task<User> GetByIdAsync(Guid id);
         Task SaveChangesAsync();
     }
