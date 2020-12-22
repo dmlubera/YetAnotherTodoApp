@@ -22,7 +22,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
         }
 
         public async Task<User> GetByEmailAsync(string email)
-            => await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+            => await _dbContext.Users.FirstOrDefaultAsync(x => x.Email.Value == email);
 
         public async Task<User> GetByIdAsync(Guid id)
             => await _dbContext.Users.FindAsync(id);

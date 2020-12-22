@@ -27,8 +27,8 @@ namespace YetAnotherTodoApp.Infrastructure.Auth.Commands.Handlers
         public async Task HandleAsync(LoginUserCommand command)
         {
             var user = await _userRepository.GetByEmailAsync(command.Email);
-            var hash = _encrypter.GetHash(command.Password, user.Salt);
-            if(!string.Equals(hash, user.Password))
+            var hash = _encrypter.GetHash(command.Password, user.Password.Salt);
+            if(user.Password.Hash != hash)
                 throw new Exception("Invalid credentials");
                 
             var jwtToken = _jwtHelper.GenerateJwtToken(user.Id);
