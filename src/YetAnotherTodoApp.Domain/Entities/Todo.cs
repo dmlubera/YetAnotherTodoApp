@@ -9,7 +9,7 @@ namespace YetAnotherTodoApp.Domain.Entities
     public class Todo : BaseEntity
     {
         private readonly List<Step> _steps = new List<Step>();
-        public Title Title { get; private set; }
+        public virtual Title Title { get; private set; }
         public string Description { get; private set; }
         public DateTime FinishDate { get; private set; }
         public TodoStatus Status { get; private set; }

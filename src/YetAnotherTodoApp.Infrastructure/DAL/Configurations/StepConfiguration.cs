@@ -10,6 +10,9 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).IsRequired().ValueGeneratedNever();
+
+            // Value Objects
+            builder.OwnsOne(x => x.Title);
         }
     }
 }

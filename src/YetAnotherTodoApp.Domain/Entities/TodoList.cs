@@ -7,7 +7,7 @@ namespace YetAnotherTodoApp.Domain.Entities
     public class TodoList : BaseEntity
     {
         private readonly List<Todo> _todos = new List<Todo>();
-        public Title Title { get; private set; }
+        public virtual Title Title { get; private set; }
         public virtual User User { get; private set; }
         public virtual IReadOnlyCollection<Todo> Todos => _todos.AsReadOnly();
 

@@ -6,7 +6,7 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
 {
     public class Username : IEquatable<Username>
     {
-        public string Value { get; }
+        public string Value { get; private set; }
 
         protected Username(string value)
             => Value = value;

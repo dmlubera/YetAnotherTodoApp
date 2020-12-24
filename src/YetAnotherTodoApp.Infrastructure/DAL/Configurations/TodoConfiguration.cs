@@ -15,6 +15,9 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Configurations
                 .WithOne(x => x.Todo)
                 .HasForeignKey("todoId")
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Value Objects
+            builder.OwnsOne(x => x.Title);
         }
     }
 }

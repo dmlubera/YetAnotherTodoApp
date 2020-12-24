@@ -7,10 +7,10 @@ namespace YetAnotherTodoApp.Domain.Entities
     public class User : BaseEntity
     {
         private readonly List<TodoList> _todoLists = new List<TodoList>();
-        public Username Username { get; private set; }
-        public Name Name { get; private set; }
-        public Email Email { get; private set; }
-        public Password Password { get; private set; }
+        public virtual Username Username { get; private set; }
+        public virtual Name Name { get; private set; }
+        public virtual Email Email { get; private set; }
+        public virtual Password Password { get; private set; }
         public virtual IReadOnlyCollection<TodoList> TodoLists => _todoLists.AsReadOnly();
 
         protected User() { }

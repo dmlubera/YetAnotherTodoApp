@@ -16,12 +16,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Configurations
                 .HasForeignKey("userId")
                 .OnDelete(DeleteBehavior.Cascade);
             
-            
             // ValueObjects
-            builder.HasOne(x => x.Username);
-            builder.HasOne(x => x.Name);
-            builder.HasOne(x => x.Email);
-            builder.HasOne(x => x.Password);
+            builder.OwnsOne(x => x.Username);
+            builder.OwnsOne(x => x.Name);
+            builder.OwnsOne(x => x.Email);
+            builder.OwnsOne(x => x.Password);
         }
     }
 }
