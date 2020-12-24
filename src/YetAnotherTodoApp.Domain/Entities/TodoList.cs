@@ -13,17 +13,11 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         protected TodoList() { }
 
-        public TodoList(string name)
+        public TodoList(string title)
         {
             Id = Guid.NewGuid();
-            SetTitle(name);
-            CreatedAt = DateTime.UtcNow;
-        }
-
-        public void SetTitle(string title)
-        {
             Title = Title.Create(title);
-            LastModifiedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
 
         public void AddTodo(Todo todo)

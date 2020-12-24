@@ -12,17 +12,11 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         protected Step() { }
 
-        public Step(string name)
+        public Step(string title)
         {
             Id = Guid.NewGuid();
-            SetName(name);
-            CreatedAt = DateTime.UtcNow;
-        }
-
-        public void SetName(string title)
-        {
             Title = Title.Create(title);
-            LastModifiedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
     }
 }
