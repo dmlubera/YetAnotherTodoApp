@@ -12,6 +12,7 @@ namespace YetAnotherTodoApp.Application.DI
             services.AddScoped<ICommandDispatcher, CommandDispatcher>();
             services.AddScoped<ICommandHandler<RegisterUserCommand>, RegisterUserCommandHandler>();
             services.AddScoped<ICommandHandler<AddTodoCommand>, AddTodoCommandHandler>();
+            services.AddScoped<ICommandHandler<CreateTodoListCommand>, CreateTodoListCommandHandler>();
         }
     }
 }

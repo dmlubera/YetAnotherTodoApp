@@ -11,6 +11,7 @@ namespace YetAnotherTodoApp.Application.DI
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new TodoProfile());
+                cfg.AddProfile(new TodoListProfile());
             });
 
             var mapper = mapperConfiguration.CreateMapper();
