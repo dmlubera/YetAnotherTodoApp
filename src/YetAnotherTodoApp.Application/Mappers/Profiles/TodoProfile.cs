@@ -8,7 +8,8 @@ namespace YetAnotherTodoApp.Application.Mappers.Profiles
     {
         public TodoProfile()
         {
-            CreateMap<Todo, TodoDto>();
+            CreateMap<Todo, TodoDto>()
+                .ForMember(x => x.Title, opt => opt.MapFrom(x => x.Title.Value));
         }
     }
 }
