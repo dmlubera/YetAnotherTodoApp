@@ -48,5 +48,20 @@ namespace YetAnotherTodoApp.Api.Controllers
             await _commandDispatcher.DispatchAsync(command);
             return Ok();
         }
+
+        [Authorize]
+        [HttpDelete("{todoId}")]
+        public async Task<IActionResult> DeleteTodoAsync(Guid todoId)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new DeleteTodoCommand
+            {
+                UserId = userId,
+                TodoId = todoId
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
     }
 }

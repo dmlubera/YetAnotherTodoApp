@@ -22,5 +22,8 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         public void AddTodo(Todo todo)
             => _todos.Add(todo);
+
+        public void DeleteTodo(Todo todo)
+            => _todos.Remove(todo);
     }
 }

@@ -5,7 +5,7 @@ POST {{api}}/users
 Content-Type: application/json
 
 {
-    "username": "test",
+    "username": "test123",
     "email": "test@test.com",
     "password": "test123"
 }
@@ -26,3 +26,21 @@ Content-Type: application/json
 ### Get todos
 GET {{api}}/todo
 Authorization: Bearer {{accessToken}}
+
+### Add todo
+POST {{api}}/todo
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "test123",
+    "project": "totallynewproject",
+    "finishDate": "2021-04-11"
+}
+
+###
+@todoId = 
+
+### Delete todo
+DELETE {{api}}/todo/{{todoId}}
+Authorization:  Bearer {{accessToken}}
