@@ -46,10 +46,19 @@ DELETE {{api}}/todo/{{todoId}}
 Authorization:  Bearer {{accessToken}}
 
 ### Update todo status
-PUT {{api}}/todo/{{todoId}}
+PUT {{api}}/todo/{{todoId}}/status
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "status": "inprogress"
+    "status": "done"
+}
+
+### Update todo priority
+PUT {{api}}/todo/{{todoId}}/priority
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "priority": "low"
 }

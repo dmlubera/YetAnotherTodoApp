@@ -32,5 +32,11 @@ namespace YetAnotherTodoApp.Domain.Entities
             Status = updatedStatus;
             LastModifiedAt = DateTime.UtcNow;
         }
+
+        public void UpdatePriority(TodoPriority updatedPriority)
+        {
+            Priority = updatedPriority;
+            LastModifiedAt = DateTime.UtcNow;
+        }
     }
 }

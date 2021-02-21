@@ -15,6 +15,7 @@ namespace YetAnotherTodoApp.Application.DI
             services.AddScoped<ICommandHandler<CreateTodoListCommand>, CreateTodoListCommandHandler>();
             services.AddScoped<ICommandHandler<DeleteTodoCommand>, DeleteTodoCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateTodoStatusCommand>, UpdateTodoStatusCommandHandler>();
+            services.AddScoped<ICommandHandler<UpdateTodoPriorityCommand>, UpdateTodoPriorityCommandHandler>();
         }
     }
 }

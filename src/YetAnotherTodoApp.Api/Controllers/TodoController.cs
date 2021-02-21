@@ -65,7 +65,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         [Authorize]
-        [HttpPut("{todoId}")]
+        [HttpPut("{todoId}/status")]
         public async Task<IActionResult> UpdateTodoStatusAsync(Guid todoId, [FromBody] UpdateTodoStatusRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
@@ -74,6 +74,22 @@ namespace YetAnotherTodoApp.Api.Controllers
                 UserId = userId,
                 TodoId = todoId,
                 Status = request.Status
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut("{todoId}/priority")]
+        public async Task<IActionResult> UpdateTodoPriorityAsync(Guid todoId, [FromBody] UpdateTodoPriorityRequest request)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new UpdateTodoPriorityCommand
+            {
+                UserId = userId,
+                TodoId = todoId,
+                Priority = request.Priority
             };
             await _commandDispatcher.DispatchAsync(command);
 
