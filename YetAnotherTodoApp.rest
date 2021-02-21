@@ -39,8 +39,17 @@ Content-Type: application/json
 }
 
 ###
-@todoId = 
+@todoId = fedff631-dd0a-43c3-b57c-7eaf7db7a7d8
 
 ### Delete todo
 DELETE {{api}}/todo/{{todoId}}
 Authorization:  Bearer {{accessToken}}
+
+### Update todo status
+PUT {{api}}/todo/{{todoId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "status": "inprogress"
+}

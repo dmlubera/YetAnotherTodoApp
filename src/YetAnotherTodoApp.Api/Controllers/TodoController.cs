@@ -63,5 +63,21 @@ namespace YetAnotherTodoApp.Api.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpPut("{todoId}")]
+        public async Task<IActionResult> UpdateTodoStatusAsync(Guid todoId, [FromBody] UpdateTodoStatusRequest request)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new UpdateTodoStatusCommand
+            {
+                UserId = userId,
+                TodoId = todoId,
+                Status = request.Status
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
     }
 }
