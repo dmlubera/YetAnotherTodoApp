@@ -56,5 +56,21 @@ namespace YetAnotherTodoApp.Api.Controllers
             await _commandDispatcher.DispatchAsync(command);
             return Ok(_cache.Get(command.TokenId));
         }
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserInfoAsync([FromBody] UpdateUserInfoRequest request)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new UpdateUserInfoCommand
+            {
+                UserId = userId,
+                FirstName = request.FirstName,
+                LastName = request.LastName
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
     }
 }

@@ -27,6 +27,15 @@ Content-Type: application/json
 GET {{api}}/users
 Authorization: Bearer {{accessToken}}
 
+### Update user info
+PUT {{api}}/users
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "firstName": "UpdatedFirstName",
+    "lastName": "UpdatedLastName"
+}
 
 ### Get todos
 GET {{api}}/todo

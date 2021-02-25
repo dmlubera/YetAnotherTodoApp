@@ -27,5 +27,11 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         public void AddTodoList(TodoList todoList)
             => _todoLists.Add(todoList);
+
+        public void UpdateUserInfo(string firstName, string lastname)
+        {
+            Name = Name.Create(firstName, lastname);
+            LastModifiedAt = DateTime.UtcNow;
+        }
     }
 }

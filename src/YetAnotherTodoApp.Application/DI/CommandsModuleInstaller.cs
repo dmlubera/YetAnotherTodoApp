@@ -17,6 +17,7 @@ namespace YetAnotherTodoApp.Application.DI
             services.AddScoped<ICommandHandler<UpdateTodoStatusCommand>, UpdateTodoStatusCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateTodoPriorityCommand>, UpdateTodoPriorityCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateTodoCommand>, UpdateTodoCommandHandler>();
+            services.AddScoped<ICommandHandler<UpdateUserInfoCommand>, UpdateUserInfoCommandHandler>();
         }
     }
 }
