@@ -16,12 +16,44 @@ POST {{api}}/users/auth
 Content-Type: application/json
 
 {
-    "email": "test@test.com",
-    "password": "test123"
+    "email": "test1234@test.com",
+    "password": "test123456"
 }
 
 ###
 @accessToken = {{sign_in.response.body.$.token}}
+
+### Get user info
+GET {{api}}/users
+Authorization: Bearer {{accessToken}}
+
+### Update user info
+PUT {{api}}/users
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "firstName": "UpdatedFirstName",
+    "lastName": "UpdatedLastName"
+}
+
+### Update user email
+PUT {{api}}/users/email
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "email": "test1234@test.com"
+}
+
+### Update user password
+PUT {{api}}/users/password
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "password": "test123456"
+}
 
 ### Get todos
 GET {{api}}/todo
