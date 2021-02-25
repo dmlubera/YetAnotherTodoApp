@@ -40,5 +40,21 @@ namespace YetAnotherTodoApp.Api.Controllers
             await _commandDispatcher.DispatchAsync(new CreateTodoListCommand(userId, request.Title));
             return Ok();
         }
+
+        [Authorize]
+        [HttpPut("{todolistId}")]
+        public async Task<IActionResult> UpdateTodoListAsync(Guid todoListId, [FromBody] UpdateTodoListRequest request)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new UpdateTodoListCommand
+            {
+                UserId = userId,
+                TodoListId = todoListId,
+                Title = request.Title
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
     }
 }
