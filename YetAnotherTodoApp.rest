@@ -23,6 +23,11 @@ Content-Type: application/json
 ###
 @accessToken = {{sign_in.response.body.$.token}}
 
+### Get user info
+GET {{api}}/users
+Authorization: Bearer {{accessToken}}
+
+
 ### Get todos
 GET {{api}}/todo
 Authorization: Bearer {{accessToken}}
