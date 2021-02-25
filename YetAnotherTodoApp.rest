@@ -16,8 +16,8 @@ POST {{api}}/users/auth
 Content-Type: application/json
 
 {
-    "email": "test@test.com",
-    "password": "test123"
+    "email": "test1234@test.com",
+    "password": "test123456"
 }
 
 ###
@@ -44,6 +44,15 @@ Content-Type: application/json
 
 {
     "email": "test1234@test.com"
+}
+
+### Update user password
+PUT {{api}}/users/password
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "password": "test123456"
 }
 
 ### Get todos

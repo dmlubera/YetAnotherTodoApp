@@ -87,5 +87,20 @@ namespace YetAnotherTodoApp.Api.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpPut("password")]
+        public async Task<IActionResult> UpdateUserPasswordEmail([FromBody] UpdateUserPasswordRequest request)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new UpdateUserPasswordCommand
+            {
+                UserId = userId,
+                Password = request.Password
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
     }
 }

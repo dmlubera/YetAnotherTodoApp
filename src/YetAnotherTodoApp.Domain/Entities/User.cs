@@ -39,5 +39,11 @@ namespace YetAnotherTodoApp.Domain.Entities
             Email = Email.Create(email);
             LastModifiedAt = DateTime.UtcNow;
         }
+
+        public void UpdatePassword(string passwordHash, string passwordSalt)
+        {
+            Password = Password.Create(passwordHash, passwordSalt);
+            LastModifiedAt = DateTime.UtcNow;
+        }
     }
 }

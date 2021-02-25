@@ -19,6 +19,7 @@ namespace YetAnotherTodoApp.Application.DI
             services.AddScoped<ICommandHandler<UpdateTodoCommand>, UpdateTodoCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateUserInfoCommand>, UpdateUserInfoCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateUserEmailCommand>, UpdateUserEmailCommandHandler>();
+            services.AddScoped<ICommandHandler<UpdateUserPasswordCommand>, UpdateUserPasswordCommandHandler>();
         }
     }
 }
