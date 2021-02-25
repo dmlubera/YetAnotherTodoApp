@@ -1,0 +1,75 @@
+@api = https://localhost:5001/api
+
+### Create account
+POST {{api}}/users
+Content-Type: application/json
+
+{
+    "username": "test123",
+    "email": "test@test.com",
+    "password": "test123"
+}
+
+### Sign-in
+# @name sign_in
+POST {{api}}/users/auth
+Content-Type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test123"
+}
+
+###
+@accessToken = {{sign_in.response.body.$.token}}
+
+### Get todos
+GET {{api}}/todo
+Authorization: Bearer {{accessToken}}
+
+### Add todo
+POST {{api}}/todo
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "test123",
+    "project": "totallynewproject",
+    "finishDate": "2021-04-11"
+}
+
+###
+@todoId = fedff631-dd0a-43c3-b57c-7eaf7db7a7d8
+
+### Delete todo
+DELETE {{api}}/todo/{{todoId}}
+Authorization:  Bearer {{accessToken}}
+
+### Update todo
+PUT {{api}}/todo/{{todoId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "New name",
+    "description": "New description",
+    "finishDate": "2021-04-11"
+}
+
+### Update todo status
+PUT {{api}}/todo/{{todoId}}/status
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "status": "done"
+}
+
+### Update todo priority
+PUT {{api}}/todo/{{todoId}}/priority
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "priority": "low"
+}

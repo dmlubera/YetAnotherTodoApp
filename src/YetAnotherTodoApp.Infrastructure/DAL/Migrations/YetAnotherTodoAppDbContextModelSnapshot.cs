@@ -19,39 +19,246 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.User", b =>
+            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.Step", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LastName")
+                    b.Property<Guid?>("todoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("todoId");
+
+                    b.ToTable("Steps");
+                });
+
+            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.Todo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("FinishDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Salt")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("LastModifiedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("todoListId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("todoListId");
+
+                    b.ToTable("Todos");
+                });
+
+            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.TodoList", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("userId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("TodoLists");
+                });
+
+            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.Step", b =>
+                {
+                    b.HasOne("YetAnotherTodoApp.Domain.Entities.Todo", "Todo")
+                        .WithMany("Steps")
+                        .HasForeignKey("todoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Title", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("StepId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("StepId");
+
+                            b1.ToTable("Steps");
+
+                            b1.WithOwner()
+                                .HasForeignKey("StepId");
+                        });
+                });
+
+            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.Todo", b =>
+                {
+                    b.HasOne("YetAnotherTodoApp.Domain.Entities.TodoList", "TodoList")
+                        .WithMany("Todos")
+                        .HasForeignKey("todoListId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Title", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("TodoId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("TodoId");
+
+                            b1.ToTable("Todos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TodoId");
+                        });
+                });
+
+            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.TodoList", b =>
+                {
+                    b.HasOne("YetAnotherTodoApp.Domain.Entities.User", "User")
+                        .WithMany("TodoLists")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Title", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("TodoListId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("TodoListId");
+
+                            b1.ToTable("TodoLists");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TodoListId");
+                        });
+                });
+
+            modelBuilder.Entity("YetAnotherTodoApp.Domain.Entities.User", b =>
+                {
+                    b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Name", "Name", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("FirstName")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("LastName")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Password", "Password", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Hash")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Salt")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Username", "Username", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
                 });
 #pragma warning restore 612, 618
         }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using YetAnotherTodoApp.Domain.Exceptions;
+using ApplicationException = YetAnotherTodoApp.Application.Exceptions.ApplicationException;
 
 namespace YetAnotherTodoApp.Api.Middlewares
 {
@@ -37,7 +38,12 @@ namespace YetAnotherTodoApp.Api.Middlewares
 
             switch(ex)
             {
-                case DomainException e when ex.GetType() == typeof(DomainException):
+                case DomainException e when ex.GetType().BaseType == typeof(DomainException):
+                    errorCode = e.Code;
+                    statusCode = HttpStatusCode.BadRequest;
+                    message = e.Message;
+                    break;
+                case ApplicationException e when ex.GetType().BaseType == typeof(ApplicationException):
                     errorCode = e.Code;
                     statusCode = HttpStatusCode.BadRequest;
                     message = e.Message;

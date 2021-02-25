@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using YetAnotherTodoApp.Domain.Repostiories;
+using YetAnotherTodoApp.Domain.Repositories;
 using YetAnotherTodoApp.Infrastructure.DAL.Repositories;
 
 namespace YetAnotherTodoApp.Infrastructure.DAL.DI
@@ -9,6 +9,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.DI
         public static void RegisterRepositoriesModule(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITodoListRepository, TodoListRepository>();
         }
     }
 }

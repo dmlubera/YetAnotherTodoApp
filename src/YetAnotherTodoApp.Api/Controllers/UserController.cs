@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models;
 using YetAnotherTodoApp.Infrastructure.Auth.Commands.Models;
@@ -21,13 +22,21 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         [HttpPost]
-        public async Task RegisterUserAsync([FromBody] RegisterUserCommand command)
-            => await _commandDispatcher.DispatchAsync(command);
+        public async Task RegisterUserAsync([FromBody] RegisterUserRequest request)
+        {
+            var command = new RegisterUserCommand(request.Username, request.Email, request.Password);
+            await _commandDispatcher.DispatchAsync(command);
+        }
 
         [HttpPost("auth")]
-        public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserCommand command)
+        public async Task<IActionResult> LoginUserAsync([FromBody] AuthenticateUserRequest request)
         {
-            command.TokenId = Guid.NewGuid();
+            var command = new LoginUserCommand
+            {
+                TokenId = Guid.NewGuid(),
+                Email = request.Email,
+                Password = request.Password
+            };
             await _commandDispatcher.DispatchAsync(command);
             return Ok(_cache.Get(command.TokenId));
         }
