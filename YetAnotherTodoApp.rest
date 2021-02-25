@@ -45,6 +45,17 @@ Content-Type: application/json
 DELETE {{api}}/todo/{{todoId}}
 Authorization:  Bearer {{accessToken}}
 
+### Update todo
+PUT {{api}}/todo/{{todoId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "New name",
+    "description": "New description",
+    "finishDate": "2021-04-11"
+}
+
 ### Update todo status
 PUT {{api}}/todo/{{todoId}}/status
 Authorization: Bearer {{accessToken}}

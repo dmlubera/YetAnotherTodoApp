@@ -27,6 +27,14 @@ namespace YetAnotherTodoApp.Domain.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
+        public void Update(string title, string descrtiption, DateTime finishDate)
+        {
+            Title = Title.Create(title);
+            Description = descrtiption;
+            FinishDate = finishDate;
+            LastModifiedAt = DateTime.UtcNow;
+        }
+
         public void UpdateStatus(TodoStatus updatedStatus)
         {
             Status = updatedStatus;

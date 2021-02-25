@@ -41,7 +41,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             var command = new AddTodoCommand
             {
                 UserId = userId,
-                Title =  request.Title,
+                Title = request.Title,
                 Project = request.Project,
                 FinishDate = request.FinishDate
             };
@@ -58,6 +58,24 @@ namespace YetAnotherTodoApp.Api.Controllers
             {
                 UserId = userId,
                 TodoId = todoId
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut("{todoId}")]
+        public async Task<IActionResult> UpdateTodoAsync(Guid todoId, [FromBody] UpdateTodoRequest request)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new UpdateTodoCommand
+            {
+                UserId = userId,
+                TodoId = todoId,
+                Title = request.Title,
+                Description = request.Description,
+                FinishDate = request.FinishDate
             };
             await _commandDispatcher.DispatchAsync(command);
 
