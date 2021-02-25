@@ -56,5 +56,20 @@ namespace YetAnotherTodoApp.Api.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpDelete("{todoListId}")]
+        public async Task<IActionResult> DeleteTodoListAsync(Guid todoListId)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new DeleteTodoListCommand
+            {
+                UserId = userId,
+                TodoListId = todoListId
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
     }
 }
