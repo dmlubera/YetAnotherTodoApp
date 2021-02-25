@@ -25,5 +25,11 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         public void DeleteTodo(Todo todo)
             => _todos.Remove(todo);
+
+        public void UpdateTitle(string title)
+        {
+            Title = Title.Create(title);
+            LastModifiedAt = DateTime.UtcNow;
+        }
     }
 }

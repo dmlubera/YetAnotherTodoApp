@@ -105,3 +105,23 @@ Content-Type: application/json
 {
     "priority": "low"
 }
+
+### Get todolists
+GET {{api}}/todolist
+Authorization: Bearer {{accessToken}}
+
+
+@todolistId = c7050053-8b1a-44a5-bb61-122297f916a3
+
+### Update todolist
+PUT {{api}}/todolist/{{todolistId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "UpdatedTitle"
+}
+
+### Delete todolist
+DELETE {{api}}/todolist/{{todolistId}}
+Authorization: Bearer {{accessToken}}
