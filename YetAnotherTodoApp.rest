@@ -37,6 +37,15 @@ Content-Type: application/json
     "lastName": "UpdatedLastName"
 }
 
+### Update user email
+PUT {{api}}/users/email
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "email": "test1234@test.com"
+}
+
 ### Get todos
 GET {{api}}/todo
 Authorization: Bearer {{accessToken}}

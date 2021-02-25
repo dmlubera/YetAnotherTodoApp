@@ -33,5 +33,11 @@ namespace YetAnotherTodoApp.Domain.Entities
             Name = Name.Create(firstName, lastname);
             LastModifiedAt = DateTime.UtcNow;
         }
+
+        public void UpdateEmail(string email)
+        {
+            Email = Email.Create(email);
+            LastModifiedAt = DateTime.UtcNow;
+        }
     }
 }

@@ -72,5 +72,20 @@ namespace YetAnotherTodoApp.Api.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpPut("email")]
+        public async Task<IActionResult> UpdateUserEmailAsync([FromBody] UpdateUserEmailRequest request)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            var command = new UpdateUserEmailCommand
+            {
+                UserId = userId,
+                Email = request.Email
+            };
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
     }
 }
