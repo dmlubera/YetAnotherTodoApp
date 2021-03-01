@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YetAnotherTodoApp.Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3FC22F79-71AE-42C6-AE21-217991778E10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YetAnotherTodoApp.Domain.Tests.Unit", "YetAnotherTodoApp.Domain.Tests.Unit\YetAnotherTodoApp.Domain.Tests.Unit.csproj", "{967D9CC6-0E88-4036-96D1-42996650E56A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YetAnotherTodoApp.Domain.Tests.Unit", "tests\YetAnotherTodoApp.Domain.Tests.Unit\YetAnotherTodoApp.Domain.Tests.Unit.csproj", "{967D9CC6-0E88-4036-96D1-42996650E56A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YetAnotherTodoApp.Application.Tests.Unit", "YetAnotherTodoApp.Application.Tests.Unit\YetAnotherTodoApp.Application.Tests.Unit.csproj", "{175CFB3E-657B-4743-8894-928182BAFB94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YetAnotherTodoApp.Application.Tests.Unit", "tests\YetAnotherTodoApp.Application.Tests.Unit\YetAnotherTodoApp.Application.Tests.Unit.csproj", "{175CFB3E-657B-4743-8894-928182BAFB94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
