@@ -1,23 +1,23 @@
 @api = https://localhost:5001/api
 
 ### Create account
-POST {{api}}/users
+POST {{api}}/auth/register
 Content-Type: application/json
 
 {
-    "username": "test123",
-    "email": "test@test.com",
-    "password": "test123"
+    "username": "test1234",
+    "email": "test1231@test.com",
+    "password": "test1231"
 }
 
 ### Sign-in
 # @name sign_in
-POST {{api}}/users/auth
+POST {{api}}/auth/login
 Content-Type: application/json
 
 {
-    "email": "test1234@test.com",
-    "password": "test123456"
+    "email": "test1231@test.com",
+    "password": "test1231"
 }
 
 ###
