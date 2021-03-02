@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Commands;
@@ -22,10 +23,12 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task RegisterUserAsync([FromBody] RegisterUserRequest request)
+        public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserRequest request)
         {
             var command = new RegisterUserCommand(request.Username, request.Email, request.Password);
             await _commandDispatcher.DispatchAsync(command);
+
+            return StatusCode(201);
         }
 
         [HttpPost("login")]
