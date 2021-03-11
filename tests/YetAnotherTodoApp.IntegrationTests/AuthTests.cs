@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.IntegrationTests
@@ -19,9 +20,9 @@ namespace YetAnotherTodoApp.IntegrationTests
         {
             var request = new RegisterUserRequest
             {
-                Username = "test874",
-                Email = "testowy874@test.com",
-                Password = "test123!@#"
+                Username = "uniqueUsername",
+                Email = "uniqueemail@test.com",
+                Password = "secretPassword"
             };
 
             var response = await RegisterAsync(request);
@@ -34,9 +35,9 @@ namespace YetAnotherTodoApp.IntegrationTests
         {
             var request = new RegisterUserRequest
             {
-                Username = "test123",
+                Username = "test1234",
                 Email = "testowytest.com",
-                Password = "test123!@#"
+                Password = "secretPassword"
             };
 
             var response = await RegisterAsync(request);
@@ -45,6 +46,42 @@ namespace YetAnotherTodoApp.IntegrationTests
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             content.Should().NotBeNull();
             content.Code.Should().Be(new InvalidEmailFormatException(request.Email).Code);
+        }
+
+        [Fact]
+        public async Task RegisterUserAsync_WithExistingEmail_ReturnsBadRequestHttpStatusCode()
+        {
+            var request = new RegisterUserRequest
+            {
+                Username = "newUniqueUsername",
+                Email = "test123@test.com",
+                Password = "secretPassword"
+            };
+
+            var response = await RegisterAsync(request);
+            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            content.Should().NotBeNull();
+            content.Code.Should().Be(new EmailInUseException(request.Email).Code);
+        }
+
+        [Fact]
+        public async Task RegisterUserAsync_WithExistingUsername_ReturnsBadRequestHttpStatusCode()
+        {
+            var request = new RegisterUserRequest
+            {
+                Username = "test123",
+                Email = "test1234@test.com",
+                Password = "secretPassword"
+            };
+
+            var response = await RegisterAsync(request);
+            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            content.Should().NotBeNull();
+            content.Code.Should().Be(new UsernameInUseException(request.Username).Code);
         }
     }
 }

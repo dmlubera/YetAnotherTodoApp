@@ -1,36 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using System.Linq;
+﻿using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
-using System.Threading.Tasks;
+using Xunit;
 using YetAnotherTodoApp.Api;
-using YetAnotherTodoApp.Infrastructure.DAL;
 
 namespace YetAnotherTodoApp.IntegrationTests
 {
-    public class IntegrationTestBase
+    public class IntegrationTestBase : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
+        private readonly CustomWebApplicationFactory<Startup> _factory;
         protected readonly HttpClient TestClient;
 
         public IntegrationTestBase()
         {
-            var appFactory = new WebApplicationFactory<Startup>()
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureServices(services =>
-                    {
-                        var descriptor = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<YetAnotherTodoAppDbContext>));
-                        if (descriptor != null)
-                            services.Remove(descriptor);
-
-                        services.AddDbContext<YetAnotherTodoAppDbContext>(opts => opts.UseInMemoryDatabase("TestDb"));
-                    });
-                });
-            TestClient = appFactory.CreateClient();
+            _factory = new CustomWebApplicationFactory<Startup>();
+            TestClient = _factory.CreateClient();
         }
 
         protected static StringContent GetContent(object value)
