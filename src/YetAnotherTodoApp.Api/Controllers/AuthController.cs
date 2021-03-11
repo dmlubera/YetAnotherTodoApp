@@ -32,7 +32,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUserAsync([FromBody] AuthenticateUserRequest request)
+        public async Task<IActionResult> AuthenticateUserAsync([FromBody] AuthenticateUserRequest request)
         {
             var command = new LoginUserCommand
             {

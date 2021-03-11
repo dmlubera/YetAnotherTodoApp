@@ -15,6 +15,9 @@ namespace YetAnotherTodoApp.IntegrationTests
         private async Task<HttpResponseMessage> RegisterAsync(RegisterUserRequest request)
             => await TestClient.PostAsync("api/auth/register", GetContent(request));
 
+        private async Task<HttpResponseMessage> AuthenticateAsync(AuthenticateUserRequest request)
+            => await TestClient.PostAsync("api/auth/login", GetContent(request));
+
         [Fact]
         public async Task RegiterUserAsync_WithCorrectData_ReturnsCreatedHttpStatusCode()
         {
@@ -82,6 +85,22 @@ namespace YetAnotherTodoApp.IntegrationTests
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             content.Should().NotBeNull();
             content.Code.Should().Be(new UsernameInUseException(request.Username).Code);
+        }
+
+        [Fact]
+        public async Task AuthenticateUserAsync_WithValidCredentials_ReturnsJwtToken()
+        {
+            var request = new AuthenticateUserRequest
+            {
+                Email = "test123@test.com",
+                Password = "secretpassword"
+            };
+
+            var response = await AuthenticateAsync(request);
+            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().NotBeNull();
         }
     }
 }
