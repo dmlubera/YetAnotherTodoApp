@@ -23,8 +23,8 @@ namespace YetAnotherTodoApp.IntegrationTests
         {
             var request = new RegisterUserRequest
             {
-                Username = "uniqueUsername",
-                Email = "uniqueemail@test.com",
+                Username = "UniqueUsername",
+                Email = "uniqueusername@yetanothertodoapp.com",
                 Password = "secretPassword"
             };
 
@@ -34,12 +34,12 @@ namespace YetAnotherTodoApp.IntegrationTests
         }
 
         [Fact]
-        public async Task RegisterUserAsync_WithIncorrectEmail_ReturnsBadRequestHttpStatusCode()
+        public async Task RegisterUserAsync_WithIncorrectEmailFormat_ReturnsBadRequestHttpStatusCode()
         {
             var request = new RegisterUserRequest
             {
-                Username = "test1234",
-                Email = "testowytest.com",
+                Username = "UniqueUsername",
+                Email = "uniqueemailyetanothertodoapp.com",
                 Password = "secretPassword"
             };
 
@@ -51,13 +51,15 @@ namespace YetAnotherTodoApp.IntegrationTests
             content.Code.Should().Be(new InvalidEmailFormatException(request.Email).Code);
         }
 
-        [Fact]
-        public async Task RegisterUserAsync_WithExistingEmail_ReturnsBadRequestHttpStatusCode()
+        [Theory]
+        [InlineData("testuser@yetanothertodoapp.com")]
+        [InlineData("testUser@yetanothertodoapp.com")]
+        public async Task RegisterUserAsync_WithExistingEmail_ReturnsBadRequestHttpStatusCode(string email)
         {
             var request = new RegisterUserRequest
             {
-                Username = "newUniqueUsername",
-                Email = "test123@test.com",
+                Username = "NewUniqueUsername",
+                Email = email,
                 Password = "secretPassword"
             };
 
@@ -69,13 +71,15 @@ namespace YetAnotherTodoApp.IntegrationTests
             content.Code.Should().Be(new EmailInUseException(request.Email).Code);
         }
 
-        [Fact]
-        public async Task RegisterUserAsync_WithExistingUsername_ReturnsBadRequestHttpStatusCode()
+        [Theory]
+        [InlineData("testuser")]
+        [InlineData("testUser")]
+        public async Task RegisterUserAsync_WithExistingUsername_ReturnsBadRequestHttpStatusCode(string username)
         {
             var request = new RegisterUserRequest
             {
-                Username = "test123",
-                Email = "test1234@test.com",
+                Username = username,
+                Email = "newuniqueusername@yetanothertodoapp.com",
                 Password = "secretPassword"
             };
 
@@ -92,14 +96,46 @@ namespace YetAnotherTodoApp.IntegrationTests
         {
             var request = new AuthenticateUserRequest
             {
-                Email = "test123@test.com",
-                Password = "secretpassword"
+                Email = "testuser@yetanothertodoapp.com",
+                Password = "secretPassword"
             };
 
             var response = await AuthenticateAsync(request);
             var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task AuthenticateUserAsync_WithInvalidCredentials_ReturnsBadRequestHttpStatusCode()
+        {
+            var request = new AuthenticateUserRequest
+            {
+                Email = "testuser@yetanothertodoapp.com",
+                Password = "wrongSecretPassword"
+            };
+
+            var response = await AuthenticateAsync(request);
+            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            content.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task AuthenticateUserAsync_WithNotExistingUserAccount_ReturnsBadRequestHttpStatusCode()
+        {
+            var request = new AuthenticateUserRequest
+            {
+                Email = "notexistinguseraccount@yetanothertodoapp.com",
+                Password = "secretPassword"
+            };
+
+            var response = await AuthenticateAsync(request);
+            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             content.Should().NotBeNull();
         }
     }

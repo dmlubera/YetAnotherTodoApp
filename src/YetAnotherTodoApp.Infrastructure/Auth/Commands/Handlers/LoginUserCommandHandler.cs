@@ -26,11 +26,12 @@ namespace YetAnotherTodoApp.Infrastructure.Auth.Commands.Handlers
 
         public async Task HandleAsync(LoginUserCommand command)
         {
-            var user = await _userRepository.GetByEmailAsync(command.Email);
+            var user = await _userRepository.GetByEmailAsync(command.Email)
+                ?? throw new Exception("Invalid credentials");
             var hash = _encrypter.GetHash(command.Password, user.Password.Salt);
-            if(user.Password.Hash != hash)
+            if (user.Password.Hash != hash)
                 throw new Exception("Invalid credentials");
-                
+
             var jwtToken = _jwtHelper.GenerateJwtToken(user.Id);
             _cache.Set(command.TokenId, jwtToken);
         }

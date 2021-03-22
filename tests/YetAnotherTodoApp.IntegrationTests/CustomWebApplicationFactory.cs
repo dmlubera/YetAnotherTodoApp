@@ -32,10 +32,15 @@ namespace YetAnotherTodoApp.IntegrationTests
 
         private void InitializeDbForTests(YetAnotherTodoAppDbContext dbContext)
         {
+            CreateInitialUserAccount(dbContext);
+        }
+
+        private void CreateInitialUserAccount(YetAnotherTodoAppDbContext dbContext)
+        {
             var encrypter = new Encrypter();
             var salt = encrypter.GetSalt();
-            var password = encrypter.GetHash("secretpassword", salt);
-            dbContext.Users.Add(new User("test123", "test123@test.com", password, salt));
+            var password = encrypter.GetHash("secretPassword", salt);
+            dbContext.Users.Add(new User("testuser", "testuser@yetanothertodoapp.com", password, salt));
             dbContext.SaveChanges();
         }
     }
