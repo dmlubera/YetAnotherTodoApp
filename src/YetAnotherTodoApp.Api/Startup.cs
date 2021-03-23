@@ -6,6 +6,7 @@ using YetAnotherTodoApp.Api.Configurations;
 using YetAnotherTodoApp.Api.Middlewares;
 using YetAnotherTodoApp.Application.DI;
 using YetAnotherTodoApp.Infrastructure.Auth.DI;
+using YetAnotherTodoApp.Infrastructure.CQRS.DI;
 using YetAnotherTodoApp.Infrastructure.DAL.DI;
 
 namespace YetAnotherTodoApp.Api
@@ -29,6 +30,7 @@ namespace YetAnotherTodoApp.Api
             services.AddAuthenticationConfiguration(Configuration);
             services.AddMemoryCache();
             services.RegisterRepositoriesModule();
+            services.RegisterCrqsModule();
             services.RegisterCommandsModule();
             services.RegisterQueriesModule();
             services.RegisterHelpersModule();

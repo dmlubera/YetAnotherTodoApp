@@ -1,7 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using YetAnotherTodoApp.Application.Commands;
 
-namespace YetAnotherTodoApp.Application.Commands
+namespace YetAnotherTodoApp.Infrastructure.CQRS
 {
     public class CommandDispatcher : ICommandDispatcher
     {

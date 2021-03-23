@@ -9,7 +9,6 @@ namespace YetAnotherTodoApp.Application.DI
     {
         public static void RegisterCommandsModule(this IServiceCollection services)
         {
-            services.AddScoped<ICommandDispatcher, CommandDispatcher>();
             services.AddScoped<ICommandHandler<RegisterUserCommand>, RegisterUserCommandHandler>();
             services.AddScoped<ICommandHandler<AddTodoCommand>, AddTodoCommandHandler>();
             services.AddScoped<ICommandHandler<CreateTodoListCommand>, CreateTodoListCommandHandler>();

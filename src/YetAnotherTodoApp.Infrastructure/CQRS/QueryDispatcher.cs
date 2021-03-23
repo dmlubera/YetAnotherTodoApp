@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using YetAnotherTodoApp.Application.Queries;
 
-namespace YetAnotherTodoApp.Application.Queries
+namespace YetAnotherTodoApp.Infrastructure.CQRS
 {
     public class QueryDispatcher : IQueryDispatcher
     {
