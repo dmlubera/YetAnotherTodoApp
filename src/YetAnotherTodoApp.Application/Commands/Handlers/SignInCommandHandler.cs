@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Repositories;
 
@@ -25,10 +26,10 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
         public async Task HandleAsync(SignInCommand command)
         {
             var user = await _userRepository.GetByEmailAsync(command.Email)
-                ?? throw new Exception("Invalid credentials");
+                ?? throw new InvalidCredentialsException();
             var hash = _encrypter.GetHash(command.Password, user.Password.Salt);
             if (user.Password.Hash != hash)
-                throw new Exception("Invalid credentials");
+                throw new InvalidCredentialsException();
 
             var jwtToken = _jwtHelper.GenerateJwtToken(user.Id);
             _cache.Set(command.TokenId, jwtToken);

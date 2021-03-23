@@ -34,6 +34,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         {
             var command = new SignInCommand(Guid.NewGuid(), request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
+
             return Ok(_cache.Get(command.TokenId));
         }
     }
