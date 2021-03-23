@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models;
-using YetAnotherTodoApp.Infrastructure.Auth.Commands.Models;
 
 namespace YetAnotherTodoApp.Api.Controllers
 {

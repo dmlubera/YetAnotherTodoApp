@@ -1,6 +1,6 @@
 using System;
 
-namespace YetAnotherTodoApp.Infrastructure.Auth.DTO
+namespace YetAnotherTodoApp.Application.DTOs
 {
     public class JwtDto
     {

@@ -1,6 +1,6 @@
 using System;
 using Microsoft.Extensions.Caching.Memory;
-using YetAnotherTodoApp.Infrastructure.Auth.DTO;
+using YetAnotherTodoApp.Application.DTOs;
 
 namespace YetAnotherTodoApp.Infrastructure.Auth.Extensions
 {

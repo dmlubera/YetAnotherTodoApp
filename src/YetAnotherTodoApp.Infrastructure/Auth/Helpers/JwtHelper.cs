@@ -4,7 +4,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using YetAnotherTodoApp.Infrastructure.Auth.DTO;
+using YetAnotherTodoApp.Application.DTOs;
+using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Infrastructure.Auth.Settings;
 
 namespace YetAnotherTodoApp.Infrastructure.Auth.Helpers

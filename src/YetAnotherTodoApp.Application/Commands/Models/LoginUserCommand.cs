@@ -1,7 +1,6 @@
-using System;
-using YetAnotherTodoApp.Application.Commands;
+﻿using System;
 
-namespace YetAnotherTodoApp.Infrastructure.Auth.Commands.Models
+namespace YetAnotherTodoApp.Application.Commands.Models
 {
     public class LoginUserCommand : ICommand
     {

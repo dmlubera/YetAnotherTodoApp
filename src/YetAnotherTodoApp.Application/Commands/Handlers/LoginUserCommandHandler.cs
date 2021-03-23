@@ -1,13 +1,11 @@
+﻿using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using YetAnotherTodoApp.Application.Commands;
+using YetAnotherTodoApp.Application.Commands.Models;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Repositories;
-using YetAnotherTodoApp.Infrastructure.Auth.Commands.Models;
-using YetAnotherTodoApp.Infrastructure.Auth.Helpers;
 
-namespace YetAnotherTodoApp.Infrastructure.Auth.Commands.Handlers
+namespace YetAnotherTodoApp.Application.Commands.Handlers
 {
     public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand>
     {
