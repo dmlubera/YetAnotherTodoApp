@@ -7,14 +7,14 @@ using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers
 {
-    public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand>
+    public class SignInCommandHandler : ICommandHandler<SignInCommand>
     {
         private readonly IUserRepository _userRepository;
         private readonly IJwtHelper _jwtHelper;
         private readonly IEncrypter _encrypter;
         private readonly IMemoryCache _cache;
 
-        public LoginUserCommandHandler(IUserRepository userRepository, IJwtHelper jwtHelper, IEncrypter encrypter, IMemoryCache cache)
+        public SignInCommandHandler(IUserRepository userRepository, IJwtHelper jwtHelper, IEncrypter encrypter, IMemoryCache cache)
         {
             _userRepository = userRepository;
             _jwtHelper = jwtHelper;
@@ -22,7 +22,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
             _cache = cache;
         }
 
-        public async Task HandleAsync(LoginUserCommand command)
+        public async Task HandleAsync(SignInCommand command)
         {
             var user = await _userRepository.GetByEmailAsync(command.Email)
                 ?? throw new Exception("Invalid credentials");

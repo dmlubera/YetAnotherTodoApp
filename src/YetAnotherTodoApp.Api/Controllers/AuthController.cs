@@ -20,19 +20,19 @@ namespace YetAnotherTodoApp.Api.Controllers
             _cache = cache;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserRequest request)
+        [HttpPost("sign-up")]
+        public async Task<IActionResult> SignUpAsync([FromBody] SignUpRequest request)
         {
-            var command = new RegisterUserCommand(request.Username.ToLower(), request.Email.ToLower(), request.Password);
+            var command = new SignUpCommand(request.Username.ToLower(), request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
 
             return StatusCode(201);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> AuthenticateUserAsync([FromBody] AuthenticateUserRequest request)
+        [HttpPost("sign-in")]
+        public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
         {
-            var command = new LoginUserCommand(Guid.NewGuid(), request.Email.ToLower(), request.Password);
+            var command = new SignInCommand(Guid.NewGuid(), request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
             return Ok(_cache.Get(command.TokenId));
         }

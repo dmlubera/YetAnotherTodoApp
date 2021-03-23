@@ -12,19 +12,19 @@ using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
 {
-    public class RegisterUserCommandHandlerTests
+    public class SignUpCommandHandlerTests
     {
         private readonly Fixture _fixture;
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<IEncrypter> _encrypterMock;
-        private readonly RegisterUserCommandHandler _handler;
+        private readonly SignUpCommandHandler _handler;
 
-        public RegisterUserCommandHandlerTests()
+        public SignUpCommandHandlerTests()
         {
             _fixture = new Fixture();
             _userRepositoryMock = new Mock<IUserRepository>();
             _encrypterMock = new Mock<IEncrypter>();
-            _handler = new RegisterUserCommandHandler(_userRepositoryMock.Object, _encrypterMock.Object);
+            _handler = new SignUpCommandHandler(_userRepositoryMock.Object, _encrypterMock.Object);
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
         [Fact]
         public async Task HandleAsync_WhenGivenValidData_ThenShouldRegisterUser()
         {
-            var command = new RegisterUserCommand("validUsername", "validEmail@test.com", "secretPassword");
+            var command = new SignUpCommand("validUsername", "validEmail@test.com", "secretPassword");
             var passwordHash = _fixture.Create<string>();
             var passwordSalt = _fixture.Create<string>();
             _userRepositoryMock.Setup(x => x.CheckIfEmailIsInUseAsync(command.Email))
@@ -79,7 +79,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
                x.Password.Salt == passwordSalt)), Times.Once);
         }
 
-        private RegisterUserCommand CreateCommandFixture()
-            => _fixture.Build<RegisterUserCommand>().Create();
+        private SignUpCommand CreateCommandFixture()
+            => _fixture.Build<SignUpCommand>().Create();
     }
 }

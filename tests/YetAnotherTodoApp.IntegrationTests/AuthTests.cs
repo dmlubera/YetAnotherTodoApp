@@ -12,16 +12,16 @@ namespace YetAnotherTodoApp.IntegrationTests
 {
     public class AuthTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> RegisterAsync(RegisterUserRequest request)
-            => await TestClient.PostAsync("api/auth/register", GetContent(request));
+        private async Task<HttpResponseMessage> RegisterAsync(SignUpRequest request)
+            => await TestClient.PostAsync("api/auth/sign-up", GetContent(request));
 
-        private async Task<HttpResponseMessage> AuthenticateAsync(AuthenticateUserRequest request)
-            => await TestClient.PostAsync("api/auth/login", GetContent(request));
+        private async Task<HttpResponseMessage> AuthenticateAsync(SignInRequest request)
+            => await TestClient.PostAsync("api/auth/sign-in", GetContent(request));
 
         [Fact]
         public async Task RegiterUserAsync_WithCorrectData_ReturnsCreatedHttpStatusCode()
         {
-            var request = new RegisterUserRequest
+            var request = new SignUpRequest
             {
                 Username = "UniqueUsername",
                 Email = "uniqueusername@yetanothertodoapp.com",
@@ -36,7 +36,7 @@ namespace YetAnotherTodoApp.IntegrationTests
         [Fact]
         public async Task RegisterUserAsync_WithIncorrectEmailFormat_ReturnsBadRequestHttpStatusCode()
         {
-            var request = new RegisterUserRequest
+            var request = new SignUpRequest
             {
                 Username = "UniqueUsername",
                 Email = "uniqueemailyetanothertodoapp.com",
@@ -56,7 +56,7 @@ namespace YetAnotherTodoApp.IntegrationTests
         [InlineData("testUser@yetanothertodoapp.com")]
         public async Task RegisterUserAsync_WithExistingEmail_ReturnsBadRequestHttpStatusCode(string email)
         {
-            var request = new RegisterUserRequest
+            var request = new SignUpRequest
             {
                 Username = "NewUniqueUsername",
                 Email = email,
@@ -76,7 +76,7 @@ namespace YetAnotherTodoApp.IntegrationTests
         [InlineData("testUser")]
         public async Task RegisterUserAsync_WithExistingUsername_ReturnsBadRequestHttpStatusCode(string username)
         {
-            var request = new RegisterUserRequest
+            var request = new SignUpRequest
             {
                 Username = username,
                 Email = "newuniqueusername@yetanothertodoapp.com",
@@ -94,7 +94,7 @@ namespace YetAnotherTodoApp.IntegrationTests
         [Fact]
         public async Task AuthenticateUserAsync_WithValidCredentials_ReturnsJwtToken()
         {
-            var request = new AuthenticateUserRequest
+            var request = new SignInRequest
             {
                 Email = "testuser@yetanothertodoapp.com",
                 Password = "secretPassword"
@@ -110,7 +110,7 @@ namespace YetAnotherTodoApp.IntegrationTests
         [Fact]
         public async Task AuthenticateUserAsync_WithInvalidCredentials_ReturnsBadRequestHttpStatusCode()
         {
-            var request = new AuthenticateUserRequest
+            var request = new SignInRequest
             {
                 Email = "testuser@yetanothertodoapp.com",
                 Password = "wrongSecretPassword"
@@ -126,7 +126,7 @@ namespace YetAnotherTodoApp.IntegrationTests
         [Fact]
         public async Task AuthenticateUserAsync_WithNotExistingUserAccount_ReturnsBadRequestHttpStatusCode()
         {
-            var request = new AuthenticateUserRequest
+            var request = new SignInRequest
             {
                 Email = "notexistinguseraccount@yetanothertodoapp.com",
                 Password = "secretPassword"

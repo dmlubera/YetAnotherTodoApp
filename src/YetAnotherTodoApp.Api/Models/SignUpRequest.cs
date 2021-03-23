@@ -1,6 +1,6 @@
 ﻿namespace YetAnotherTodoApp.Api.Models
 {
-    public class RegisterUserRequest
+    public class SignUpRequest
     {
         public string Username { get; set; }
         public string Email { get; set; }

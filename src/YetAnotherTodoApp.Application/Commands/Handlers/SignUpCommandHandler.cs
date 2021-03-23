@@ -7,18 +7,18 @@ using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers
 {
-    public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
+    public class SignUpCommandHandler : ICommandHandler<SignUpCommand>
     {
         private readonly IUserRepository _userRepository;
         private readonly IEncrypter _encrypter;
 
-        public RegisterUserCommandHandler(IUserRepository userRepository, IEncrypter encrypter)
+        public SignUpCommandHandler(IUserRepository userRepository, IEncrypter encrypter)
         {
             _userRepository = userRepository;
             _encrypter = encrypter;
         }
 
-        public async Task HandleAsync(RegisterUserCommand command)
+        public async Task HandleAsync(SignUpCommand command)
         {
             if (await _userRepository.CheckIfEmailIsInUseAsync(command.Email))
                 throw new EmailInUseException(command.Email);
