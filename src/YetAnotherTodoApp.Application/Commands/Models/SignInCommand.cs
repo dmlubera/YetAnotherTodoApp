@@ -8,6 +8,8 @@ namespace YetAnotherTodoApp.Application.Commands.Models
         public string Email { get; set; }
         public string Password { get; set; }
 
+        protected SignInCommand() { }
+
         public SignInCommand(Guid tokenId, string email, string password)
         {
             TokenId = tokenId;

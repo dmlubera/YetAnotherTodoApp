@@ -9,6 +9,8 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
 
+        protected Name() { }
+
         protected Name(string firstName, string lastName)
         {
             FirstName = firstName;

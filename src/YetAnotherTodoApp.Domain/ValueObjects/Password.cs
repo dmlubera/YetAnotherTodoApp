@@ -8,6 +8,8 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public string Hash { get; private set; }
         public string Salt { get; private set; }
 
+        protected Password() { }
+
         protected Password(string hash, string salt)
         {
             Hash = hash;
@@ -26,7 +28,7 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Password) obj);
+            return Equals((Password)obj);
         }
 
         public override int GetHashCode()
