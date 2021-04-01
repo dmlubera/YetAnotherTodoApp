@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Extensions;
 
 namespace YetAnotherTodoApp.Api.Controllers
 {
@@ -35,7 +36,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             var command = new SignInCommand(Guid.NewGuid(), request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
 
-            return Ok(_cache.Get(command.TokenId));
+            return Ok(_cache.GetJwt(command.TokenId));
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models;
 using YetAnotherTodoApp.Application.Exceptions;
+using YetAnotherTodoApp.Application.Extensions;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Repositories;
 
@@ -31,7 +32,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
                 throw new InvalidCredentialsException();
 
             var jwtToken = _jwtHelper.GenerateJwtToken(user.Id);
-            _cache.Set(command.TokenId, jwtToken);
+            _cache.SetJwt(command.TokenId, jwtToken);
         }
     }
 }
