@@ -1,26 +1,33 @@
 ﻿using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers
 {
-    public class UpdateUserPasswordCommandHandler : ICommandHandler<UpdateUserPasswordCommand>
+    public class UpdatePasswordCommandHandler : ICommandHandler<UpdatePasswordCommand>
     {
         private readonly IUserRepository _userRepository;
         private readonly IEncrypter _encrypter;
 
-        public UpdateUserPasswordCommandHandler(IUserRepository userRepository, IEncrypter encrypter)
+        public UpdatePasswordCommandHandler(IUserRepository userRepository, IEncrypter encrypter)
         {
             _userRepository = userRepository;
             _encrypter = encrypter;
         }
 
-        public async Task HandleAsync(UpdateUserPasswordCommand command)
+        public async Task HandleAsync(UpdatePasswordCommand command)
         {
             var user = await _userRepository.GetByIdAsync(command.UserId);
+            var passwordHashWithUserSalt = _encrypter.GetHash(command.Password, user.Password.Salt);
+
+            if (passwordHashWithUserSalt == user.Password.Hash)
+                throw new UpdatePasswordToAlreadyUsedValueException();
+
             var passwordSalt = _encrypter.GetSalt();
             var passwordHash = _encrypter.GetHash(command.Password, passwordSalt);
+
             user.UpdatePassword(passwordHash, passwordSalt);
 
             await _userRepository.SaveChangesAsync();

@@ -51,10 +51,10 @@ namespace YetAnotherTodoApp.Api.Controllers
 
         [Authorize]
         [HttpPut("email")]
-        public async Task<IActionResult> UpdateUserEmailAsync([FromBody] UpdateUserEmailRequest request)
+        public async Task<IActionResult> UpdateEmailAsync([FromBody] UpdateUserEmailRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateUserEmailCommand
+            var command = new UpdateEmailCommand
             {
                 UserId = userId,
                 Email = request.Email
@@ -66,10 +66,10 @@ namespace YetAnotherTodoApp.Api.Controllers
 
         [Authorize]
         [HttpPut("password")]
-        public async Task<IActionResult> UpdateUserPasswordEmail([FromBody] UpdateUserPasswordRequest request)
+        public async Task<IActionResult> UpdatePasswordEmail([FromBody] UpdateUserPasswordRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateUserPasswordCommand
+            var command = new UpdatePasswordCommand
             {
                 UserId = userId,
                 Password = request.Password

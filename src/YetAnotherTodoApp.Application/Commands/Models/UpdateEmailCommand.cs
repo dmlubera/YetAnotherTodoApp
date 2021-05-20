@@ -2,9 +2,9 @@
 
 namespace YetAnotherTodoApp.Application.Commands.Models
 {
-    public class UpdateUserPasswordCommand : ICommand
+    public class UpdateEmailCommand : ICommand
     {
         public Guid UserId { get; set; }
-        public string Password { get; set; }
+        public string Email { get; set; }
     }
 }
