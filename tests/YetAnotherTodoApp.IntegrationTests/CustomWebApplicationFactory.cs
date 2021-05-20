@@ -6,6 +6,7 @@ using System.Linq;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Infrastructure.DAL;
+using YetAnotherTodoApp.IntegrationTests.Dummies;
 
 namespace YetAnotherTodoApp.IntegrationTests
 {
@@ -39,8 +40,8 @@ namespace YetAnotherTodoApp.IntegrationTests
         {
             var encrypter = new Encrypter();
             var salt = encrypter.GetSalt();
-            var password = encrypter.GetHash("secretPassword", salt);
-            dbContext.Users.Add(new User("testuser", "testuser@yetanothertodoapp.com", password, salt));
+            var password = encrypter.GetHash(TestUser.Password, salt);
+            dbContext.Users.Add(new User(TestUser.Username, TestUser.Email, password, salt));
             dbContext.SaveChanges();
         }
     }
