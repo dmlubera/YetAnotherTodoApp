@@ -24,6 +24,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
                 throw new EmailInUseException(command.Email);
             if (await _userRepository.CheckIfUsernameIsInUseAsync(command.Username))
                 throw new UsernameInUseException(command.Username);
+            if (string.IsNullOrWhiteSpace(command.Password))
+                throw new InvalidPasswordFormatException();
 
             var passwordSalt = _encrypter.GetSalt();
             var passwordHash = _encrypter.GetHash(command.Password, passwordSalt);

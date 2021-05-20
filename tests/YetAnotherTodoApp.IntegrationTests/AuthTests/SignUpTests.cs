@@ -117,5 +117,25 @@ namespace YetAnotherTodoApp.IntegrationTests.AuthTests
             content.Code.Should().BeEquivalentTo(expectedException.Code);
             content.Message.Should().BeEquivalentTo(expectedException.Message);
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task SignUpAsync_WithInvalidPasswordFormat_ReturnsBadRequest(string password)
+        {
+            var expectedException = new InvalidPasswordFormatException();
+            var request = new SignUpRequest
+            {
+                Username = "testuser1",
+                Email = "test@yetanothertodoapp.com",
+                Password = password
+            };
+
+            var response = await SignUpAsync(request);
+            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            content.Code.Should().BeEquivalentTo(expectedException.Code);
+            content.Message.Should().BeEquivalentTo(expectedException.Message);
+        }
     }
 }
