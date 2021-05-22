@@ -1,6 +1,6 @@
 ﻿namespace YetAnotherTodoApp.Api.Models
 {
-    public class UpdateUserPasswordRequest
+    public class UpdatePasswordRequest
     {
         public string Password { get; set; }
     }

@@ -1,6 +1,6 @@
 ﻿namespace YetAnotherTodoApp.Api.Models
 {
-    public class UpdateUserEmailRequest
+    public class UpdateEmailRequest
     {
         public string Email { get; set; }
     }
