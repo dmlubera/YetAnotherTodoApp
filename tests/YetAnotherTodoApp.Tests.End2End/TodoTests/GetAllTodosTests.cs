@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace YetAnotherTodoApp.IntegrationTests.TodoTests
+namespace YetAnotherTodoApp.Tests.End2End.TodoTests
 {
     public class GetAllTodosTests
     {

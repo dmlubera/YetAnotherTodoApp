@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Domain.Exceptions;
-using YetAnotherTodoApp.IntegrationTests.Dummies;
+using YetAnotherTodoApp.Tests.End2End.Dummies;
 
-namespace YetAnotherTodoApp.IntegrationTests.UserTests
+namespace YetAnotherTodoApp.Tests.End2End.UserTests
 {
     public class UpdateUserInfoTests : IntegrationTestBase
     {

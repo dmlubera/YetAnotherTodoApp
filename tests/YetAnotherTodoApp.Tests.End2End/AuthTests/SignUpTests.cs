@@ -8,7 +8,7 @@ using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Exceptions;
 
-namespace YetAnotherTodoApp.IntegrationTests.AuthTests
+namespace YetAnotherTodoApp.Tests.End2End.AuthTests
 {
     public class SignUpTests : IntegrationTestBase
     {

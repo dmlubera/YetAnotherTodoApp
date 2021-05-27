@@ -1,4 +1,4 @@
-﻿namespace YetAnotherTodoApp.IntegrationTests
+﻿namespace YetAnotherTodoApp.Tests.End2End
 {
     public class AuthSuccessResponse
     {

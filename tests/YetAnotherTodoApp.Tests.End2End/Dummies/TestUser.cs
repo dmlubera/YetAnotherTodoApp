@@ -1,4 +1,4 @@
-﻿namespace YetAnotherTodoApp.IntegrationTests.Dummies
+﻿namespace YetAnotherTodoApp.Tests.End2End.Dummies
 {
     public static class TestUser
     {

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api;
 using YetAnotherTodoApp.Api.Models;
-using YetAnotherTodoApp.IntegrationTests.Dummies;
+using YetAnotherTodoApp.Tests.End2End.Dummies;
 
-namespace YetAnotherTodoApp.IntegrationTests
+namespace YetAnotherTodoApp.Tests.End2End
 {
     public class IntegrationTestBase : IClassFixture<CustomWebApplicationFactory<Startup>>
     {

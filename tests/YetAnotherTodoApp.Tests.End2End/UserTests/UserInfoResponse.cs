@@ -1,4 +1,4 @@
-﻿namespace YetAnotherTodoApp.IntegrationTests.UserTests
+﻿namespace YetAnotherTodoApp.Tests.End2End.UserTests
 {
     public class UserInfoResponse
     {

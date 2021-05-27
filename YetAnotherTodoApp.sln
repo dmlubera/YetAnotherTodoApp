@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YetAnotherTodoApp.Domain.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YetAnotherTodoApp.Application.Tests.Unit", "tests\YetAnotherTodoApp.Application.Tests.Unit\YetAnotherTodoApp.Application.Tests.Unit.csproj", "{175CFB3E-657B-4743-8894-928182BAFB94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YetAnotherTodoApp.IntegrationTests", "tests\YetAnotherTodoApp.IntegrationTests\YetAnotherTodoApp.IntegrationTests.csproj", "{2261BC6D-1BC0-4390-9056-291021578ABC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YetAnotherTodoApp.Tests.End2End", "tests\YetAnotherTodoApp.Tests.End2End\YetAnotherTodoApp.Tests.End2End.csproj", "{2261BC6D-1BC0-4390-9056-291021578ABC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

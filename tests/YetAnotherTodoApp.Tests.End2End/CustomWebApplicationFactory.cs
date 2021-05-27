@@ -6,9 +6,9 @@ using System.Linq;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Infrastructure.DAL;
-using YetAnotherTodoApp.IntegrationTests.Dummies;
+using YetAnotherTodoApp.Tests.End2End.Dummies;
 
-namespace YetAnotherTodoApp.IntegrationTests
+namespace YetAnotherTodoApp.Tests.End2End
 {
     public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
