@@ -3,6 +3,7 @@ using FluentAssertions;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
+using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Handlers;
 using YetAnotherTodoApp.Application.Commands.Models;
 using YetAnotherTodoApp.Application.Exceptions;
@@ -17,6 +18,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
         private readonly Fixture _fixture;
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<IEncrypter> _encrypterMock;
+        private readonly Mock<ICache> _memoryCacheMock;
         private readonly SignUpCommandHandler _handler;
 
         public SignUpCommandHandlerTests()
@@ -24,7 +26,8 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
             _fixture = new Fixture();
             _userRepositoryMock = new Mock<IUserRepository>();
             _encrypterMock = new Mock<IEncrypter>();
-            _handler = new SignUpCommandHandler(_userRepositoryMock.Object, _encrypterMock.Object);
+            _memoryCacheMock = new Mock<ICache>();
+            _handler = new SignUpCommandHandler(_userRepositoryMock.Object, _encrypterMock.Object, _memoryCacheMock.Object);
         }
 
         [Fact]

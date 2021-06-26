@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models;
 using YetAnotherTodoApp.Application.Extensions;
@@ -13,9 +13,9 @@ namespace YetAnotherTodoApp.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
-        private readonly IMemoryCache _cache;
+        private readonly ICache _cache;
 
-        public AuthController(ICommandDispatcher commandDispatcher, IMemoryCache cache)
+        public AuthController(ICommandDispatcher commandDispatcher, ICache cache)
         {
             _commandDispatcher = commandDispatcher;
             _cache = cache;
@@ -26,8 +26,9 @@ namespace YetAnotherTodoApp.Api.Controllers
         {
             var command = new SignUpCommand(request.Username.ToLower(), request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
+            var userId = _cache.GetId(command.TokenId);
 
-            return StatusCode(201);
+            return Created($"/api/users/{userId}", null);
         }
 
         [HttpPost("sign-in")]

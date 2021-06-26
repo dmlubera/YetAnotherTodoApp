@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -18,7 +19,9 @@ namespace YetAnotherTodoApp.Tests.End2End
             {
                 var descriptor = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<YetAnotherTodoAppDbContext>));
                 services.Remove(descriptor);
-                services.AddDbContext<YetAnotherTodoAppDbContext>(opts => opts.UseInMemoryDatabase("InMemoryDb"));
+                var connection = new SqliteConnection("DataSource=:memory:");
+                connection.Open();
+                services.AddDbContext<YetAnotherTodoAppDbContext>(opts => opts.UseSqlite(connection));
 
                 var serviceProvider = services.BuildServiceProvider();
                 using(var scope = serviceProvider.CreateScope())

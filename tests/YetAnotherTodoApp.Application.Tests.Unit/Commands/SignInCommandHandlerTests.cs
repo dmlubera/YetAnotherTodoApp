@@ -1,11 +1,10 @@
-﻿using AutoFixture;
-using Bogus;
+﻿using Bogus;
 using FluentAssertions;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Handlers;
 using YetAnotherTodoApp.Application.Commands.Models;
 using YetAnotherTodoApp.Application.Exceptions;
@@ -21,7 +20,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<IJwtHelper> _jwtHelperMock;
         private readonly Mock<IEncrypter> _encrypterMock;
-        private readonly Mock<IMemoryCache> _memoryCacheMock;
+        private readonly Mock<ICache> _memoryCacheMock;
         private readonly SignInCommandHandler _handler;
 
         public SignInCommandHandlerTests()
@@ -29,7 +28,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
             _userRepositoryMock = new Mock<IUserRepository>();
             _jwtHelperMock = new Mock<IJwtHelper>();
             _encrypterMock = new Mock<IEncrypter>();
-            _memoryCacheMock = new Mock<IMemoryCache>();
+            _memoryCacheMock = new Mock<ICache>();
             _handler = new SignInCommandHandler(_userRepositoryMock.Object, _jwtHelperMock.Object, _encrypterMock.Object, _memoryCacheMock.Object);
         }
 

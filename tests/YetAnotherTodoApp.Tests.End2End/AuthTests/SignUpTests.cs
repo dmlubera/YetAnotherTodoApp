@@ -1,12 +1,16 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Exceptions;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Exceptions;
+using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.AuthTests
 {
@@ -28,6 +32,29 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
             var response = await SignUpAsync(request);
 
             response.StatusCode.Should().Be(HttpStatusCode.Created);
+        }
+
+        [Fact]
+        public async Task SignUpAsync_WithValidData_AddsUserToDatabase()
+        {
+            var request = new SignUpRequest
+            {
+                Username = "YetAnotherUniqueUsername",
+                Email = "yetanotheruniqueusername@yetanothertodoapp.com",
+                Password = "secretPassword"
+            };
+
+            var response = await SignUpAsync(request);
+            
+            response.StatusCode.Should().Be(HttpStatusCode.Created);
+            var locationHeader = response.Headers.Location;
+            var userId = locationHeader.ToString().Split('/').Last();
+
+            var user = await DbContext.GetAsync<User>(Guid.Parse(userId));
+
+            user.Should().NotBeNull();
+            user.Username.Value.Should().Be(request.Username.ToLower());
+            user.Email.Value.Should().Be(request.Email.ToLower());
         }
 
         [Theory]

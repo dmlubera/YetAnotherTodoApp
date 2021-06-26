@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Models;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Extensions;
@@ -13,9 +13,9 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
         private readonly IUserRepository _userRepository;
         private readonly IJwtHelper _jwtHelper;
         private readonly IEncrypter _encrypter;
-        private readonly IMemoryCache _cache;
+        private readonly ICache _cache;
 
-        public SignInCommandHandler(IUserRepository userRepository, IJwtHelper jwtHelper, IEncrypter encrypter, IMemoryCache cache)
+        public SignInCommandHandler(IUserRepository userRepository, IJwtHelper jwtHelper, IEncrypter encrypter, ICache cache)
         {
             _userRepository = userRepository;
             _jwtHelper = jwtHelper;
