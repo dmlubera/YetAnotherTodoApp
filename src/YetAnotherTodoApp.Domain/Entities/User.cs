@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
@@ -26,7 +28,12 @@ namespace YetAnotherTodoApp.Domain.Entities
         }
 
         public void AddTodoList(TodoList todoList)
-            => _todoLists.Add(todoList);
+        {
+            if (_todoLists.Any(x => x.Title.Value == todoList.Title.Value))
+                throw new TodoListWithGivenTitleAlreadyExistsException(todoList.Title.Value);
+
+            _todoLists.Add(todoList);
+        }
 
         public void RemoveTodoList(TodoList todoList)
             => _todoLists.Remove(todoList);
