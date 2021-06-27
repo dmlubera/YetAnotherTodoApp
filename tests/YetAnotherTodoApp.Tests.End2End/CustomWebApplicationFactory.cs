@@ -46,9 +46,11 @@ namespace YetAnotherTodoApp.Tests.End2End
             var todoList = new TodoList(TestTodoList.Title);
             var todoListWithAssignedTodo = new TodoList(TodoListWithAssignedTodo.Title);
             todoListWithAssignedTodo.AddTodo(new Todo("AssignedTestTodo", DateTime.UtcNow.Date));
-            
+            var todoListForUpdateTests = new TodoList(TodoListForUpdateTests.Title);
+
             user.AddTodoList(todoList);
             user.AddTodoList(todoListWithAssignedTodo);
+            user.AddTodoList(todoListForUpdateTests);
             User = user;
             dbContext.Users.Add(user);
             dbContext.SaveChanges();

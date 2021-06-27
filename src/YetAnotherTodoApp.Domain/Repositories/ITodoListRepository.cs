@@ -9,5 +9,7 @@ namespace YetAnotherTodoApp.Domain.Repositories
     {
         Task<IEnumerable<TodoList>> GetAllForUserAsync(Guid userId);
         Task<TodoList> GetForUserAsync(Guid userId, Guid todoListId);
+        Task<bool> CheckIfUserHasGotTodoListWithGivenTitle(Guid userId, string title);
+        Task SaveChangesAsync();
     }
 }

@@ -20,5 +20,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
 
         public async Task<TodoList> GetForUserAsync(Guid userId, Guid todoListId)
             => await _dbContext.TodoLists.FirstOrDefaultAsync(x => x.User.Id == userId && x.Id == todoListId);
+
+        public async Task<bool> CheckIfUserHasGotTodoListWithGivenTitle(Guid userId, string title)
+            => await _dbContext.TodoLists.AnyAsync(x => x.User.Id == userId && x.Title.Value == title);
+
+        public async Task SaveChangesAsync()
+            => await _dbContext.SaveChangesAsync();
     }
 }
