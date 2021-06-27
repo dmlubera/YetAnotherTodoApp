@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers
@@ -18,6 +19,9 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
         {
             var user = await _userRepository.GetByIdAsync(command.UserId);
             var todoList = user.TodoLists.FirstOrDefault(x => x.Id == command.TodoListId);
+            if (todoList is null)
+                throw new TodoListWithGivenIdDoesNotExistException(command.TodoListId);
+
             user.RemoveTodoList(todoList);
 
             await _userRepository.SaveChangesAsync();

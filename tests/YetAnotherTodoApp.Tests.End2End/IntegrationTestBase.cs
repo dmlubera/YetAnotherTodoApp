@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api;
 using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Infrastructure.DAL;
 using YetAnotherTodoApp.Tests.End2End.Dummies;
 
@@ -17,6 +18,7 @@ namespace YetAnotherTodoApp.Tests.End2End
     {
         protected readonly YetAnotherTodoAppDbContext DbContext;
         protected readonly HttpClient TestClient;
+        protected readonly User User;
 
         public IntegrationTestBase()
         {
@@ -24,6 +26,7 @@ namespace YetAnotherTodoApp.Tests.End2End
             var providerFactory= factory.Services.GetService<IServiceScopeFactory>();
             DbContext = providerFactory.CreateScope().ServiceProvider.GetService<YetAnotherTodoAppDbContext>();
             TestClient = factory.CreateClient();
+            User = factory.User;
         }
 
         protected static StringContent GetContent(object value)

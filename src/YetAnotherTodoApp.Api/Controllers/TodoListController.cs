@@ -75,7 +75,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             };
             await _commandDispatcher.DispatchAsync(command);
 
-            return Ok();
+            return NoContent();
         }
     }
 }
