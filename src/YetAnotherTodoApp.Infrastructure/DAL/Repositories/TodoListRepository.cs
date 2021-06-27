@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,9 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
             => _dbContext = dbContext;
 
         public async Task<IEnumerable<TodoList>> GetAllForUserAsync(Guid userId)
-           => await Task.FromResult(_dbContext.TodoLists.Where(x => x.User.Id == userId).ToList());
+           => await _dbContext.TodoLists.Where(x => x.User.Id == userId).ToListAsync();
+
+        public async Task<TodoList> GetForUserAsync(Guid userId, Guid todoListId)
+            => await _dbContext.TodoLists.FirstOrDefaultAsync(x => x.User.Id == userId && x.Id == todoListId);
     }
 }

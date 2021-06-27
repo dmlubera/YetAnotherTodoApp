@@ -13,6 +13,7 @@ namespace YetAnotherTodoApp.Application.DI
         {
             services.AddScoped<IQueryHandler<GetTodosQuery, IEnumerable<TodoDto>>, GetTodosQueryHandler>();
             services.AddScoped<IQueryHandler<GetTodoListsQuery, IEnumerable<TodoListDto>>, GetTodoListsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetTodoListQuery, TodoListDto>, GetTodoListQueryHandler>();
             services.AddScoped<IQueryHandler<GetUserInfoQuery, UserInfoDto>, GetUserInforQueryHandler>();
         }
     }

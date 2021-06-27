@@ -19,7 +19,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher _queryDispatcher;
         private readonly ICache _cache;
-        
+
         public TodoListController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, ICache cache)
         {
             _commandDispatcher = commandDispatcher;
@@ -33,6 +33,14 @@ namespace YetAnotherTodoApp.Api.Controllers
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
             return Ok(await _queryDispatcher.HandleAsync<GetTodoListsQuery, IEnumerable<TodoListDto>>(new GetTodoListsQuery(userId)));
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTodoListAsync(Guid id)
+        {
+            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
+            return Ok(await _queryDispatcher.HandleAsync<GetTodoListQuery, TodoListDto>(new GetTodoListQuery(userId, id)));
         }
 
         [Authorize]
