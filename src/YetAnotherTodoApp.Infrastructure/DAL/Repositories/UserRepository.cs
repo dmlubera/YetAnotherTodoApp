@@ -34,6 +34,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
             => await _dbContext
                         .Users
                             .Include(x => x.TodoLists)
+                                .ThenInclude(x => x.Todos)
                         .FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task SaveChangesAsync()

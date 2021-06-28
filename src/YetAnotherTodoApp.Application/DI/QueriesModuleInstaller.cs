@@ -15,6 +15,7 @@ namespace YetAnotherTodoApp.Application.DI
             services.AddScoped<IQueryHandler<GetTodoListsQuery, IEnumerable<TodoListDto>>, GetTodoListsQueryHandler>();
             services.AddScoped<IQueryHandler<GetTodoListQuery, TodoListDto>, GetTodoListQueryHandler>();
             services.AddScoped<IQueryHandler<GetUserInfoQuery, UserInfoDto>, GetUserInforQueryHandler>();
+            services.AddScoped<IQueryHandler<GetTodoQuery, TodoDto>, GetTodoQueryHandler>();
         }
     }
 }

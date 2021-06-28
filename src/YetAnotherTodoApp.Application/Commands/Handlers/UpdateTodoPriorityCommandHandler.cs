@@ -18,9 +18,12 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
         {
             var user = await _userRepository.GetByIdAsync(command.UserId);
             var todo = user.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Id == command.TodoId);
-
-            todo.UpdatePriority(command.Priority);
-            await _userRepository.SaveChangesAsync();
+            
+            if(todo.Priority != command.Priority)
+            {
+                todo.UpdatePriority(command.Priority);
+                await _userRepository.SaveChangesAsync();
+            }
         }
     }
 }

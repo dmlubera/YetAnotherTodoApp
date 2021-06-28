@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using YetAnotherTodoApp.Domain.Enums;
+using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
@@ -22,7 +23,7 @@ namespace YetAnotherTodoApp.Domain.Entities
         {
             Id = Guid.NewGuid();
             Title = Title.Create(title);
-            FinishDate = finishDate;
+            SetFinishDate(finishDate);
             Priority = TodoPriority.Normal;
             CreatedAt = DateTime.UtcNow;
         }
@@ -45,6 +46,14 @@ namespace YetAnotherTodoApp.Domain.Entities
         {
             Priority = updatedPriority;
             LastModifiedAt = DateTime.UtcNow;
+        }
+
+        private void SetFinishDate(DateTime date)
+        {
+            if (DateTime.UtcNow.Date > date.Date)
+                throw new DateCannotBeEarlierThanTodayDateException(date.Date);
+
+            FinishDate = date.Date;
         }
     }
 }

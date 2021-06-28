@@ -1,17 +1,33 @@
-﻿using System.Threading.Tasks;
+﻿using FluentAssertions;
+using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Xunit;
+using YetAnotherTodoApp.Application.Exceptions;
+using YetAnotherTodoApp.Domain.Entities;
+using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoTests
 {
-    public class DeleteTodoTests
+    public class DeleteTodoTests : IntegrationTestBase
     {
-        public async Task WithExistingId_ReturnsHttpStatusCodeNoContent()
+        private async Task<HttpResponseMessage> ActAsync(Guid id)
+            => await TestClient.DeleteAsync($"api/todo/{id}");
+
+        [Fact]
+        public async Task WithExistingId_ReturnsHttpStatusCodeNoContentAndRemoveTodoFromDatabase()
         {
+            var todoToDelete = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
 
-        }
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(todoToDelete.Id);
 
-        public async Task WithExistingId_DeleteTodoFromDatabase()
-        {
-
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+            var todo = await DbContext.GetAsync<Todo>(todoToDelete.Id);
+            todo.Should().BeNull();
         }
 
         public async Task WithExistingIdOfTodoWithAssignedTasks_DeleteTodoAndAssignedTasksFromDatabase()
@@ -19,9 +35,19 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
 
         }
 
+        [Fact]
         public async Task WithNonExistingId_ReturnHttpStatusCodeBadRequest()
         {
+            var id = Guid.NewGuid();
+            var expectedException = new TodoWithGivenIdDoesNotExistException(id);
 
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(id);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().Be(expectedException.Code);
+            errorResponse.Message.Should().Be(expectedException.Message);
         }
     }
 }

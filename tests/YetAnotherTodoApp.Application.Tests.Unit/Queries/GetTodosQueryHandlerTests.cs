@@ -34,7 +34,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Queries
             var query = new GetTodosQuery(Guid.NewGuid());
             var user = new User("validUsername", "validEmail@test.com", "secretPassowrd", "salt");
             var todoList = CreateTodoListFixture();
-            var todo = CreateTodoFixture();
+            var todo = new Todo("TestTitle", DateTime.UtcNow.Date);
             todoList.AddTodo(todo);
             user.AddTodoList(todoList);
             _userRepositoryMock.Setup(x => x.GetByIdAsync(query.UserId))
@@ -46,9 +46,6 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Queries
 
             _mapperMock.Verify(x => x.Map<IEnumerable<TodoDto>>(todoList.Todos), Times.Once);
         }
-
-        private Todo CreateTodoFixture()
-            => _fixture.Build<Todo>().Create();
 
         private TodoList CreateTodoListFixture()
             => _fixture.Build<TodoList>().Create();
