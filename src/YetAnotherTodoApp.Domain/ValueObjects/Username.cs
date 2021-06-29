@@ -8,6 +8,8 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
     {
         public string Value { get; private set; }
 
+        protected Username() { }
+
         protected Username(string value)
             => Value = value;
 

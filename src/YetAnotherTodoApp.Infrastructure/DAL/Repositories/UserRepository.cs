@@ -31,7 +31,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
             => await _dbContext.Users.AnyAsync(x => x.Username.Value == username);
 
         public async Task<User> GetByIdAsync(Guid id)
-            => await _dbContext.Users.FindAsync(id);
+            => await _dbContext
+                        .Users
+                            .Include(x => x.TodoLists)
+                                .ThenInclude(x => x.Todos)
+                        .FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task SaveChangesAsync()
             => await _dbContext.SaveChangesAsync();

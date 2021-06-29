@@ -10,7 +10,6 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.DI
             services.AddDbContext<YetAnotherTodoAppDbContext>(opts =>
             {
                 opts.UseSqlServer(connectionString);
-                opts.UseLazyLoadingProxies();
             });
         }
     }

@@ -1,26 +1,28 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers
 {
     public class UpdateTodoListCommandHandler : ICommandHandler<UpdateTodoListCommand>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ITodoListRepository _repository;
 
-        public UpdateTodoListCommandHandler(IUserRepository userRepository)
+        public UpdateTodoListCommandHandler(ITodoListRepository repository)
         {
-            _userRepository = userRepository;
+            _repository = repository;
         }
 
         public async Task HandleAsync(UpdateTodoListCommand command)
         {
-            var user = await _userRepository.GetByIdAsync(command.UserId);
-            var todoList = user.TodoLists.FirstOrDefault(x => x.Id == command.TodoListId);
+            if (await _repository.CheckIfUserHasGotTodoListWithGivenTitle(command.UserId, command.Title))
+                throw new TodoListWithGivenTitleAlreadyExistsException(command.Title);
+
+            var todoList = await _repository.GetForUserAsync(command.UserId, command.TodoListId);
             todoList.UpdateTitle(command.Title);
 
-            await _userRepository.SaveChangesAsync();
+            _repository.SaveChangesAsync();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.DI
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITodoListRepository, TodoListRepository>();
+            services.AddScoped<ITodoRepository, TodoRepository>();
         }
     }
 }

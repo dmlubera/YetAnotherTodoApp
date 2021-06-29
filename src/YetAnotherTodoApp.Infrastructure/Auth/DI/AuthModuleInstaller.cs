@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using YetAnotherTodoApp.Application.Commands;
-using YetAnotherTodoApp.Infrastructure.Auth.Commands.Handlers;
-using YetAnotherTodoApp.Infrastructure.Auth.Commands.Models;
+using YetAnotherTodoApp.Application.Commands.Handlers;
+using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Infrastructure.Auth.Helpers;
 
 namespace YetAnotherTodoApp.Infrastructure.Auth.DI
@@ -11,7 +12,6 @@ namespace YetAnotherTodoApp.Infrastructure.Auth.DI
         public static void RegisterAuthModule(this IServiceCollection services)
         {
             services.AddScoped<IJwtHelper, JwtHelper>();
-            services.AddScoped<ICommandHandler<LoginUserCommand>, LoginUserCommandHandler>();
         }
     }
 }
