@@ -55,5 +55,8 @@ namespace YetAnotherTodoApp.Domain.Entities
 
             FinishDate = date.Date;
         }
+
+        public void AddSteps(IList<Step> steps)
+            => _steps.AddRange(steps);
     }
 }

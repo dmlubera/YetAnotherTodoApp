@@ -44,6 +44,9 @@ namespace YetAnotherTodoApp.Tests.End2End
             var password = encrypter.GetHash(TestUser.Password, salt);
             var user = new User(TestUser.Username, TestUser.Email, password, salt);
             user.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").AddTodo(new Todo("TodoAssignedToInbox", DateTime.UtcNow.Date));
+            var todoWithAssignedStep = new Todo("TodoWithAssignedStep", DateTime.UtcNow.Date);
+            todoWithAssignedStep.AddSteps(new[] { new Step("StepOne") });
+            user.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").AddTodo(todoWithAssignedStep);
             var todoList = new TodoList(TestTodoList.Title);
             var todoListWithAssignedTodo = new TodoList(TodoListWithAssignedTodo.Title);
             todoListWithAssignedTodo.AddTodo(new Todo("AssignedTestTodo", DateTime.UtcNow.Date));

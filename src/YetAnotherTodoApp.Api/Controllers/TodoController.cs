@@ -51,7 +51,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> AddTodoAsync([FromBody] AddTodoRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new AddTodoCommand(userId, request.Title, request.Project, request.FinishDate);
+            var command = new AddTodoCommand(userId, request.Title, request.Project, request.FinishDate, request.Steps);
             await _commandDispatcher.DispatchAsync(command);
 
             var resourceId = _cache.Get<Guid>(command.CacheId.ToString());

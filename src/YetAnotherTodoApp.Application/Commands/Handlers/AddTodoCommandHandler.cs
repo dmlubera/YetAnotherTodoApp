@@ -23,6 +23,9 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers
         {
             var user = await _userRepository.GetByIdAsync(command.UserId);
             var todo = new Todo(command.Title, command.FinishDate);
+            if (command.Steps.Count != 0)
+                todo.AddSteps(command.Steps.Select(x => new Step(x.Title, x.Description)).ToList());
+
             if (string.IsNullOrWhiteSpace(command.Project))
                 user.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox")
                     ?.AddTodo(todo);

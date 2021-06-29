@@ -6,7 +6,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Domain.Exceptions;
+using YetAnotherTodoApp.Domain.ValueObjects;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoTests
@@ -32,7 +34,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var todoId = response.Headers.Location.GetResourceId();
 
-            var todo = await DbContext.GetTodoWithReferencedTodoListAsync(todoId);
+            var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
             todo.TodoList.Title.Value.Should().Be(request.Project);
             todo.Title.Value.Should().Be(request.Title);
             todo.FinishDate.Should().Be(request.FinishDate);
@@ -53,20 +55,35 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var todoId = response.Headers.Location.GetResourceId();
 
-            var todo = await DbContext.GetTodoWithReferencedTodoListAsync(todoId);
+            var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
             todo.TodoList.Title.Value.Should().Be("Inbox");
             todo.Title.Value.Should().Be(request.Title);
             todo.FinishDate.Should().Be(request.FinishDate);
         }
 
-        public async Task WithTasks_ReturnsHttpStatusCodeCreatedWithLocationHeader()
+        [Fact]
+        public async Task WithTasks_ReturnsHttpStatusCodeCreatedWithLocationHeaderAndSaveResourcesToDatabase()
         {
+            var request = new AddTodoRequest
+            {
+                Title = "TodoWithActions",
+                FinishDate = DateTime.UtcNow.Date,
+                Steps = new []
+                {
+                    new StepDto { Title = "ActionOne" },
+                    new StepDto { Title = "ActionTwo" }
+                }
+            };
 
-        }
-        
-        public async Task WithTasks_AddTodoAndAssignedTasksToDatabase()
-        {
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(request);
 
+            response.StatusCode.Should().Be(HttpStatusCode.Created);
+            var todoId = response.Headers.Location.GetResourceId();
+            var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
+            todo.Title.Value.Should().Be(request.Title);
+            todo.FinishDate.Should().Be(request.FinishDate);
+            todo.Steps.Count.Should().Be(request.Steps.Count);
         }
 
         [Fact]

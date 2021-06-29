@@ -30,9 +30,19 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             todo.Should().BeNull();
         }
 
+        [Fact]
         public async Task WithExistingIdOfTodoWithAssignedTasks_DeleteTodoAndAssignedTasksFromDatabase()
         {
+            var todoToDelete = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Title.Value == "TodoWithAssignedStep");
 
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(todoToDelete.Id);
+
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+            var todo = await DbContext.GetAsync<Todo>(todoToDelete.Id);
+            todo.Should().BeNull();
+            var step = await DbContext.GetAsync<Step>(todoToDelete.Steps.FirstOrDefault().Id);
+            step.Should().BeNull();
         }
 
         [Fact]

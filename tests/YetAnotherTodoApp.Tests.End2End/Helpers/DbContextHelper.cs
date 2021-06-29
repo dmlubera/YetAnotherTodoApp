@@ -17,10 +17,11 @@ namespace YetAnotherTodoApp.Tests.End2End.Helpers
             where TEntity : BaseEntity
             => await dbContext.Set<TEntity>().FindAsync(id);
 
-        public async static Task<Todo> GetTodoWithReferencedTodoListAsync(this YetAnotherTodoAppDbContext dbContext, Guid id)
+        public async static Task<Todo> GetTodoWithReferencesAsync(this YetAnotherTodoAppDbContext dbContext, Guid id)
             => await dbContext
                         .Set<Todo>()
                             .Include(x => x.TodoList)
+                            .Include(x => x.Steps)
                         .FirstOrDefaultAsync(x => x.Id == id);
     }
 }
