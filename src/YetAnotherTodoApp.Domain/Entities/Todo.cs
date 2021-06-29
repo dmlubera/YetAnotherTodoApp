@@ -32,7 +32,7 @@ namespace YetAnotherTodoApp.Domain.Entities
         {
             Title = Title.Create(title);
             Description = descrtiption;
-            FinishDate = finishDate;
+            SetFinishDate(finishDate);
             LastModifiedAt = DateTime.UtcNow;
         }
 
