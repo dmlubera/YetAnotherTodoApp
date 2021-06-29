@@ -27,7 +27,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todo = JsonConvert.DeserializeObject<TodoDto>(await response.Content.ReadAsStringAsync());
 
             todo.Title.Should().Be(expectedTodo.Title.Value);
-            todo.FinishDate.Should().Be(expectedTodo.FinishDate.Date);
+            todo.FinishDate.Should().Be(expectedTodo.FinishDate.Value);
         }
 
         [Fact]

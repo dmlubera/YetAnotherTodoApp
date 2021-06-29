@@ -36,7 +36,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todo = await DbContext.GetAsync<Todo>(todoToUpdate.Id);
             todo.Description.Should().Be(request.Description);
             todo.Title.Value.Should().Be(request.Title);
-            todo.FinishDate.Should().Be(request.FinishDate);
+            todo.FinishDate.Value.Should().Be(request.FinishDate);
         }
 
         public async Task WithInvalidData_ReturnsHttpStatusCodeBadRequestWithCustomException()

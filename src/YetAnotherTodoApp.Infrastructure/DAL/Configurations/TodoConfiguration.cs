@@ -18,6 +18,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Configurations
 
             // Value Objects
             builder.OwnsOne(x => x.Title);
+            builder.OwnsOne(x => x.FinishDate);
         }
     }
 }

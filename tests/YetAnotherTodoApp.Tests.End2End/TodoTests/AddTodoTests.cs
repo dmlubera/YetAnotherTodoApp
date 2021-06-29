@@ -8,7 +8,6 @@ using Xunit;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Domain.Exceptions;
-using YetAnotherTodoApp.Domain.ValueObjects;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoTests
@@ -37,7 +36,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
             todo.TodoList.Title.Value.Should().Be(request.Project);
             todo.Title.Value.Should().Be(request.Title);
-            todo.FinishDate.Should().Be(request.FinishDate);
+            todo.FinishDate.Value.Should().Be(request.FinishDate);
         }
 
         [Fact]
@@ -58,7 +57,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
             todo.TodoList.Title.Value.Should().Be("Inbox");
             todo.Title.Value.Should().Be(request.Title);
-            todo.FinishDate.Should().Be(request.FinishDate);
+            todo.FinishDate.Value.Should().Be(request.FinishDate);
         }
 
         [Fact]
@@ -82,7 +81,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todoId = response.Headers.Location.GetResourceId();
             var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
             todo.Title.Value.Should().Be(request.Title);
-            todo.FinishDate.Should().Be(request.FinishDate);
+            todo.FinishDate.Value.Should().Be(request.FinishDate);
             todo.Steps.Count.Should().Be(request.Steps.Count);
         }
 

@@ -9,11 +9,11 @@ namespace YetAnotherTodoApp.Domain.Entities
     public class User : BaseEntity
     {
         private readonly List<TodoList> _todoLists = new List<TodoList>();
-        public virtual Username Username { get; private set; }
-        public virtual Name Name { get; private set; }
-        public virtual Email Email { get; private set; }
-        public virtual Password Password { get; private set; }
-        public virtual IReadOnlyCollection<TodoList> TodoLists => _todoLists.AsReadOnly();
+        public Username Username { get; private set; }
+        public Name Name { get; private set; }
+        public Email Email { get; private set; }
+        public Password Password { get; private set; }
+        public IReadOnlyCollection<TodoList> TodoLists => _todoLists.AsReadOnly();
 
         protected User() { }
 
@@ -24,7 +24,7 @@ namespace YetAnotherTodoApp.Domain.Entities
             Email = Email.Create(email);
             Password = Password.Create(password, salt);
             AddTodoList(new TodoList("Inbox"));
-            CreatedAt = DateTime.UtcNow;
+            UpdateAuditInfo();
         }
 
         public void AddTodoList(TodoList todoList)
