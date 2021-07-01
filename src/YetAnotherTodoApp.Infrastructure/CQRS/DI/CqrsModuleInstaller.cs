@@ -4,9 +4,9 @@ using YetAnotherTodoApp.Application.Queries;
 
 namespace YetAnotherTodoApp.Infrastructure.CQRS.DI
 {
-    public static class CqrsModuleInstaller
+    internal static class CqrsModuleInstaller
     {
-        public static void RegisterCrqsModule(this IServiceCollection services)
+        internal static void RegisterCrqsModule(this IServiceCollection services)
         {
             services.AddScoped<ICommandDispatcher, CommandDispatcher>();
             services.AddScoped<IQueryDispatcher, QueryDispatcher>();

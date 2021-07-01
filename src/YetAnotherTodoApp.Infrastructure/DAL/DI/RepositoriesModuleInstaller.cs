@@ -4,9 +4,9 @@ using YetAnotherTodoApp.Infrastructure.DAL.Repositories;
 
 namespace YetAnotherTodoApp.Infrastructure.DAL.DI
 {
-    public static class RepositoriesModuleInstaller
+    internal static class RepositoriesModuleInstaller
     {
-        public static void RegisterRepositoriesModule(this IServiceCollection services)
+        internal static void RegisterRepositoriesModule(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITodoListRepository, TodoListRepository>();

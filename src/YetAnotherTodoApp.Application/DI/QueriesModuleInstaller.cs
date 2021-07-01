@@ -11,9 +11,9 @@ using YetAnotherTodoApp.Application.Queries.Models.Users;
 
 namespace YetAnotherTodoApp.Application.DI
 {
-    public static class QueriesModuleInstaller
+    internal static class QueriesModuleInstaller
     {
-        public static void RegisterQueriesModule(this IServiceCollection services)
+        internal static void RegisterQueriesModule(this IServiceCollection services)
         {
             services.AddScoped<IQueryHandler<GetTodosQuery, IEnumerable<TodoDto>>, GetTodosQueryHandler>();
             services.AddScoped<IQueryHandler<GetTodoListsQuery, IEnumerable<TodoListDto>>, GetTodoListsQueryHandler>();

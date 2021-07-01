@@ -3,9 +3,9 @@ using YetAnotherTodoApp.Application.Cache;
 
 namespace YetAnotherTodoApp.Infrastructure.Cache.DI
 {
-    public static class CacheModuleInstaller
+    internal static class CacheModuleInstaller
     {
-        public static void RegisterCacheModule(this IServiceCollection services)
+        internal static void RegisterCacheModule(this IServiceCollection services)
             => services.AddScoped<ICache, MemoryCache>();
     }
 }

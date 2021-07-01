@@ -6,7 +6,7 @@ namespace YetAnotherTodoApp.Application.DI
 {
     public static class AutoMapperModuleInstaller
     {
-        public static void RegisterAutoMapperModule(this IServiceCollection services)
+        internal static void RegisterAutoMapperModule(this IServiceCollection services)
         {
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {

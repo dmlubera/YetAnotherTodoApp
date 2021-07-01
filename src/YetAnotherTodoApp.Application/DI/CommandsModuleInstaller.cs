@@ -11,9 +11,9 @@ using YetAnotherTodoApp.Application.Commands.Models.Users;
 
 namespace YetAnotherTodoApp.Application.DI
 {
-    public static class CommandsModuleInstaller
+    internal static class CommandsModuleInstaller
     {
-        public static void RegisterCommandsModule(this IServiceCollection services)
+        internal static void RegisterCommandsModule(this IServiceCollection services)
         {
             services.AddScoped<ICommandHandler<SignUpCommand>, SignUpCommandHandler>();
             services.AddScoped<ICommandHandler<AddTodoCommand>, AddTodoCommandHandler>();
