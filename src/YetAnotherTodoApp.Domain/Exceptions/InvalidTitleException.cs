@@ -5,7 +5,7 @@
         public override string Code => "invalid_title";
 
         public InvalidTitleException(string title)
-            : base($"Title: {title} is invalid.")
+            : base($"Given title: {title} has invalid value.")
         {
         }
     }

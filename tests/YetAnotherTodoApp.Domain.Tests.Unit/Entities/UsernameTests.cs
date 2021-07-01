@@ -32,10 +32,12 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         [InlineData("test$test")]
         public void Create_WithInvalidUsername_ShouldThrowAnException(string username)
         {
-            var exception = Record.Exception(() => Username.Create(username));
+            var expectedException = new InvalidUsernameException(username);
 
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<InvalidUsernameException>();
+            var exception = Assert.Throws<InvalidUsernameException>(() => Username.Create(username));
+
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
     }
 }

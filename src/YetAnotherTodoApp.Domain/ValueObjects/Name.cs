@@ -12,30 +12,25 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         protected Name() { }
 
         protected Name(string firstName, string lastName)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-        }
+            => (FirstName, LastName) = (firstName, lastName);
 
         public bool Equals(Name other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return FirstName == other.FirstName && LastName == other.LastName;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return Equals((Name) obj);
         }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(FirstName, LastName);
-        }
+        public override int GetHashCode() 
+            => HashCode.Combine(FirstName, LastName);
 
         public static Name Create(string firstName, string lastName)
         {

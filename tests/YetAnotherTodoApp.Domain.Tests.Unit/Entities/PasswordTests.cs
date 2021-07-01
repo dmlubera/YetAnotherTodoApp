@@ -23,10 +23,12 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         [InlineData("   ")]
         public void Create_WithInvalidHash_ShouldThrowAnException(string hash)
         {
-            var exception = Record.Exception(() => Password.Create(hash, "test"));
+            var expectedException = new InvalidPasswordHashException();
 
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<InvalidPasswordHashException>();
+            var exception = Assert.Throws<InvalidPasswordHashException>(() => Password.Create(hash, "salt"));
+
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
 
         [Theory]
@@ -35,10 +37,12 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         [InlineData("   ")]
         public void Create_WithInvalidSalt_ShouldThrowAnException(string salt)
         {
-            var exception = Record.Exception(() => Password.Create("test", salt));
+            var expectedException = new InvalidPasswordSaltException();
 
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<InvalidPasswordSaltException>();
+            var exception = Assert.Throws<InvalidPasswordSaltException>(() => Password.Create("hash", salt));
+
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
     }
 }

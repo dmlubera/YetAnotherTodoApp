@@ -20,12 +20,14 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void Create_WithInvalidHash_ShouldThrowAnException(string title)
+        public void Create_WithInvalidValue_ShouldThrowAnException(string title)
         {
-            var exception = Record.Exception(() => Title.Create(title));
+            var expectedException = new InvalidTitleException(title);
 
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<InvalidTitleException>();
+            var exception = Assert.Throws<InvalidTitleException>(() => Title.Create(title));
+
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
     }
 }

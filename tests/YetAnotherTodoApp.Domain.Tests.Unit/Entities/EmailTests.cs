@@ -14,7 +14,7 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         [InlineData("test.test@test.test.com")]
         [InlineData("test.test@test-test.com")]
         [InlineData("test_test@test.com")]
-        public void Create_WithValidValue_ShouldReturnEmail(string email)
+        public void Create_WithValidValue_ShouldReturnAnEmail(string email)
         {
             var result = Email.Create(email);
 
@@ -41,12 +41,14 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         [InlineData("test..test@test.com")]
         [InlineData("test$test@test.com")]
         [InlineData("test$test@$test.com")]
-        public void Create_WithInvalidValue_ShouldThrowException(string email)
+        public void Create_WithInvalidValue_ShouldThrowAnException(string email)
         {
-            var exception = Record.Exception(() => Email.Create(email));
+            var expectedException = new InvalidEmailFormatException(email);
 
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<InvalidEmailFormatException>();
+            var exception = Assert.Throws<InvalidEmailFormatException>(() => Email.Create(email));
+
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
     }
 }

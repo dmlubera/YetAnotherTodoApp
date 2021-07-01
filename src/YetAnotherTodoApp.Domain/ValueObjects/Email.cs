@@ -9,28 +9,27 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public string Value { get; private set; }
 
         protected Email() { }
+
         protected Email(string value)
             => Value = value;
 
         public bool Equals(Email other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return Value == other.Value;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
             return Equals((Email) obj);
         }
 
         public override int GetHashCode()
-        {
-            return (Value != null ? Value.GetHashCode() : 0);
-        }
+            => Value != null ? Value.GetHashCode() : 0;
 
         public static Email Create(string email)
         {

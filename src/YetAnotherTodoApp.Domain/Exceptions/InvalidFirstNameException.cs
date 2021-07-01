@@ -5,7 +5,7 @@
         public override string Code => "invalid_firstname";
 
         public InvalidFirstNameException(string firstName)
-            : base($"Firstname: {firstName} is invalid.")
+            : base($"Given first name: {firstName} has invalid value.")
         {
         }
     }

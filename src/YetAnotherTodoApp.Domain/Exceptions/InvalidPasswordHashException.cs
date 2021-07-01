@@ -4,8 +4,8 @@
     {
         public override string Code => "invalid_password_hash";
 
-        public InvalidPasswordHashException(string hash)
-            : base($"Password hash: {hash} is invalid.")
+        public InvalidPasswordHashException()
+            : base($"Given password's hash has invalid value.")
         {
         }
     }

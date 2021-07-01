@@ -31,10 +31,12 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         [InlineData("1test")]
         public void Create_WithInvalidFirstName_ShouldThrowAnException(string firstName)
         {
-            var exception = Record.Exception(() => Name.Create(firstName, "test"));
+            var expectedException = new InvalidFirstNameException(firstName);
 
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<InvalidFirstNameException>();
+            var exception = Assert.Throws<InvalidFirstNameException>(() => Name.Create(firstName, "lastName"));
+
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
 
         [Theory]
@@ -46,10 +48,12 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         [InlineData("1test")]
         public void Create_WithInvalidLastName_ShouldThrowAnException(string lastName)
         {
-            var exception = Record.Exception(() => Name.Create("test", lastName));
+            var expectedException = new InvalidLastNameException(lastName);
 
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<InvalidLastNameException>();
+            var exception = Assert.Throws<InvalidLastNameException>(() => Name.Create("firstName", lastName));
+
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
     }
 }

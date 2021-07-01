@@ -17,7 +17,7 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
 
         public bool Equals(FinishDate other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return Value == other.Value && Value == other.Value;
         }
@@ -32,6 +32,5 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
 
             return new FinishDate(date.Date);
         }
-
     }
 }
