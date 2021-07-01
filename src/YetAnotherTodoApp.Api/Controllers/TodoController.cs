@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;

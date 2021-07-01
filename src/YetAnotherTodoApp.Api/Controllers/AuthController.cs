@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Auths;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models.Auths;

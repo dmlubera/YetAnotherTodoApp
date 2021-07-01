@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YetAnotherTodoApp.Api.Models
+namespace YetAnotherTodoApp.Api.Models.Todos
 {
     public class UpdateTodoRequest
     {

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Auths;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Infrastructure.DAL;
 using YetAnotherTodoApp.Tests.End2End.Dummies;

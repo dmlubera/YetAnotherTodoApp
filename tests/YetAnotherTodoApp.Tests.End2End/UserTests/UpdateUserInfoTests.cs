@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Tests.End2End.Dummies;
 

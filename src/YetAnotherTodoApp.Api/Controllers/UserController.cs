@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models.Users;
 using YetAnotherTodoApp.Application.DTOs;

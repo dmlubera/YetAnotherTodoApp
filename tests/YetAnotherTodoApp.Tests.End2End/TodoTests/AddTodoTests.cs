@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Tests.End2End.Helpers;

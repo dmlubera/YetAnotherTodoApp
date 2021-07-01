@@ -1,4 +1,4 @@
-﻿namespace YetAnotherTodoApp.Api.Models
+﻿namespace YetAnotherTodoApp.Api.Models.TodoLists
 {
     public class UpdateTodoListRequest
     {

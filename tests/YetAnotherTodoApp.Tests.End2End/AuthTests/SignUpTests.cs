@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Auths;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Exceptions;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using YetAnotherTodoApp.Application.DTOs;
 
-namespace YetAnotherTodoApp.Api.Models
+namespace YetAnotherTodoApp.Api.Models.Todos
 {
     public class AddTodoRequest
     {

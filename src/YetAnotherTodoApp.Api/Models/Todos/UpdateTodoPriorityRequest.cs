@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 using YetAnotherTodoApp.Domain.Enums;
 
-namespace YetAnotherTodoApp.Api.Models
+namespace YetAnotherTodoApp.Api.Models.Todos
 {
-    public class UpdateTodoStatusRequest
+    public class UpdateTodoPriorityRequest
     {
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public TodoStatus Status { get; set; }
+        public TodoPriority Priority { get; set; }
     }
 }
