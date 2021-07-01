@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Commands;
-using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Commands.Models.Users;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Queries;
-using YetAnotherTodoApp.Application.Queries.Models;
+using YetAnotherTodoApp.Application.Queries.Models.Users;
 
 namespace YetAnotherTodoApp.Api.Controllers
 {
@@ -38,12 +38,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdateUserInfoAsync([FromBody] UpdateUserInfoRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateUserInfoCommand
-            {
-                UserId = userId,
-                FirstName = request.FirstName,
-                LastName = request.LastName
-            };
+            var command = new UpdateUserInfoCommand(userId, request.FirstName, request.LastName);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
@@ -54,11 +49,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdateEmailAsync([FromBody] UpdateEmailRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateEmailCommand
-            {
-                UserId = userId,
-                Email = request.Email
-            };
+            var command = new UpdateEmailCommand(userId, request.Email);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
@@ -69,11 +60,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdatePasswordEmail([FromBody] UpdatePasswordRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdatePasswordCommand
-            {
-                UserId = userId,
-                Password = request.Password
-            };
+            var command = new UpdatePasswordCommand(userId, request.Password);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();

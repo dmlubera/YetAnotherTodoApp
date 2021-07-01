@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
-using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Commands.Models.Auths;
 using YetAnotherTodoApp.Application.Extensions;
 
 namespace YetAnotherTodoApp.Api.Controllers
@@ -26,7 +25,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         {
             var command = new SignUpCommand(request.Username.ToLower(), request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
-            var userId = _cache.GetId(command.TokenId);
+            var userId = _cache.GetId(command.CacheTokenId);
 
             return Created($"/api/users/{userId}", null);
         }
@@ -34,10 +33,10 @@ namespace YetAnotherTodoApp.Api.Controllers
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
         {
-            var command = new SignInCommand(Guid.NewGuid(), request.Email.ToLower(), request.Password);
+            var command = new SignInCommand(request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
 
-            return Ok(_cache.GetJwt(command.TokenId));
+            return Ok(_cache.GetJwt(command.CacheTokenId));
         }
     }
 }

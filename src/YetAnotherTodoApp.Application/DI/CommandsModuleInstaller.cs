@@ -1,7 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using YetAnotherTodoApp.Application.Commands;
-using YetAnotherTodoApp.Application.Commands.Handlers;
-using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Commands.Handlers.Auths;
+using YetAnotherTodoApp.Application.Commands.Handlers.TodoLists;
+using YetAnotherTodoApp.Application.Commands.Handlers.Todos;
+using YetAnotherTodoApp.Application.Commands.Handlers.Users;
+using YetAnotherTodoApp.Application.Commands.Models.Auths;
+using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
+using YetAnotherTodoApp.Application.Commands.Models.Todos;
+using YetAnotherTodoApp.Application.Commands.Models.Users;
 
 namespace YetAnotherTodoApp.Application.DI
 {

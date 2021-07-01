@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
-using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Commands.Models.Todos;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Queries;
-using YetAnotherTodoApp.Application.Queries.Models;
+using YetAnotherTodoApp.Application.Queries.Models.Todos;
 
 namespace YetAnotherTodoApp.Api.Controllers
 {
@@ -54,7 +54,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             var command = new AddTodoCommand(userId, request.Title, request.Project, request.FinishDate, request.Steps);
             await _commandDispatcher.DispatchAsync(command);
 
-            var resourceId = _cache.Get<Guid>(command.CacheId.ToString());
+            var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
             return Created($"/api/todo/{resourceId}", null);
         }
 
@@ -63,11 +63,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> DeleteTodoAsync(Guid todoId)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new DeleteTodoCommand
-            {
-                UserId = userId,
-                TodoId = todoId
-            };
+            var command = new DeleteTodoCommand(userId, todoId);
             await _commandDispatcher.DispatchAsync(command);
 
             return NoContent();
@@ -78,14 +74,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdateTodoAsync(Guid todoId, [FromBody] UpdateTodoRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateTodoCommand
-            {
-                UserId = userId,
-                TodoId = todoId,
-                Title = request.Title,
-                Description = request.Description,
-                FinishDate = request.FinishDate
-            };
+            var command = new UpdateTodoCommand(userId, todoId, request.Title, request.Description, request.FinishDate);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
@@ -96,12 +85,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdateTodoStatusAsync(Guid todoId, [FromBody] UpdateTodoStatusRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateTodoStatusCommand
-            {
-                UserId = userId,
-                TodoId = todoId,
-                Status = request.Status
-            };
+            var command = new UpdateTodoStatusCommand(userId, todoId, request.Status);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
@@ -112,12 +96,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdateTodoPriorityAsync(Guid todoId, [FromBody] UpdateTodoPriorityRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateTodoPriorityCommand
-            {
-                UserId = userId,
-                TodoId = todoId,
-                Priority = request.Priority
-            };
+            var command = new UpdateTodoPriorityCommand(userId, todoId, request.Priority);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();

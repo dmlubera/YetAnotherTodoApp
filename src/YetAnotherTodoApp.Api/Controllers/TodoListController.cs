@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using YetAnotherTodoApp.Api.Models;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
-using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Queries;
-using YetAnotherTodoApp.Application.Queries.Models;
+using YetAnotherTodoApp.Application.Queries.Models.TodoLists;
 
 namespace YetAnotherTodoApp.Api.Controllers
 {
@@ -50,7 +50,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
             var command = new CreateTodoListCommand(userId, request.Title);
             await _commandDispatcher.DispatchAsync(command);
-            var resourceId = _cache.Get<Guid>(command.CacheToken.ToString());
+            var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
 
             return Created($"api/todolist/{resourceId}", null);
         }
@@ -60,12 +60,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdateTodoListAsync(Guid todoListId, [FromBody] UpdateTodoListRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateTodoListCommand
-            {
-                UserId = userId,
-                TodoListId = todoListId,
-                Title = request.Title
-            };
+            var command = new UpdateTodoListCommand(userId, todoListId, request.Title);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
@@ -76,11 +71,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> DeleteTodoListAsync(Guid todoListId)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new DeleteTodoListCommand
-            {
-                UserId = userId,
-                TodoListId = todoListId
-            };
+            var command = new DeleteTodoListCommand(userId, todoListId);
             await _commandDispatcher.DispatchAsync(command);
 
             return NoContent();

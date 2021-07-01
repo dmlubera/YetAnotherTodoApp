@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Application.DTOs;
-using YetAnotherTodoApp.Application.Queries.Handlers;
+using YetAnotherTodoApp.Application.Queries.Handlers.Todos;
 using YetAnotherTodoApp.Application.Queries.Models;
+using YetAnotherTodoApp.Application.Queries.Models.Todos;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
