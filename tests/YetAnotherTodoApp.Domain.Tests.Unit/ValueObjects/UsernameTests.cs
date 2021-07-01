@@ -3,7 +3,7 @@ using Xunit;
 using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Domain.ValueObjects;
 
-namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
+namespace YetAnotherTodoApp.Domain.Tests.Unit.ValueObjects
 {
     public class UsernameTests
     {
