@@ -6,22 +6,16 @@ namespace YetAnotherTodoApp.Application.Extensions
 {
     public static class CacheExtensions
     {
-        public static void SetJwt(this ICache cache, Guid tokenId, JwtDto jwtToken)
-            => cache.Set(GenerateJwtKey(tokenId), jwtToken, TimeSpan.FromSeconds(99));
+        public static void SetJwtToken(this ICache cache, Guid tokenId, JwtDto jwtToken)
+            => cache.Set(tokenId.ToString(), jwtToken, TimeSpan.FromSeconds(60));
 
-        public static JwtDto GetJwt(this ICache cache, Guid tokenId)
-            => cache.Get<JwtDto>(GenerateJwtKey(tokenId));
+        public static JwtDto GetJwtToken(this ICache cache, Guid tokenId)
+            => cache.Get<JwtDto>(tokenId.ToString());
 
-        public static void SetId(this ICache cache, Guid tokenId, Guid id)
-            => cache.Set(GenerateIdKey(tokenId), id, TimeSpan.FromSeconds(99));
+        public static void SetResourceIdentifier(this ICache cache, Guid tokenId, Guid id)
+            => cache.Set(tokenId.ToString(), id, TimeSpan.FromSeconds(60));
 
-        public static Guid GetId(this ICache cache, Guid tokenId)
-            => cache.Get<Guid>(GenerateIdKey(tokenId));
-
-        private static string GenerateJwtKey(Guid tokenId)
-            => $"jwt-{tokenId}";
-
-        private static string GenerateIdKey(Guid tokenId)
-            => $"id-{tokenId}";
+        public static Guid GetResourceIdentifier(this ICache cache, Guid tokenId)
+            => cache.Get<Guid>(tokenId.ToString());
     }
 }

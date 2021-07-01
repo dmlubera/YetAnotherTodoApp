@@ -25,7 +25,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         {
             var command = new SignUpCommand(request.Username.ToLower(), request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
-            var userId = _cache.GetId(command.CacheTokenId);
+            var userId = _cache.GetResourceIdentifier(command.CacheTokenId);
 
             return Created($"/api/users/{userId}", null);
         }
@@ -36,7 +36,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             var command = new SignInCommand(request.Email.ToLower(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
 
-            return Ok(_cache.GetJwt(command.CacheTokenId));
+            return Ok(_cache.GetJwtToken(command.CacheTokenId));
         }
     }
 }

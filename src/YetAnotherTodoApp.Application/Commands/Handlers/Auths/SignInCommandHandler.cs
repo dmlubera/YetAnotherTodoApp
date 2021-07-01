@@ -32,7 +32,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Auths
                 throw new InvalidCredentialsException();
 
             var jwtToken = _jwtHelper.GenerateJwtToken(user.Id);
-            _cache.SetJwt(command.CacheTokenId, jwtToken);
+            _cache.SetJwtToken(command.CacheTokenId, jwtToken);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Auths
             var passwordSalt = _encrypter.GetSalt();
             var passwordHash = _encrypter.GetHash(command.Password, passwordSalt);
             var user = new User(command.Username, command.Email, passwordHash, passwordSalt);
-            _cache.SetId(command.CacheTokenId, user.Id);
+            _cache.SetResourceIdentifier(command.CacheTokenId, user.Id);
 
             await _userRepository.AddAsync(user);
         }
