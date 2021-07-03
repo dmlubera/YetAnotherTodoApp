@@ -35,7 +35,7 @@ namespace YetAnotherTodoApp.Domain.Entities
             _todoLists.Add(todoList);
         }
 
-        public void RemoveTodoList(TodoList todoList)
+        public void DeleteTodoList(TodoList todoList)
             => _todoLists.Remove(todoList);
 
         public void UpdateUserInfo(string firstName, string lastname)

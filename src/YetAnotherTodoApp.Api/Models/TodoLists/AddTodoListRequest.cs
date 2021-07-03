@@ -1,6 +1,6 @@
 ﻿namespace YetAnotherTodoApp.Api.Models.TodoLists
 {
-    public class CreateTodoListRequest
+    public class AddTodoListRequest
     {
         public string Title { get; set; }
     }

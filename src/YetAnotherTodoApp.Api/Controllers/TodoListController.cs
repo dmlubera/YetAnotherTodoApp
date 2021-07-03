@@ -45,10 +45,10 @@ namespace YetAnotherTodoApp.Api.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateTodoListAsync([FromBody] CreateTodoListRequest request)
+        public async Task<IActionResult> AddTodoListAsync([FromBody] AddTodoListRequest request)
         {
             var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new CreateTodoListCommand(userId, request.Title);
+            var command = new AddTodoListAsync(userId, request.Title);
             await _commandDispatcher.DispatchAsync(command);
             var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
 

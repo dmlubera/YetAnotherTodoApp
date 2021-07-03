@@ -12,15 +12,15 @@ using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
 {
-    public class CreateTodoListTests : IntegrationTestBase
+    public class AddTodoListTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> CreateTodoListAsync(CreateTodoListRequest request)
+        private async Task<HttpResponseMessage> CreateTodoListAsync(AddTodoListRequest request)
             => await TestClient.PostAsync("api/todolist/", GetContent(request));
 
         [Fact]
         public async Task WithValidData_ReturnsHttpStatusCodeCreatedWithLocationHeader()
         {
-            var request = new CreateTodoListRequest
+            var request = new AddTodoListRequest
             {
                 Title = "TestTodoList"
             };
@@ -35,7 +35,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithValidData_AddTodoListToDatabase()
         {
-            var request = new CreateTodoListRequest
+            var request = new AddTodoListRequest
             {
                 Title = "TestTodoList"
             };
@@ -53,7 +53,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithInvalidData_ReturnsValidationError()
         {
-            var request = new CreateTodoListRequest
+            var request = new AddTodoListRequest
             {
                 Title = string.Empty
             };
@@ -69,7 +69,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingTitle_ReturnsHttpStatusCodeBadRequestWithCustomException()
         {
-            var request = new CreateTodoListRequest
+            var request = new AddTodoListRequest
             {
                 Title = "Inbox"
             };

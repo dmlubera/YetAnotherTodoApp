@@ -22,7 +22,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
             if (todoList is null)
                 throw new TodoListWithGivenIdDoesNotExistException(command.TodoListId);
 
-            user.RemoveTodoList(todoList);
+            user.DeleteTodoList(todoList);
 
             await _userRepository.SaveChangesAsync();
         }

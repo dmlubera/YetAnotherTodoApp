@@ -7,18 +7,18 @@ using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
 {
-    public class CreateTodoListCommandHandler : ICommandHandler<CreateTodoListCommand>
+    public class AddTodoListCommandHandler : ICommandHandler<AddTodoListAsync>
     {
         private readonly IUserRepository _userRepository;
         private readonly ICache _cache;
 
-        public CreateTodoListCommandHandler(IUserRepository userRepository, ICache cache)
+        public AddTodoListCommandHandler(IUserRepository userRepository, ICache cache)
         {
             _userRepository = userRepository;
             _cache = cache;
         }
 
-        public async Task HandleAsync(CreateTodoListCommand command)
+        public async Task HandleAsync(AddTodoListAsync command)
         {
             var user = await _userRepository.GetByIdAsync(command.UserId);
             var todoList = new TodoList(command.Title);
