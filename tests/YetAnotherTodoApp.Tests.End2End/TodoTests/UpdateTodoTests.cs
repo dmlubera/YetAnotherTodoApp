@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Exceptions;
@@ -45,7 +46,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         }
 
         [Fact]
-        public async Task WithEmptyTitle_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithEmptyTitle_ReturnsValidationError()
         {
             var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
             var request = new UpdateTodoRequest
@@ -54,15 +55,13 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 Title = string.Empty,
                 FinishDate = DateTime.UtcNow.Date
             };
-            var expectedException = new InvalidTitleException(request.Title);
 
             await AuthenticateTestUserAsync();
             var response = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            errorResponse.Code.Should().Be(expectedException.Code);
-            errorResponse.Message.Should().Be(expectedException.Message);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]

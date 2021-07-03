@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api.Models.Auths;
+using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Exceptions;
@@ -70,9 +71,8 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task UpdateEmailAsync_WithInvalidEmailFormat_ReturnsBadRequest(string email)
+        public async Task UpdateEmailAsync_WithInvalidEmailFormat_ShouldReturnValidationError(string email)
         {
-            var expectedException = new InvalidEmailFormatException(email);
             await AuthenticateTestUserAsync();
             var request = new UpdateEmailRequest
             {
@@ -80,11 +80,10 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
             };
 
             var response = await UpdateEmailAsync(request);
-            var exception = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Code.Should().BeEquivalentTo(expectedException.Code);
-            exception.Message.Should().BeEquivalentTo(expectedException.Message);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]

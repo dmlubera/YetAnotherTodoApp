@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.TodoLists;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Exceptions;
@@ -50,21 +51,19 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         }
 
         [Fact]
-        public async Task WithInvalidData_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithInvalidData_ReturnsValidationError()
         {
             var request = new CreateTodoListRequest
             {
                 Title = string.Empty
             };
-            var expectedError = new InvalidTitleException(request.Title);
-
+            
             await AuthenticateTestUserAsync();
             var response = await CreateTodoListAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().Be(expectedError.Code);
-            content.Message.Should().Be(expectedError.Message);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]

@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Tests.End2End.Dummies;
@@ -43,9 +45,8 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task UpdateUserInfo_WithInvalidFirstName_ShouldThrowAnException(string firstName)
+        public async Task UpdateUserInfo_WithInvalidFirstName_ShouldReturnValidationError(string firstName)
         {
-            var expectedException = new InvalidFirstNameException(firstName);
             await AuthenticateTestUserAsync();
 
             var request = new UpdateUserInfoRequest
@@ -55,10 +56,10 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
             };
 
             var response = await UpdateUserInfoAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
 
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Theory]
@@ -66,7 +67,6 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
         [InlineData(" ")]
         public async Task UpdateUserInfo_WithInvalidLastName_ShouldThrowAnException(string lastName)
         {
-            var expectedException = new InvalidLastNameException(lastName);
             await AuthenticateTestUserAsync();
 
             var request = new UpdateUserInfoRequest
@@ -76,10 +76,10 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
             };
 
             var response = await UpdateUserInfoAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
 
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
     }
 }

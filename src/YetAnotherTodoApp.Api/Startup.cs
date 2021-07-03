@@ -1,8 +1,10 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using YetAnotherTodoApp.Api.Configurations;
+using YetAnotherTodoApp.Api.Filters;
 using YetAnotherTodoApp.Api.Middlewares;
 using YetAnotherTodoApp.Application.DI;
 using YetAnotherTodoApp.Infrastructure.DAL.DI;
@@ -22,6 +24,11 @@ namespace YetAnotherTodoApp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(opts => opts.Filters.Add<ValidationFilter>())
+                    .AddFluentValidation(opts => {
+                        opts.ValidatorOptions.LanguageManager.Enabled = false;
+                        opts.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    });
             services.AddYetAnotherTodoAppDbContext(Configuration.GetConnectionString("DefaultConnection"));
             services.AddControllers();
             services.AddOptions();
