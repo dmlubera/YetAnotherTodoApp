@@ -16,7 +16,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
 {
     public class UpdateTodoTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> ActAsync(Guid id, UpdateTodoRequest request)
+        private async Task<HttpResponseMessage> ActAsync(Guid id, object request)
             => await TestClient.PutAsync($"/api/todo/{id}", GetContent(request));
 
         [Fact]
@@ -40,9 +40,38 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             todo.FinishDate.Value.Should().Be(request.FinishDate);
         }
 
-        public async Task WithInvalidData_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        [Fact]
+        public async Task WithoutTitle_ReturnsValidationError()
         {
+            var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
+            var request = new
+            {
+                FinishDate = DateTime.UtcNow.Date
+            };
 
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(todoToUpdate.Id, request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task WithoutFinishDate_ReturnsValidationError()
+        {
+            var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
+            var request = new
+            {
+                Title = "test"
+            };
+
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(todoToUpdate.Id, request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]

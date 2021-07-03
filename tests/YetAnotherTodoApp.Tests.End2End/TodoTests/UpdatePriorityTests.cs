@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Enums;
@@ -15,7 +16,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
 {
     public class UpdatePriorityTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> ActAsync(Guid id, UpdateTodoPriorityRequest request)
+        private async Task<HttpResponseMessage> ActAsync(Guid id, object request)
             => await TestClient.PutAsync($"/api/todo/{id}/priority", GetContent(request));
 
         [Fact]
@@ -35,9 +36,21 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             todo.Priority.Should().Be(request.Priority);
         }
 
-        public async Task WithInvalidPriority_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        [Fact]
+        public async Task WithInvalidPriority_ReturnsValidationError()
         {
-            // should be implemented after adding FluentValidation
+            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
+            var request = new
+            {
+                Priority = "unknown"
+            };
+
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(todoToUpdate.Id, request);
+            var errorReponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorReponse.Errors.Should().NotBeEmpty();
         }
     }
 }

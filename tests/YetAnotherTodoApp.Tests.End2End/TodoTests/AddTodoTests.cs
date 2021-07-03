@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Domain.Exceptions;
@@ -14,7 +15,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
 {
     public class AddTodoTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> ActAsync(AddTodoRequest request)
+        private async Task<HttpResponseMessage> ActAsync(object request)
             => await TestClient.PostAsync("/api/todo", GetContent(request));
 
         [Fact]
@@ -104,14 +105,36 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             errorResponse.Message.Should().Be(expectedException.Message);
         }
 
-        public async Task WithoutTitle_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        [Fact]
+        public async Task WithoutTitle_ReturnsValidationError()
         {
-            // should be implemented after adding FluentValidation
+            var request = new
+            {
+                FinishDate = DateTime.UtcNow.Date
+            };
+
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
-        public async Task WithoutFinishDate_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        [Fact]
+        public async Task WithoutFinishDate_ReturnsValidationError()
         {
-            // should be implemented after adding FluentValidation
+            var request = new
+            {
+                Title = "test"
+            };
+
+            await AuthenticateTestUserAsync();
+            var response = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
     }
 }

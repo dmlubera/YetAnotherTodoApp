@@ -6,6 +6,6 @@ namespace YetAnotherTodoApp.Api.Validators.Todos
     public class UpdateTodoPriorityRequestValidator : AbstractValidator<UpdateTodoPriorityRequest>
     {
         public UpdateTodoPriorityRequestValidator()
-            => RuleFor(x => x.Priority).NotEmpty();
+            => RuleFor(x => x.Priority).IsInEnum();
     }
 }

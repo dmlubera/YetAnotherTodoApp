@@ -167,7 +167,6 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
         [InlineData(" ")]
         public async Task SignUpAsync_WithInvalidPasswordFormat_ReturnsValidationError(string password)
         {
-            var expectedException = new InvalidPasswordFormatException();
             var request = new SignUpRequest
             {
                 Username = "testuser1",

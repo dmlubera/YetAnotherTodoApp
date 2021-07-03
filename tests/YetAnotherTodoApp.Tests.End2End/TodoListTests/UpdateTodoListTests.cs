@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.TodoLists;
-using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Tests.End2End.Dummies;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
