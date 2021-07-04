@@ -1,26 +1,25 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
 {
     public class UpdateTodoStatusCommandHandler : ICommandHandler<UpdateTodoStatusCommand>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ITodoRepository _repository;
 
-        public UpdateTodoStatusCommandHandler(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
+        public UpdateTodoStatusCommandHandler(ITodoRepository repository)
+            => _repository = repository;
 
         public async Task HandleAsync(UpdateTodoStatusCommand command)
         {
-            var user = await _userRepository.GetByIdAsync(command.UserId);
-            var todo = user.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Id == command.TodoId);
-            todo.UpdateStatus(command.Status);
+            var todo = await _repository.GetForUserAsync(command.TodoId, command.UserId);
+            if (todo is null)
+                throw new TodoWithGivenIdDoesNotExistException(command.TodoId);
 
-            await _userRepository.SaveChangesAsync();
+            todo.UpdateStatus(command.Status);
+            await _repository.SaveChangesAsync();
         }
     }
 }

@@ -8,18 +8,15 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
 {
     public class UpdatePasswordCommandHandler : ICommandHandler<UpdatePasswordCommand>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _repository;
         private readonly IEncrypter _encrypter;
 
-        public UpdatePasswordCommandHandler(IUserRepository userRepository, IEncrypter encrypter)
-        {
-            _userRepository = userRepository;
-            _encrypter = encrypter;
-        }
+        public UpdatePasswordCommandHandler(IUserRepository repository, IEncrypter encrypter)
+            => (_repository, _encrypter) = (repository, encrypter);
 
         public async Task HandleAsync(UpdatePasswordCommand command)
         {
-            var user = await _userRepository.GetByIdAsync(command.UserId);
+            var user = await _repository.GetByIdAsync(command.UserId);
             var passwordHashWithUserSalt = _encrypter.GetHash(command.Password, user.Password.Salt);
 
             if (passwordHashWithUserSalt == user.Password.Hash)
@@ -30,7 +27,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
 
             user.UpdatePassword(passwordHash, passwordSalt);
 
-            await _userRepository.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
         }
     }
 }

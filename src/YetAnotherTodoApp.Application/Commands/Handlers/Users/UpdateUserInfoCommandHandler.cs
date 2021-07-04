@@ -6,18 +6,16 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
 {
     public class UpdateUserInfoCommandHandler : ICommandHandler<UpdateUserInfoCommand>
     {
-        private readonly IUserRepository _userRepository;
-        public UpdateUserInfoCommandHandler(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
+        private readonly IUserRepository _repository;
+        public UpdateUserInfoCommandHandler(IUserRepository repository) 
+            => _repository = repository;
 
         public async Task HandleAsync(UpdateUserInfoCommand command)
         {
-            var user = await _userRepository.GetByIdAsync(command.UserId);
+            var user = await _repository.GetByIdAsync(command.UserId);
             user.UpdateUserInfo(command.FirstName, command.LastName);
 
-            await _userRepository.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
         }
     }
 }

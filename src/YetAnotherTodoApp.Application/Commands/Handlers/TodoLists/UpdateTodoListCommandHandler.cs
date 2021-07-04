@@ -10,9 +10,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
         private readonly ITodoListRepository _repository;
 
         public UpdateTodoListCommandHandler(ITodoListRepository repository)
-        {
-            _repository = repository;
-        }
+            => _repository = repository;
 
         public async Task HandleAsync(UpdateTodoListCommand command)
         {
@@ -20,6 +18,9 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
                 throw new TodoListWithGivenTitleAlreadyExistsException(command.Title);
 
             var todoList = await _repository.GetForUserAsync(command.UserId, command.TodoListId);
+            if (todoList is null)
+                throw new TodoListWithGivenIdDoesNotExistException(command.TodoListId);
+
             todoList.UpdateTitle(command.Title);
 
             await _repository.SaveChangesAsync();

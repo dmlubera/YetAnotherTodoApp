@@ -11,22 +11,22 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Auths
 {
     public class SignUpCommandHandler : ICommandHandler<SignUpCommand>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _repository;
         private readonly IEncrypter _encrypter;
         private readonly ICache _cache;
 
-        public SignUpCommandHandler(IUserRepository userRepository, IEncrypter encrypter, ICache cache)
+        public SignUpCommandHandler(IUserRepository repository, IEncrypter encrypter, ICache cache)
         {
-            _userRepository = userRepository;
+            _repository = repository;
             _encrypter = encrypter;
             _cache = cache;
         }
 
         public async Task HandleAsync(SignUpCommand command)
         {
-            if (await _userRepository.CheckIfEmailIsInUseAsync(command.Email))
+            if (await _repository.CheckIfEmailIsInUseAsync(command.Email))
                 throw new EmailInUseException(command.Email);
-            if (await _userRepository.CheckIfUsernameIsInUseAsync(command.Username))
+            if (await _repository.CheckIfUsernameIsInUseAsync(command.Username))
                 throw new UsernameInUseException(command.Username);
             if (string.IsNullOrWhiteSpace(command.Password))
                 throw new InvalidPasswordFormatException();
@@ -36,7 +36,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Auths
             var user = new User(command.Username, command.Email, passwordHash, passwordSalt);
             _cache.SetResourceIdentifier(command.CacheTokenId, user.Id);
 
-            await _userRepository.AddAsync(user);
+            await _repository.AddAsync(user);
         }
     }
 }

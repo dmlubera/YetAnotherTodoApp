@@ -8,16 +8,14 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
 {
     public class DeleteTodoCommandHandler : ICommandHandler<DeleteTodoCommand>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _repository;
 
-        public DeleteTodoCommandHandler(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
+        public DeleteTodoCommandHandler(IUserRepository repository) 
+            => _repository = repository;
 
         public async Task HandleAsync(DeleteTodoCommand command)
         {
-            var user = await _userRepository.GetByIdAsync(command.UserId);
+            var user = await _repository.GetByIdAsync(command.UserId);
             var todo = user.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Id == command.TodoId);
 
             if (todo is null)
@@ -25,7 +23,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
 
             user.TodoLists.FirstOrDefault(x => x.Title.Value == todo.TodoList.Title.Value).DeleteTodo(todo);
 
-            await _userRepository.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
         }
     }
 }
