@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
@@ -21,9 +20,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         {
             var expectedTodoList = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(expectedTodoList.Id);
-            var todoList = JsonConvert.DeserializeObject<TodoListDto>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var todoList) =
+                await HandleRequestAsync<TodoListDto>(() => ActAsync(expectedTodoList.Id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             todoList.Title.Should().Be(expectedTodoList.Title.Value);
@@ -32,12 +30,11 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithNotExisitingId_ShouldReturnRequestWithCustomError()
         {
-            var resourceId = Guid.NewGuid();
-            var expectedException = new TodoListWithGivenIdDoesNotExistException(resourceId);
+            var id = Guid.NewGuid();
+            var expectedException = new TodoListWithGivenIdDoesNotExistException(id);
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(resourceId);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);

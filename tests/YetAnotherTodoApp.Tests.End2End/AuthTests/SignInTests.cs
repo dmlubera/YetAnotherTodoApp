@@ -24,8 +24,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
-            var jwtResponse = JsonConvert.DeserializeObject<JwtDto>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var jwtResponse) = 
+                await HandleRequestAsync<JwtDto>(() => ActAsync(request), requireAuthentication: false);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             jwtResponse.Token.Should().NotBeNullOrEmpty();
@@ -41,8 +41,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "wrongSecretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
@@ -59,8 +59,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);

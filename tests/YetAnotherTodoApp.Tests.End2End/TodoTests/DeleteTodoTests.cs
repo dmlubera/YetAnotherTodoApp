@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
@@ -22,8 +21,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var todoToDelete = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToDelete.Id);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoToDelete.Id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
             var todo = await DbContext.GetAsync<Todo>(todoToDelete.Id);
@@ -35,8 +33,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var todoToDelete = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Title.Value == "TodoWithAssignedStep");
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToDelete.Id);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoToDelete.Id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
             var todo = await DbContext.GetAsync<Todo>(todoToDelete.Id);
@@ -51,9 +48,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var id = Guid.NewGuid();
             var expectedException = new TodoWithGivenIdDoesNotExistException(id);
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(id);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);

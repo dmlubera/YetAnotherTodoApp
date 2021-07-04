@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
@@ -23,8 +22,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var expectedTodo = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
 
             await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(expectedTodo.Id);
-            var todo = JsonConvert.DeserializeObject<TodoDto>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var todo) =
+                await HandleRequestAsync<TodoDto>(() => ActAsync(expectedTodo.Id));
 
             todo.Title.Should().Be(expectedTodo.Title.Value);
             todo.FinishDate.Should().Be(expectedTodo.FinishDate.Value);
@@ -37,8 +36,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var expectedException = new TodoWithGivenIdDoesNotExistException(id);
 
             await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(id);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);

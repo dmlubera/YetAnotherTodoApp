@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
@@ -28,8 +27,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
                 Title = "UpdatedTitle"
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoListToUpdate.Id, request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToUpdate.Id, request));
             var todoList = await DbContext.GetAsync<TodoList>(todoListToUpdate.Id);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -46,12 +44,11 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
                 Title = string.Empty
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoListToUpdate.Id, request);
-            var errorReponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(todoListToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            errorReponse.Errors.Should().NotBeEmpty();
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -65,13 +62,12 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
                 Title = todoListToUpdate.Title.Value
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoListToUpdate.Id, request);
-            var errorReponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(todoListToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            errorReponse.Code.Should().Be(expectedException.Code);
-            errorReponse.Message.Should().Be(expectedException.Message);
+            errorResponse.Code.Should().Be(expectedException.Code);
+            errorResponse.Message.Should().Be(expectedException.Message);
         }
     }
 }

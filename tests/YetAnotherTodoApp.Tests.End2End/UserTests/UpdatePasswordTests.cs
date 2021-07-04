@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -26,10 +25,9 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
                 Password = "superSecretPassword"
             };
 
-            await AuthenticateTestUserAsync();
-            var httResponse = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
-            httResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             var user = await DbContext.GetAsync<User>(User.Id);
             var encrypter = new Encrypter();
             var hash = encrypter.GetHash(request.Password, user.Password.Salt);
@@ -46,9 +44,8 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
                 Password = TestUser.Password
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);

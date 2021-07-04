@@ -30,8 +30,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 FinishDate = DateTime.UtcNow.Date
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToUpdate.Id, request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             var todo = await DbContext.GetAsync<Todo>(todoToUpdate.Id);
@@ -49,9 +48,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 FinishDate = DateTime.UtcNow.Date
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(todoToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
@@ -66,9 +64,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 Title = "test"
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(todoToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
@@ -85,9 +82,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 FinishDate = DateTime.UtcNow.Date
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(todoToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
@@ -105,9 +101,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             };
             var expectedException = new DateCannotBeEarlierThanTodayDateException(request.FinishDate.Date);
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(todoToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);

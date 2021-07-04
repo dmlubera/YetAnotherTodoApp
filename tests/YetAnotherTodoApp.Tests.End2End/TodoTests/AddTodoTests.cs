@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -28,8 +27,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 FinishDate = DateTime.UtcNow.Date
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
             var todo = await DbContext.GetTodoWithReferencesAsync(httpResponse.Headers.Location.GetResourceId());
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -47,8 +45,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 FinishDate = DateTime.UtcNow.Date
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             httpResponse.Headers.Location.Should().NotBeNull();
@@ -73,8 +70,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 }
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             httpResponse.Headers.Location.Should().NotBeNull();
@@ -95,9 +91,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             };
             var expectedException = new DateCannotBeEarlierThanTodayDateException(request.FinishDate);
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);
@@ -112,9 +107,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 FinishDate = DateTime.UtcNow.Date
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
@@ -128,9 +122,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 Title = "test"
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();

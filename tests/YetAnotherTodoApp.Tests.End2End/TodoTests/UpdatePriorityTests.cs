@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
@@ -28,8 +27,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 Priority = TodoPriority.High
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToUpdate.Id, request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             var todo = await DbContext.GetAsync<Todo>(todoToUpdate.Id);
@@ -45,12 +43,11 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 Priority = "unknown"
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoToUpdate.Id, request);
-            var errorReponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(todoToUpdate.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            errorReponse.Errors.Should().NotBeEmpty();
+            errorResponse.Errors.Should().NotBeEmpty();
         }
     }
 }

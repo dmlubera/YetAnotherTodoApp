@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -25,8 +24,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
                 Title = "TestTodoList"
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             httpResponse.Headers.Location.Should().NotBeNull();
@@ -43,10 +41,9 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             {
                 Title = string.Empty
             };
-            
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
@@ -61,9 +58,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             };
             var expectedError = new TodoListWithGivenTitleAlreadyExistsException(request.Title);
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedError.Code);

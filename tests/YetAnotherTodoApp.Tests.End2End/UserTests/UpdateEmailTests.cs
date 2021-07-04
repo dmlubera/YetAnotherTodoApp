@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -26,8 +25,7 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
                 Email = "updatedEmail@yetanothertodoapp.com"
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             var user = await DbContext.GetAsync<User>(User.Id);
@@ -44,9 +42,8 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
                 Email = email
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
@@ -62,9 +59,8 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
                 Email = TestUser.Email
             };
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);

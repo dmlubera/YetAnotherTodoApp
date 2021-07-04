@@ -21,8 +21,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var expectedTodos = User.TodoLists.SelectMany(x => x.Todos).ToList();
 
             await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync();
-            var todos = JsonConvert.DeserializeObject<IList<TodoDto>>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var todos) =
+                await HandleRequestAsync<IList<TodoDto>>(() => ActAsync());
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             todos.Count.Should().Be(expectedTodos.Count);

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
@@ -23,8 +22,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         {
             var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestTodoList.Title);
 
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(todoListToRemove.Id);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToRemove.Id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
@@ -35,14 +33,13 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingIdOfTodoListContainingTodoWithAssignedSteps_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
         {
-            var resourceToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListWithAssignedTodo.Title);
+            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListWithAssignedTodo.Title);
             
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(resourceToRemove.Id);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToRemove.Id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
-            var todoList = await DbContext.GetAsync<TodoList>(resourceToRemove.Id);
-            var todo = await DbContext.GetAsync<Todo>(resourceToRemove.Todos.FirstOrDefault().Id);
+            var todoList = await DbContext.GetAsync<TodoList>(todoListToRemove.Id);
+            var todo = await DbContext.GetAsync<Todo>(todoListToRemove.Todos.FirstOrDefault().Id);
 
             todoList.Should().BeNull();
             todo.Should().BeNull();
@@ -53,10 +50,9 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         {
             var id = Guid.NewGuid();
             var expectedException = new TodoListWithGivenIdDoesNotExistException(id);
-            
-            await AuthenticateTestUserAsync();
-            var httpResponse = await ActAsync(id);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);

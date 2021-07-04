@@ -1,7 +1,4 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
-using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -30,9 +27,9 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request), requireAuthentication: false);
             httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-            
+
             var user = await DbContext.GetAsync<User>(httpResponse.Headers.Location.GetResourceId());
             user.Should().NotBeNull();
             user.Username.Value.Should().Be(request.Username.ToLower());
@@ -51,8 +48,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
@@ -72,8 +69,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
@@ -93,8 +90,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
@@ -114,8 +111,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
@@ -134,8 +131,9 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request), requireAuthentication: false);
+
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
@@ -155,8 +153,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = password
             };
 
-            var httpResponse = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
