@@ -20,7 +20,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             => await TestClient.PutAsync($"/api/todo/{id}", GetContent(request));
 
         [Fact]
-        public async Task WithValidData_ReturnsHttpStatusCodeOkAndUpdateTodoInDatabase()
+        public async Task WithValidData_ShouldReturnOkAndUpdateTodoInDatabase()
         {
             var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
             var request = new UpdateTodoRequest
@@ -31,9 +31,9 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToUpdate.Id, request);
+            var httpResponse = await ActAsync(todoToUpdate.Id, request);
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             var todo = await DbContext.GetAsync<Todo>(todoToUpdate.Id);
             todo.Description.Should().Be(request.Description);
             todo.Title.Value.Should().Be(request.Title);
@@ -41,7 +41,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         }
 
         [Fact]
-        public async Task WithoutTitle_ReturnsValidationError()
+        public async Task WithoutTitle_ShouldReturnValidationError()
         {
             var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
             var request = new
@@ -50,15 +50,15 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(todoToUpdate.Id, request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task WithoutFinishDate_ReturnsValidationError()
+        public async Task WithoutFinishDate_ShouldReturnValidationError()
         {
             var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
             var request = new
@@ -67,15 +67,15 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(todoToUpdate.Id, request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task WithEmptyTitle_ReturnsValidationError()
+        public async Task WithEmptyTitle_ShouldReturnValidationError()
         {
             var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
             var request = new UpdateTodoRequest
@@ -86,15 +86,15 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(todoToUpdate.Id, request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task WithFinishDateEarlierThanToday_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithFinishDateEarlierThanToday_ShouldReturnBadRequestWithCustomError()
         {
             var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
             var request = new UpdateTodoRequest
@@ -106,10 +106,10 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var expectedException = new DateCannotBeEarlierThanTodayDateException(request.FinishDate.Date);
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToUpdate.Id, request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(todoToUpdate.Id, request);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);
             errorResponse.Message.Should().Be(expectedException.Message);
         }

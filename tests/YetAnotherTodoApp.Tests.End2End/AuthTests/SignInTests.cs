@@ -12,11 +12,11 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
 {
     public class SignInTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> AuthenticateAsync(SignInRequest request)
+        private async Task<HttpResponseMessage> ActAsync(SignInRequest request)
             => await TestClient.PostAsync("api/auth/sign-in", GetContent(request));
 
         [Fact]
-        public async Task SignInAsync_WithValidCredentials_ReturnsJwtToken()
+        public async Task WithValidCredentials_ShouldReturnOkAndJwtToken()
         {
             var request = new SignInRequest
             {
@@ -24,15 +24,15 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await AuthenticateAsync(request);
-            var content = JsonConvert.DeserializeObject<JwtDto>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var jwtResponse = JsonConvert.DeserializeObject<JwtDto>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            content.Token.Should().NotBeNullOrEmpty();
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            jwtResponse.Token.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
-        public async Task SignInAsync_WithInvalidCredentials_ReturnsBadRequest()
+        public async Task WithInvalidCredentials_ShouldReturnBadRequestWithCustomError()
         {
             var expectedException = new InvalidCredentialsException();
             var request = new SignInRequest
@@ -41,16 +41,16 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "wrongSecretPassword"
             };
 
-            var response = await AuthenticateAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
 
         [Fact]
-        public async Task SignInAsync_WithNonExistingUserAccount_ReturnsBadRequest()
+        public async Task WithNonExistingUserAccount_ShouldReturnBadRequestWithCustomError()
         {
             var expectedException = new InvalidCredentialsException();
             var request = new SignInRequest
@@ -59,12 +59,12 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await AuthenticateAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
     }
 }

@@ -17,29 +17,29 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             => await TestClient.GetAsync($"/api/todolist/{id}");
 
         [Fact]
-        public async Task WithExistingId_ReturnsHttpStatusCodeOkAndDto()
+        public async Task WithExistingId_ShouldReturnOkAndDto()
         {
             var expectedTodoList = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(expectedTodoList.Id);
-            var retrievedResource = JsonConvert.DeserializeObject<TodoListDto>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(expectedTodoList.Id);
+            var todoList = JsonConvert.DeserializeObject<TodoListDto>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            retrievedResource.Title.Should().Be(expectedTodoList.Title.Value);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            todoList.Title.Should().Be(expectedTodoList.Title.Value);
         }
 
         [Fact]
-        public async Task WithNonExisitingId_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithNotExisitingId_ShouldReturnRequestWithCustomError()
         {
             var resourceId = Guid.NewGuid();
             var expectedException = new TodoListWithGivenIdDoesNotExistException(resourceId);
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(resourceId);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(resourceId);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);
             errorResponse.Message.Should().Be(expectedException.Message);
         }

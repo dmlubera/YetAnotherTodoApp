@@ -18,29 +18,29 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             => await TestClient.GetAsync($"/api/todo/{id}");
 
         [Fact]
-        public async Task WithExistingId_ReturnsHttpStatusCodeOkAndDto()
+        public async Task WithExistingId_ShouldReturnsHttpStatusCodeOkAndDto()
         {
             var expectedTodo = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(expectedTodo.Id);
-            var todo = JsonConvert.DeserializeObject<TodoDto>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(expectedTodo.Id);
+            var todo = JsonConvert.DeserializeObject<TodoDto>(await httpResponse.Content.ReadAsStringAsync());
 
             todo.Title.Should().Be(expectedTodo.Title.Value);
             todo.FinishDate.Should().Be(expectedTodo.FinishDate.Value);
         }
 
         [Fact]
-        public async Task WithNonExistingId_ReturnHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithNonExistingId_ShouldReturnBadRequestWithCustomError()
         {
             var id = Guid.NewGuid();
             var expectedException = new TodoWithGivenIdDoesNotExistException(id);
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(id);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(id);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);
             errorResponse.Message.Should().Be(expectedException.Message);
         }

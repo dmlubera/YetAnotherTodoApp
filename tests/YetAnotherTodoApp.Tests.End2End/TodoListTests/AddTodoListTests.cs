@@ -14,11 +14,11 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
 {
     public class AddTodoListTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> CreateTodoListAsync(AddTodoListRequest request)
+        private async Task<HttpResponseMessage> ActAsync(AddTodoListRequest request)
             => await TestClient.PostAsync("api/todolist/", GetContent(request));
 
         [Fact]
-        public async Task WithValidData_ReturnsHttpStatusCodeCreatedWithLocationHeader()
+        public async Task WithValidData_ShouldReturnCreatedAndAddResourceToDatabase()
         {
             var request = new AddTodoListRequest
             {
@@ -26,32 +26,18 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await CreateTodoListAsync(request);
+            var httpResponse = await ActAsync(request);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-            response.Headers.Location.Should().NotBeNull();
-        }
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+            httpResponse.Headers.Location.Should().NotBeNull();
 
-        [Fact]
-        public async Task WithValidData_AddTodoListToDatabase()
-        {
-            var request = new AddTodoListRequest
-            {
-                Title = "TestTodoList"
-            };
-
-            await AuthenticateTestUserAsync();
-            var response = await CreateTodoListAsync(request);
-            var resourceId = response.Headers.Location.GetResourceId();
-
-            var todoList = await DbContext.GetAsync<TodoList>(resourceId);
-
+            var todoList = await DbContext.GetAsync<TodoList>(httpResponse.Headers.Location.GetResourceId());
             todoList.Should().NotBeNull();
             todoList.Title.Value.Should().Be(request.Title);
         }
 
         [Fact]
-        public async Task WithInvalidData_ReturnsValidationError()
+        public async Task WithInvalidData_ShouldReturnValidationError()
         {
             var request = new AddTodoListRequest
             {
@@ -59,15 +45,15 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             };
             
             await AuthenticateTestUserAsync();
-            var response = await CreateTodoListAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task WithExistingTitle_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithExistingTitle_ShouldReturnBadRequestWithCustomError()
         {
             var request = new AddTodoListRequest
             {
@@ -76,12 +62,12 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             var expectedError = new TodoListWithGivenTitleAlreadyExistsException(request.Title);
 
             await AuthenticateTestUserAsync();
-            var response = await CreateTodoListAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().Be(expectedError.Code);
-            content.Message.Should().Be(expectedError.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().Be(expectedError.Code);
+            errorResponse.Message.Should().Be(expectedError.Message);
         }
     }
 }

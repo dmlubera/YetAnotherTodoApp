@@ -20,7 +20,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             => await TestClient.PutAsync($"/api/todolist/{id}", GetContent(request));
 
         [Fact]
-        public async Task WithValidData_ReturnsHttpStatusCodeOkAndUpdateResourceInDatabase()
+        public async Task WithValidData_ShouldReturnOkAndUpdateResourceInDatabase()
         {
             var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
             var request = new UpdateTodoListRequest
@@ -29,15 +29,15 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoListToUpdate.Id, request);
+            var httpResponse = await ActAsync(todoListToUpdate.Id, request);
+            var todoList = await DbContext.GetAsync<TodoList>(todoListToUpdate.Id);
 
-            var updatedResoruce = await DbContext.GetAsync<TodoList>(todoListToUpdate.Id);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            updatedResoruce.Title.Value.Should().Be(request.Title);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            todoList.Title.Value.Should().Be(request.Title);
         }
 
         [Fact]
-        public async Task WithInvalidData_ReturnsValidationError()
+        public async Task WithInvalidData_ShouldReturnValidationError()
         {
             var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
 
@@ -47,15 +47,15 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoListToUpdate.Id, request);
-            var errorReponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(todoListToUpdate.Id, request);
+            var errorReponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorReponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task WithExistingTitle_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithExistingTitle_ShouldReturnBadRequestWithCustomError()
         {
             var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
             var expectedException = new Application.Exceptions.TodoListWithGivenTitleAlreadyExistsException(todoListToUpdate.Title.Value);
@@ -66,10 +66,10 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoListToUpdate.Id, request);
-            var errorReponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(todoListToUpdate.Id, request);
+            var errorReponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorReponse.Code.Should().Be(expectedException.Code);
             errorReponse.Message.Should().Be(expectedException.Message);
         }

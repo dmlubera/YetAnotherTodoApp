@@ -18,44 +18,44 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             => await TestClient.DeleteAsync($"api/todo/{id}");
 
         [Fact]
-        public async Task WithExistingId_ReturnsHttpStatusCodeNoContentAndRemoveTodoFromDatabase()
+        public async Task WithExistingId_ShouldReturnNoContentAndRemoveResourceFromDatabase()
         {
             var todoToDelete = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToDelete.Id);
+            var httpResponse = await ActAsync(todoToDelete.Id);
 
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
             var todo = await DbContext.GetAsync<Todo>(todoToDelete.Id);
             todo.Should().BeNull();
         }
 
         [Fact]
-        public async Task WithExistingIdOfTodoWithAssignedTasks_DeleteTodoAndAssignedTasksFromDatabase()
+        public async Task WithExistingIdOfTodoWithAssignedTasks_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
         {
             var todoToDelete = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Title.Value == "TodoWithAssignedStep");
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToDelete.Id);
+            var httpResponse = await ActAsync(todoToDelete.Id);
 
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
             var todo = await DbContext.GetAsync<Todo>(todoToDelete.Id);
-            todo.Should().BeNull();
             var step = await DbContext.GetAsync<Step>(todoToDelete.Steps.FirstOrDefault().Id);
+            todo.Should().BeNull();
             step.Should().BeNull();
         }
 
         [Fact]
-        public async Task WithNonExistingId_ReturnHttpStatusCodeBadRequest()
+        public async Task WithNonExistingId_ShouldReturnBadRequestWithCustomError()
         {
             var id = Guid.NewGuid();
             var expectedException = new TodoWithGivenIdDoesNotExistException(id);
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(id);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(id);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);
             errorResponse.Message.Should().Be(expectedException.Message);
         }

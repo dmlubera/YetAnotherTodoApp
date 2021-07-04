@@ -20,7 +20,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             => await TestClient.PutAsync($"/api/todo/{id}/priority", GetContent(request));
 
         [Fact]
-        public async Task WithValidData_ReturnsHttpStatusCodeOkAndUpdateTodoInDatabase()
+        public async Task WithValidData_ShouldReturnOkAndUpdateTodoInDatabase()
         {
             var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
             var request = new UpdateTodoPriorityRequest
@@ -29,15 +29,15 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToUpdate.Id, request);
+            var httpResponse = await ActAsync(todoToUpdate.Id, request);
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             var todo = await DbContext.GetAsync<Todo>(todoToUpdate.Id);
             todo.Priority.Should().Be(request.Priority);
         }
 
         [Fact]
-        public async Task WithInvalidPriority_ReturnsValidationError()
+        public async Task WithInvalidPriority_ShouldReturnValidationError()
         {
             var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
             var request = new
@@ -46,10 +46,10 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             };
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoToUpdate.Id, request);
-            var errorReponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(todoToUpdate.Id, request);
+            var errorReponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorReponse.Errors.Should().NotBeEmpty();
         }
     }

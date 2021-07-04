@@ -17,11 +17,11 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
 {
     public class SignUpTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> SignUpAsync(SignUpRequest request)
+        private async Task<HttpResponseMessage> ActAsync(SignUpRequest request)
             => await TestClient.PostAsync("api/auth/sign-up", GetContent(request));
 
         [Fact]
-        public async Task SignUpAsync_WithValidData_ReturnsCreated()
+        public async Task WithValidData_ShouldReturnCreatedAndAddResourceToDatabase()
         {
             var request = new SignUpRequest
             {
@@ -30,29 +30,10 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await SignUpAsync(request);
-
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-        }
-
-        [Fact]
-        public async Task SignUpAsync_WithValidData_AddsUserToDatabase()
-        {
-            var request = new SignUpRequest
-            {
-                Username = "YetAnotherUniqueUsername",
-                Email = "yetanotheruniqueusername@yetanothertodoapp.com",
-                Password = "secretPassword"
-            };
-
-            var response = await SignUpAsync(request);
+            var httpResponse = await ActAsync(request);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-            var locationHeader = response.Headers.Location;
-            var userId = locationHeader.ToString().Split('/').Last();
-
-            var user = await DbContext.GetAsync<User>(Guid.Parse(userId));
-
+            var user = await DbContext.GetAsync<User>(httpResponse.Headers.Location.GetResourceId());
             user.Should().NotBeNull();
             user.Username.Value.Should().Be(request.Username.ToLower());
             user.Email.Value.Should().Be(request.Email.ToLower());
@@ -61,7 +42,7 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task SignUpAsync_WithEmptyEmail_ReturnsBadRequest(string email)
+        public async Task WithEmptyEmail_ShouldReturnValidationError(string email)
         {
             var request = new SignUpRequest
             {
@@ -70,10 +51,10 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await SignUpAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
         }
 
@@ -81,7 +62,7 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
         [InlineData(" @yetanothertodoapp.com")]
         [InlineData("testuseryetanothertodoapp.com")]
         [InlineData("testuser@yetanothertodoapp")]
-        public async Task SignUpAsync_WithInvalidEmailFormat_ReturnsBadRequest(string email)
+        public async Task WithInvalidEmailFormat_ShouldReturnBadRequestWithCustomError(string email)
         {
             var expectedException = new InvalidEmailFormatException(email);
             var request = new SignUpRequest
@@ -91,18 +72,18 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await SignUpAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
 
         [Theory]
         [InlineData("testuser@yetanothertodoapp.com")]
         [InlineData("testUser@yetanothertodoapp.com")]
-        public async Task SignUpAsync_WithExistingEmail_ReturnsBadRequest(string email)
+        public async Task WithExistingEmail_ShouldReturnBadRequestWithCustomError(string email)
         {
             var expectedException = new EmailInUseException(email);
             var request = new SignUpRequest
@@ -112,19 +93,19 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await SignUpAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
 
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("test")]
-        public async Task SignUpAsync_WithInvalidUsername_ReturnsValidationError(string username)
+        public async Task WithInvalidUsername_ShouldReturnValidationError(string username)
         {
             var request = new SignUpRequest
             {
@@ -133,17 +114,17 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await SignUpAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Theory]
         [InlineData("testuser")]
         [InlineData("testUser")]
-        public async Task SignUpAsync_WithExistingUsername_ReturnsBadRequest(string username)
+        public async Task WithExistingUsername_ShouldReturnBadRequestWithCustomError(string username)
         {
             var expectedException = new UsernameInUseException(username);
             var request = new SignUpRequest
@@ -153,19 +134,19 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await SignUpAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task SignUpAsync_WithInvalidPasswordFormat_ReturnsValidationError(string password)
+        public async Task WithInvalidPasswordFormat_ShouldReturnValidationError(string password)
         {
             var request = new SignUpRequest
             {
@@ -174,10 +155,10 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = password
             };
 
-            var response = await SignUpAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
         }
     }

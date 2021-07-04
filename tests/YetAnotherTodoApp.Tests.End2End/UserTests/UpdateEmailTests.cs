@@ -2,94 +2,59 @@
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models.Auths;
 using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Application.Exceptions;
-using YetAnotherTodoApp.Domain.Exceptions;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Tests.End2End.Dummies;
+using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.UserTests
 {
     public class UpdateEmailTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> UpdateEmailAsync(UpdateEmailRequest request)
+        private async Task<HttpResponseMessage> ActAsync(UpdateEmailRequest request)
             => await TestClient.PutAsync("api/users/email", GetContent(request));
 
-        private async Task<HttpResponseMessage> SignUpAsync(SignUpRequest request)
-            => await TestClient.PostAsync("api/auth/sign-up", GetContent(request));
-
-        private async Task<HttpResponseMessage> SingInAsync(SignInRequest request)
-            => await TestClient.PostAsync("api/auth/sign-in", GetContent(request));
-
-        private async Task<HttpResponseMessage> GetUserInfoAsync()
-            => await TestClient.GetAsync("api/users/");
-
         [Fact]
-        public async Task UpdateEmail_WithValidData_ReturnsOk()
+        public async Task WithValidData_ShouldReturnOkAndUpdateUserInfoInDatabase()
         {
-            var signUpRequest = new SignUpRequest
-            {
-                Username = "userforemailupdate",
-                Email = "userforemailupdate@yetantohertodoapp.com",
-                Password = "secretPassword"
-            };
-            var signInRequest = new SignInRequest
-            {
-                Email = signUpRequest.Email,
-                Password = signUpRequest.Password
-            };
-            var updateEmailRequest = new UpdateEmailRequest
+            var request = new UpdateEmailRequest
             {
                 Email = "updatedEmail@yetanothertodoapp.com"
             };
 
-            var signUpResponse = await SignUpAsync(signUpRequest);
-            signUpResponse.EnsureSuccessStatusCode();
+            await AuthenticateTestUserAsync();
+            var httpResponse = await ActAsync(request);
 
-            var signInResponse = await SingInAsync(signInRequest);
-            signInResponse.EnsureSuccessStatusCode();
-
-            var jwtToken = JsonConvert.DeserializeObject<AuthSuccessResponse>(await signInResponse.Content.ReadAsStringAsync()).Token;
-
-            TestClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", jwtToken);
-
-            var updateEmailResponse = await UpdateEmailAsync(updateEmailRequest);
-            updateEmailResponse.EnsureSuccessStatusCode();
-
-            var updatedUserInfo = await GetUserInfoAsync();
-            updatedUserInfo.EnsureSuccessStatusCode();
-
-            var content = JsonConvert.DeserializeObject<UserInfoResponse>(await updatedUserInfo.Content.ReadAsStringAsync());
-            
-            content.Email.Should().BeEquivalentTo(updateEmailRequest.Email);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            var user = await DbContext.GetAsync<User>(User.Id);
+            user.Email.Value.Should().BeEquivalentTo(request.Email);
         }
 
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task UpdateEmailAsync_WithInvalidEmailFormat_ShouldReturnValidationError(string email)
+        public async Task WithInvalidEmailFormat_ShouldReturnValidationError(string email)
         {
-            await AuthenticateTestUserAsync();
             var request = new UpdateEmailRequest
             {
                 Email = email
             };
 
-            var response = await UpdateEmailAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await response.Content.ReadAsStringAsync());
+            await AuthenticateTestUserAsync();
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task UpdateEmailAsync_WithAlreadyUsedEmail_ReturnsBadRequest()
+        public async Task WithAlreadyUsedEmail_ShouldReturnBadRequestWithCustomError()
         {
-            await AuthenticateTestUserAsync();
             var expectedException = new UpdateEmailToAlreadyUsedValueException();
 
             var request = new UpdateEmailRequest
@@ -97,13 +62,13 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
                 Email = TestUser.Email
             };
 
-            var response = await UpdateEmailAsync(request);
-            var exception = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            await AuthenticateTestUserAsync();
+            var httpResponse = await ActAsync(request);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Code.Should().BeEquivalentTo(expectedException.Code);
-            exception.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
-
     }
 }

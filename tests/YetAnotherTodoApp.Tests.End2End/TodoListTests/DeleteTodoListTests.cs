@@ -19,28 +19,28 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             => await TestClient.DeleteAsync($"/api/todolist/{id}");
 
         [Fact]
-        public async Task WithExistingId_ReturnsHttpStatusCodeNoContentAndRemoveTodoListFromDatabase()
+        public async Task WithExistingId_ShouldReturnNoContentAndRemoveResourceFromDatabase()
         {
-            var resourceToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestTodoList.Title);
+            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestTodoList.Title);
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(resourceToRemove.Id);
+            var httpResponse = await ActAsync(todoListToRemove.Id);
 
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-            var todoList = await DbContext.GetAsync<TodoList>(resourceToRemove.Id);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
+            var todoList = await DbContext.GetAsync<TodoList>(todoListToRemove.Id);
             todoList.Should().BeNull();
         }
 
         [Fact]
-        public async Task WithExistingIdOfTodoListWithTodoWithAssignedTasks_DeleteTodoListWithAssignedTodoAndTasksFromDatabse()
+        public async Task WithExistingIdOfTodoListContainingTodoWithAssignedSteps_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
         {
             var resourceToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListWithAssignedTodo.Title);
             
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(resourceToRemove.Id);
+            var httpResponse = await ActAsync(resourceToRemove.Id);
 
-            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
             var todoList = await DbContext.GetAsync<TodoList>(resourceToRemove.Id);
             var todo = await DbContext.GetAsync<Todo>(resourceToRemove.Todos.FirstOrDefault().Id);
 
@@ -49,16 +49,16 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         }
 
         [Fact]
-        public async Task WithNonExistingId_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithNotExistingId_ShouldReturnBadRequestWithCustomError()
         {
             var id = Guid.NewGuid();
             var expectedException = new TodoListWithGivenIdDoesNotExistException(id);
             
             await AuthenticateTestUserAsync();
-            var response = await ActAsync(id);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            var httpResponse = await ActAsync(id);
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);
             errorResponse.Message.Should().Be(expectedException.Message);
         }
