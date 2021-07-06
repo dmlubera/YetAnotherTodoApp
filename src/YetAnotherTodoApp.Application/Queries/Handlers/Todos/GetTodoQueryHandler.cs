@@ -13,14 +13,11 @@ namespace YetAnotherTodoApp.Application.Queries.Handlers.Todos
         private readonly IMapper _mapper;
 
         public GetTodoQueryHandler(ITodoRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+            => (_repository, _mapper) = (repository, mapper);
 
         public async Task<TodoDto> HandleAsync(GetTodoQuery query)
         {
-            var todo = await _repository.GetTodoAsync(query.TodoId);
+            var todo = await _repository.GetForUserAsync(query.TodoId, query.UserId);
             if (todo is null)
                 throw new TodoWithGivenIdDoesNotExistException(query.TodoId);
 

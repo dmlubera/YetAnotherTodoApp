@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using YetAnotherTodoApp.Application.DTOs;
@@ -10,19 +9,13 @@ namespace YetAnotherTodoApp.Application.Queries.Handlers.Todos
 {
     public class GetTodosQueryHandler : IQueryHandler<GetTodosQuery, IEnumerable<TodoDto>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ITodoRepository _repository;
         private readonly IMapper _mapper;
 
-        public GetTodosQueryHandler(IUserRepository userRepository, IMapper mapper)
-        {
-            _userRepository = userRepository;
-            _mapper = mapper;
-        }
+        public GetTodosQueryHandler(ITodoRepository repository, IMapper mapper)
+            => (_repository, _mapper) = (repository, mapper);
 
         public async Task<IEnumerable<TodoDto>> HandleAsync(GetTodosQuery query)
-        {
-            var user = await _userRepository.GetByIdAsync(query.UserId);
-            return _mapper.Map<IEnumerable<TodoDto>>(user.TodoLists.SelectMany(x => x.Todos).ToList());
-        }
+            => _mapper.Map<IEnumerable<TodoDto>>(await _repository.GetAllForUserAsync(query.UserId));
     }
 }

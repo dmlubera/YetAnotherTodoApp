@@ -9,16 +9,13 @@ namespace YetAnotherTodoApp.Application.Queries.Handlers.TodoLists
 {
     public class GetTodoListsQueryHandler : IQueryHandler<GetTodoListsQuery, IEnumerable<TodoListDto>>
     {
-        private readonly ITodoListRepository _todoListRepository;
+        private readonly ITodoListRepository _repository;
         private readonly IMapper _mapper;
 
-        public GetTodoListsQueryHandler(ITodoListRepository todoListRepository, IMapper mapper)
-        {
-            _todoListRepository = todoListRepository;
-            _mapper = mapper;
-        }
+        public GetTodoListsQueryHandler(ITodoListRepository repository, IMapper mapper)
+            => (_repository, _mapper) = (repository, mapper);
 
         public async Task<IEnumerable<TodoListDto>> HandleAsync(GetTodoListsQuery query)
-            => _mapper.Map<IEnumerable<TodoListDto>>(await _todoListRepository.GetAllForUserAsync(query.UserId));
+            => _mapper.Map<IEnumerable<TodoListDto>>(await _repository.GetAllForUserAsync(query.UserId));
     }
 }
