@@ -19,6 +19,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
             var todoList = user.TodoLists.FirstOrDefault(x => x.Id == command.TodoListId);
             if (todoList is null)
                 throw new TodoListWithGivenIdDoesNotExistException(command.TodoListId);
+            if (todoList.Title.Value == "Inbox")
+                throw new InboxDeletionIsNotAllowedException();
 
             user.DeleteTodoList(todoList);
 

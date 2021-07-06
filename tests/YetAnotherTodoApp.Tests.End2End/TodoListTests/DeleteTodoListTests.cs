@@ -58,5 +58,19 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             errorResponse.Code.Should().Be(expectedException.Code);
             errorResponse.Message.Should().Be(expectedException.Message);
         }
+
+        [Fact]
+        public async Task OnInbox_ShouldReturnBadRequestWithCustomError()
+        {
+            var inbox = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
+            var expectedException = new InboxDeletionIsNotAllowedException();
+
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(inbox.Id));
+
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().Be(expectedException.Code);
+            errorResponse.Message.Should().Be(expectedException.Message);
+        }
     }
 }
