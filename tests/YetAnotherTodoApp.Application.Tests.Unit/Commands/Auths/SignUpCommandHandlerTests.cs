@@ -11,7 +11,7 @@ using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
-namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
+namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
 {
     public class SignUpCommandHandlerTests
     {

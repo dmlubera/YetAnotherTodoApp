@@ -35,8 +35,16 @@ namespace YetAnotherTodoApp.Domain.Entities
             _todoLists.Add(todoList);
         }
 
-        public void DeleteTodoList(TodoList todoList)
-            => _todoLists.Remove(todoList);
+        public void DeleteTodoList(Guid id)
+        {
+            var todoList = _todoLists.FirstOrDefault(x => x.Id == id);
+            if (todoList is null)
+                throw new TodoListWithGivenIdDoesNotExistException(id);
+            if (todoList.Title.Value == "Inbox")
+                throw new InboxDeletionIsNotAllowedException();
+
+           _todoLists.Remove(todoList);
+        }
 
         public void UpdateUserInfo(string firstName, string lastname)
         {

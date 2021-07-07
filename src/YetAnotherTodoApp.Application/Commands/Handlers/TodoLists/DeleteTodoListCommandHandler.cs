@@ -16,13 +16,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
         public async Task HandleAsync(DeleteTodoListCommand command)
         {
             var user = await _repository.GetByIdAsync(command.UserId);
-            var todoList = user.TodoLists.FirstOrDefault(x => x.Id == command.TodoListId);
-            if (todoList is null)
-                throw new TodoListWithGivenIdDoesNotExistException(command.TodoListId);
-            if (todoList.Title.Value == "Inbox")
-                throw new InboxDeletionIsNotAllowedException();
 
-            user.DeleteTodoList(todoList);
+            user.DeleteTodoList(command.TodoListId);
 
             await _repository.SaveChangesAsync();
         }

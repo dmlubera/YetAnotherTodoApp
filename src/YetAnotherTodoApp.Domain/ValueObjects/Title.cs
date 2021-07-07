@@ -7,6 +7,8 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
     {
         public string Value { get; private set; }
 
+        protected Title() { }
+
         protected Title(string value)
             => Value = value;
 

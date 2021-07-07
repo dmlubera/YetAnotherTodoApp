@@ -17,7 +17,7 @@ namespace YetAnotherTodoApp.Application.DI
         {
             services.AddScoped<ICommandHandler<SignUpCommand>, SignUpCommandHandler>();
             services.AddScoped<ICommandHandler<AddTodoCommand>, AddTodoCommandHandler>();
-            services.AddScoped<ICommandHandler<AddTodoListAsync>, AddTodoListCommandHandler>();
+            services.AddScoped<ICommandHandler<AddTodoListCommand>, AddTodoListCommandHandler>();
             services.AddScoped<ICommandHandler<DeleteTodoCommand>, DeleteTodoCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateTodoStatusCommand>, UpdateTodoStatusCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateTodoPriorityCommand>, UpdateTodoPriorityCommandHandler>();
