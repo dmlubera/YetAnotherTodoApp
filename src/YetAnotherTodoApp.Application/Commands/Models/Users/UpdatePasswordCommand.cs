@@ -7,6 +7,8 @@ namespace YetAnotherTodoApp.Application.Commands.Models.Users
         public Guid UserId { get; set; }
         public string Password { get; set; }
 
+        protected UpdatePasswordCommand() { }
+
         public UpdatePasswordCommand(Guid userId, string password)
             => (UserId, Password) = (userId, password);
     }

@@ -13,6 +13,8 @@ namespace YetAnotherTodoApp.Application.Commands.Models.Todos
         public DateTime FinishDate { get; set; }
         public List<StepDto> Steps { get; set; } = new List<StepDto>();
 
+        protected AddTodoCommand() { }
+
         public AddTodoCommand(Guid userId, string title, string project, DateTime finishDate, IEnumerable<StepDto> steps)
         {
             UserId = userId;

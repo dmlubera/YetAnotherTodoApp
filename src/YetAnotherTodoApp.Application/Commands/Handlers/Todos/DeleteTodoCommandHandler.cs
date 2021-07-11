@@ -16,12 +16,12 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
         public async Task HandleAsync(DeleteTodoCommand command)
         {
             var user = await _repository.GetByIdAsync(command.UserId);
-            var todo = user.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Id == command.TodoId);
-
-            if (todo is null)
+            
+            var todoList = user.TodoLists.FirstOrDefault(x => x.Todos.Any(x => x.Id == command.TodoId));
+            if (todoList is null)
                 throw new TodoWithGivenIdDoesNotExistException(command.TodoId);
 
-            user.TodoLists.FirstOrDefault(x => x.Title.Value == todo.TodoList.Title.Value).DeleteTodo(todo);
+            todoList.DeleteTodo(command.TodoId);
 
             await _repository.SaveChangesAsync();
         }

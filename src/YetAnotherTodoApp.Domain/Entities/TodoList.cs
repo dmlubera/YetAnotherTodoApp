@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
@@ -23,8 +24,11 @@ namespace YetAnotherTodoApp.Domain.Entities
         public void AddTodo(Todo todo)
             => _todos.Add(todo);
 
-        public void DeleteTodo(Todo todo)
-            => _todos.Remove(todo);
+        public void DeleteTodo(Guid todoId)
+        {
+            var todo = _todos.FirstOrDefault(x => x.Id == todoId);
+            _todos.Remove(todo);
+        }
 
         public void UpdateTitle(string title)
         {

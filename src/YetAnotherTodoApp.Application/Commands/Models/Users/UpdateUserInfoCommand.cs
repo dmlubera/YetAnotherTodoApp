@@ -8,6 +8,8 @@ namespace YetAnotherTodoApp.Application.Commands.Models.Users
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        protected UpdateUserInfoCommand() { }
+
         public UpdateUserInfoCommand(Guid userId, string firstName, string lastName)
         {
             UserId = userId;

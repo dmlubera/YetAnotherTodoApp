@@ -15,7 +15,11 @@ namespace YetAnotherTodoApp.Domain.Entities
         public Password Password { get; private set; }
         public IReadOnlyCollection<TodoList> TodoLists => _todoLists.AsReadOnly();
 
-        protected User() { }
+        protected User()
+        {
+            AddTodoList(new TodoList("Inbox"));
+            UpdateAuditInfo();
+        }
 
         public User(string username, string email, string password, string salt)
         {

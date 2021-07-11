@@ -10,6 +10,8 @@ namespace YetAnotherTodoApp.Application.Commands.Models.Todos
         public string Description { get; set; }
         public DateTime FinishDate { get; set; }
 
+        protected UpdateTodoCommand() { }
+
         public UpdateTodoCommand(Guid userId, Guid todoId, string title, string description, DateTime finishDate)
         {
             UserId = userId;
