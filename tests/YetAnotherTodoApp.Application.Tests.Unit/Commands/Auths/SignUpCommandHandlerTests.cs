@@ -1,6 +1,7 @@
-﻿using AutoFixture;
+﻿using Bogus;
 using FluentAssertions;
 using Moq;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Application.Cache;
@@ -15,7 +16,6 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
 {
     public class SignUpCommandHandlerTests
     {
-        private readonly Fixture _fixture;
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<IEncrypter> _encrypterMock;
         private readonly Mock<ICache> _memoryCacheMock;
@@ -23,7 +23,6 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
 
         public SignUpCommandHandlerTests()
         {
-            _fixture = new Fixture();
             _userRepositoryMock = new Mock<IUserRepository>();
             _encrypterMock = new Mock<IEncrypter>();
             _memoryCacheMock = new Mock<ICache>();
@@ -61,9 +60,10 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
         [Fact]
         public async Task HandleAsync_WhenGivenValidData_ThenShouldRegisterUser()
         {
-            var command = new SignUpCommand("validUsername", "validEmail@test.com", "secretPassword");
-            var passwordHash = _fixture.Create<string>();
-            var passwordSalt = _fixture.Create<string>();
+            var command = CreateCommandFixture();
+            var faker = new Faker();
+            var passwordHash = faker.Random.String2(8);
+            var passwordSalt = faker.Random.String2(8);
             _userRepositoryMock.Setup(x => x.CheckIfEmailIsInUseAsync(command.Email))
                 .ReturnsAsync(false);
             _userRepositoryMock.Setup(x => x.CheckIfUsernameIsInUseAsync(command.Username))
@@ -83,6 +83,12 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
         }
 
         private SignUpCommand CreateCommandFixture()
-            => _fixture.Build<SignUpCommand>().Create();
+            => new Faker<SignUpCommand>()
+                .CustomInstantiator(x => Activator.CreateInstance(typeof(SignUpCommand), nonPublic: true) as SignUpCommand)
+                .RuleFor(x => x.CacheTokenId, f => f.Random.Guid())
+                .RuleFor(x => x.Email, f => f.Internet.Email())
+                .RuleFor(x => x.Username, f => f.Random.AlphaNumeric(7))
+                .RuleFor(x => x.Password, f => f.Internet.Password())
+                .Generate();
     }
 }

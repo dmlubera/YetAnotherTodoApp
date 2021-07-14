@@ -9,6 +9,8 @@ namespace YetAnotherTodoApp.Application.Commands.Models.Auths
         public string Email { get; set; }
         public string Password { get; set; }
 
+        protected SignUpCommand() { }
+
         public SignUpCommand(string username, string email, string password)
         {
             Username = username;
