@@ -17,8 +17,6 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         protected User()
         {
-            AddTodoList(new TodoList("Inbox"));
-            UpdateAuditInfo();
         }
 
         public User(string username, string email, string password, string salt)

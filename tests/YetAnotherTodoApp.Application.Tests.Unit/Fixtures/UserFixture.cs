@@ -8,13 +8,18 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Fixtures
     public static class UserFixture
     {
         public static User Create()
-            => new Faker<User>()
+        {
+            var userFixture = new Faker<User>()
                 .CustomInstantiator(x => Activator.CreateInstance(typeof(User), nonPublic: true) as User)
                 .RuleFor(x => x.Name, x => CustomizedNameFaker().Generate())
                 .RuleFor(x => x.Username, x => CustomizedUsernameFaker().Generate())
                 .RuleFor(x => x.Email, x => CustomizedEmailFaker().Generate())
                 .RuleFor(x => x.Password, x => CustomizedPasswordFaker().Generate())
                 .Generate();
+            userFixture.AddTodoList(new TodoList("Inbox"));
+            
+            return userFixture;
+        }
 
         private static Faker<Username> CustomizedUsernameFaker()
             => new Faker<Username>()

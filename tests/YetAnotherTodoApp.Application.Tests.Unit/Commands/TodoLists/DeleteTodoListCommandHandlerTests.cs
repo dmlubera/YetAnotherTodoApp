@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Application.Commands.Handlers.TodoLists;
@@ -32,7 +33,9 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
 
             await _handler.HandleAsync(new DeleteTodoListCommand(userFixture.Id, todoListFixture.Id));
 
-            userFixture.TodoLists.Count.Should().Be(0);
+            userFixture.TodoLists
+                .FirstOrDefault(x => x.Title.Value == todoListFixture.Title.Value)
+                .Should().BeNull();
             _repositoryMock.Verify(x => x.SaveChangesAsync());
         }
     }
