@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using YetAnotherTodoApp.Api.Extensions;
 using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
@@ -13,6 +14,7 @@ using YetAnotherTodoApp.Application.Queries.Models.Todos;
 
 namespace YetAnotherTodoApp.Api.Controllers
 {
+    [Authorize]
     [Route("api/todo/")]
     public class TodoController : ControllerBase
     {
@@ -27,76 +29,67 @@ namespace YetAnotherTodoApp.Api.Controllers
             _cache = cache;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetTodosAsync()
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var todos = await _queryDispatcher.HandleAsync<GetTodosQuery, IEnumerable<TodoDto>>(new GetTodosQuery(userId));
+            var todos = await _queryDispatcher
+                .HandleAsync<GetTodosQuery, IEnumerable<TodoDto>>(new GetTodosQuery(User.GetAuthenticatedUserId()));
             return Ok(todos);
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTodoAsync(Guid id)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var todo = await _queryDispatcher.HandleAsync<GetTodoQuery, TodoDto>(new GetTodoQuery(userId, id));
+            var todo = await _queryDispatcher
+                .HandleAsync<GetTodoQuery, TodoDto>(new GetTodoQuery(User.GetAuthenticatedUserId(), id));
 
             return Ok(todo);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddTodoAsync([FromBody] AddTodoRequest request)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new AddTodoCommand(userId, request.Title, request.Project, request.FinishDate, request.Steps);
+            var command = new AddTodoCommand(User.GetAuthenticatedUserId(), request.Title,
+                request.Project, request.FinishDate, request.Steps);
+
             await _commandDispatcher.DispatchAsync(command);
 
             var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
             return Created($"/api/todo/{resourceId}", null);
         }
 
-        [Authorize]
         [HttpDelete("{todoId}")]
         public async Task<IActionResult> DeleteTodoAsync(Guid todoId)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new DeleteTodoCommand(userId, todoId);
+            var command = new DeleteTodoCommand(User.GetAuthenticatedUserId(), todoId);
             await _commandDispatcher.DispatchAsync(command);
 
             return NoContent();
         }
 
-        [Authorize]
         [HttpPut("{todoId}")]
         public async Task<IActionResult> UpdateTodoAsync(Guid todoId, [FromBody] UpdateTodoRequest request)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateTodoCommand(userId, todoId, request.Title, request.Description, request.FinishDate);
+            var command = new UpdateTodoCommand(User.GetAuthenticatedUserId(), todoId,
+                request.Title, request.Description, request.FinishDate);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
         }
 
-        [Authorize]
         [HttpPut("{todoId}/status")]
         public async Task<IActionResult> UpdateTodoStatusAsync(Guid todoId, [FromBody] UpdateTodoStatusRequest request)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateTodoStatusCommand(userId, todoId, request.Status);
+            var command = new UpdateTodoStatusCommand(User.GetAuthenticatedUserId(), todoId, request.Status);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
         }
 
-        [Authorize]
         [HttpPut("{todoId}/priority")]
         public async Task<IActionResult> UpdateTodoPriorityAsync(Guid todoId, [FromBody] UpdateTodoPriorityRequest request)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateTodoPriorityCommand(userId, todoId, request.Priority);
+            var command = new UpdateTodoPriorityCommand(User.GetAuthenticatedUserId(), todoId, request.Priority);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
