@@ -6,8 +6,6 @@ namespace YetAnotherTodoApp.Application.DI
     internal static class HelpersModuleInstaller
     {
         internal static void RegisterHelpersModule(this IServiceCollection services)
-        {
-            services.AddScoped<IEncrypter, Encrypter>();
-        }
+            => services.AddSingleton<IEncrypter, Encrypter>();
     }
 }

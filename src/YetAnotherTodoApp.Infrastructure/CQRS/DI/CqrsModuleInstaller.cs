@@ -8,8 +8,8 @@ namespace YetAnotherTodoApp.Infrastructure.CQRS.DI
     {
         internal static void RegisterCrqsModule(this IServiceCollection services)
         {
-            services.AddScoped<ICommandDispatcher, CommandDispatcher>();
-            services.AddScoped<IQueryDispatcher, QueryDispatcher>();
+            services.AddTransient<ICommandDispatcher, CommandDispatcher>();
+            services.AddTransient<IQueryDispatcher, QueryDispatcher>();
         }
     }
 }

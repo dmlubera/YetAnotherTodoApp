@@ -6,6 +6,6 @@ namespace YetAnotherTodoApp.Infrastructure.Cache.DI
     internal static class CacheModuleInstaller
     {
         internal static void RegisterCacheModule(this IServiceCollection services)
-            => services.AddScoped<ICache, MemoryCache>();
+            => services.AddTransient<ICache, MemoryCache>();
     }
 }

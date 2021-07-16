@@ -15,19 +15,19 @@ namespace YetAnotherTodoApp.Application.DI
     {
         internal static void RegisterCommandsModule(this IServiceCollection services)
         {
-            services.AddScoped<ICommandHandler<SignUpCommand>, SignUpCommandHandler>();
-            services.AddScoped<ICommandHandler<AddTodoCommand>, AddTodoCommandHandler>();
-            services.AddScoped<ICommandHandler<AddTodoListCommand>, AddTodoListCommandHandler>();
-            services.AddScoped<ICommandHandler<DeleteTodoCommand>, DeleteTodoCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateTodoStatusCommand>, UpdateTodoStatusCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateTodoPriorityCommand>, UpdateTodoPriorityCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateTodoCommand>, UpdateTodoCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateUserInfoCommand>, UpdateUserInfoCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateEmailCommand>, UpdateEmailCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdatePasswordCommand>, UpdatePasswordCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateTodoListCommand>, UpdateTodoListCommandHandler>();
-            services.AddScoped<ICommandHandler<DeleteTodoListCommand>, DeleteTodoListCommandHandler>();
-            services.AddScoped<ICommandHandler<SignInCommand>, SignInCommandHandler>();
+            services.AddTransient<ICommandHandler<SignUpCommand>, SignUpCommandHandler>();
+            services.AddTransient<ICommandHandler<AddTodoCommand>, AddTodoCommandHandler>();
+            services.AddTransient<ICommandHandler<AddTodoListCommand>, AddTodoListCommandHandler>();
+            services.AddTransient<ICommandHandler<DeleteTodoCommand>, DeleteTodoCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdateTodoStatusCommand>, UpdateTodoStatusCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdateTodoPriorityCommand>, UpdateTodoPriorityCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdateTodoCommand>, UpdateTodoCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdateUserInfoCommand>, UpdateUserInfoCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdateEmailCommand>, UpdateEmailCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdatePasswordCommand>, UpdatePasswordCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdateTodoListCommand>, UpdateTodoListCommandHandler>();
+            services.AddTransient<ICommandHandler<DeleteTodoListCommand>, DeleteTodoListCommandHandler>();
+            services.AddTransient<ICommandHandler<SignInCommand>, SignInCommandHandler>();
         }
     }
 }

@@ -8,9 +8,9 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.DI
     {
         internal static void RegisterRepositoriesModule(this IServiceCollection services)
         {
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ITodoListRepository, TodoListRepository>();
-            services.AddScoped<ITodoRepository, TodoRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ITodoListRepository, TodoListRepository>();
+            services.AddTransient<ITodoRepository, TodoRepository>();
         }
     }
 }

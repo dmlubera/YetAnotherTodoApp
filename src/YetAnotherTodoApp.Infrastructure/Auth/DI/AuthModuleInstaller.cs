@@ -7,8 +7,6 @@ namespace YetAnotherTodoApp.Infrastructure.Auth.DI
     internal static class AuthModuleInstaller
     {
         internal static void RegisterAuthModule(this IServiceCollection services)
-        {
-            services.AddScoped<IJwtHelper, JwtHelper>();
-        }
+            => services.AddSingleton<IJwtHelper, JwtHelper>();
     }
 }

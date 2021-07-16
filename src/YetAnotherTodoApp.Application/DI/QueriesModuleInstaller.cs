@@ -15,11 +15,11 @@ namespace YetAnotherTodoApp.Application.DI
     {
         internal static void RegisterQueriesModule(this IServiceCollection services)
         {
-            services.AddScoped<IQueryHandler<GetTodosQuery, IEnumerable<TodoDto>>, GetTodosQueryHandler>();
-            services.AddScoped<IQueryHandler<GetTodoListsQuery, IEnumerable<TodoListDto>>, GetTodoListsQueryHandler>();
-            services.AddScoped<IQueryHandler<GetTodoListQuery, TodoListDto>, GetTodoListQueryHandler>();
-            services.AddScoped<IQueryHandler<GetUserInfoQuery, UserInfoDto>, GetUserInforQueryHandler>();
-            services.AddScoped<IQueryHandler<GetTodoQuery, TodoDto>, GetTodoQueryHandler>();
+            services.AddTransient<IQueryHandler<GetTodosQuery, IEnumerable<TodoDto>>, GetTodosQueryHandler>();
+            services.AddTransient<IQueryHandler<GetTodoListsQuery, IEnumerable<TodoListDto>>, GetTodoListsQueryHandler>();
+            services.AddTransient<IQueryHandler<GetTodoListQuery, TodoListDto>, GetTodoListQueryHandler>();
+            services.AddTransient<IQueryHandler<GetUserInfoQuery, UserInfoDto>, GetUserInforQueryHandler>();
+            services.AddTransient<IQueryHandler<GetTodoQuery, TodoDto>, GetTodoQueryHandler>();
         }
     }
 }
