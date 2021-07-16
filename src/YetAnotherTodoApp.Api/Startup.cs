@@ -7,7 +7,6 @@ using YetAnotherTodoApp.Api.Configurations;
 using YetAnotherTodoApp.Api.Filters;
 using YetAnotherTodoApp.Api.Middlewares;
 using YetAnotherTodoApp.Application.DI;
-using YetAnotherTodoApp.Infrastructure.DAL.DI;
 using YetAnotherTodoApp.Infrastructure.DI;
 
 namespace YetAnotherTodoApp.Api
@@ -29,7 +28,6 @@ namespace YetAnotherTodoApp.Api
                         opts.ValidatorOptions.LanguageManager.Enabled = false;
                         opts.RegisterValidatorsFromAssemblyContaining<Startup>();
                     });
-            services.AddYetAnotherTodoAppDbContext(Configuration.GetConnectionString("DefaultConnection"));
             services.AddControllers();
             services.AddOptions();
             services.AddSwaggerConfiguration(Configuration);
@@ -37,7 +35,7 @@ namespace YetAnotherTodoApp.Api
             services.AddMemoryCache();
 
             services.RegisterApplicationModule();
-            services.RegisterInfrastructureModule();
+            services.RegisterInfrastructureModule(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
