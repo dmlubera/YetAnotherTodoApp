@@ -28,6 +28,8 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
         {
             var commandFixture = CreateCommandFixture();
             var userFixture = UserFixture.Create();
+            _repositoryMock.Setup(x => x.CheckIfEmailIsInUseAsync(It.IsAny<string>()))
+                .ReturnsAsync(false);
             _repositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(userFixture);
 
@@ -38,15 +40,17 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
         }
 
         [Fact]
-        public async Task WhenGivenEmailIsCurrentlySetEmail_ThenShouldThrowCustomException()
+        public async Task WhenGivenEmailIsInUse_ThenShouldThrowCustomException()
         {
             var userFixture = UserFixture.Create();
-            var expectedException = new UpdateEmailToAlreadyUsedValueException();
-            var commandFixture = new UpdateEmailCommand(Guid.NewGuid(), userFixture.Email.Value);
+            var commandFixture = CreateCommandFixture();
+            var expectedException = new EmailInUseException(commandFixture.Email);
+            _repositoryMock.Setup(x => x.CheckIfEmailIsInUseAsync(It.IsAny<string>()))
+                .ReturnsAsync(true);
             _repositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(userFixture);
 
-            var exception = await Assert.ThrowsAsync<UpdateEmailToAlreadyUsedValueException>(async () => await _handler.HandleAsync(commandFixture));
+            var exception = await Assert.ThrowsAsync<EmailInUseException>(async () => await _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Code.Should().Be(expectedException.Code);

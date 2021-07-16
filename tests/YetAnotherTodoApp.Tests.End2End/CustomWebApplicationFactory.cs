@@ -39,25 +39,31 @@ namespace YetAnotherTodoApp.Tests.End2End
 
         private void InitializeDbForTests(YetAnotherTodoAppDbContext dbContext)
         {
-            var encrypter = new Encrypter();
-            var salt = encrypter.GetSalt();
-            var password = encrypter.GetHash(TestUser.Password, salt);
-            var user = new User(TestUser.Username, TestUser.Email, password, salt);
-            user.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").AddTodo(new Todo("TodoAssignedToInbox", DateTime.UtcNow.Date));
+            User = CreateUser(TestUser.Username, TestUser.Email, TestUser.Password);
+            User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").AddTodo(new Todo("TodoAssignedToInbox", DateTime.UtcNow.Date));
             var todoWithAssignedStep = new Todo("TodoWithAssignedStep", DateTime.UtcNow.Date);
             todoWithAssignedStep.AddSteps(new[] { new Step("StepOne") });
-            user.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").AddTodo(todoWithAssignedStep);
+            User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").AddTodo(todoWithAssignedStep);
             var todoList = new TodoList(TestTodoList.Title);
             var todoListWithAssignedTodo = new TodoList(TodoListWithAssignedTodo.Title);
             todoListWithAssignedTodo.AddTodo(new Todo("AssignedTestTodo", DateTime.UtcNow.Date));
             var todoListForUpdateTests = new TodoList(TodoListForUpdateTests.Title);
 
-            user.AddTodoList(todoList);
-            user.AddTodoList(todoListWithAssignedTodo);
-            user.AddTodoList(todoListForUpdateTests);
-            User = user;
-            dbContext.Users.Add(user);
+            User.AddTodoList(todoList);
+            User.AddTodoList(todoListWithAssignedTodo);
+            User.AddTodoList(todoListForUpdateTests);
+            dbContext.Users.Add(User);
+            dbContext.Users.Add(CreateUser("secondTestUser", "secondTestUser@yetanothertodoapp.com", "superSecretPassword"));
             dbContext.SaveChanges();
+        }
+
+        private User CreateUser(string username, string email, string password)
+        {
+            var encrypter = new Encrypter();
+            var salt = encrypter.GetSalt();
+            var hash = encrypter.GetHash(password, salt);
+
+            return new User(username, email, hash, salt);
         }
     }
 }

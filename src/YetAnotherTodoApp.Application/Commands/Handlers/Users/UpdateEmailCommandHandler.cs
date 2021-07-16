@@ -14,9 +14,9 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
 
         public async Task HandleAsync(UpdateEmailCommand command)
         {
+            if (await _repository.CheckIfEmailIsInUseAsync(command.Email))
+                throw new EmailInUseException(command.Email);
             var user = await _repository.GetByIdAsync(command.UserId);
-            if (command.Email == user.Email.Value)
-                throw new UpdateEmailToAlreadyUsedValueException();
 
             user.UpdateEmail(command.Email);
 

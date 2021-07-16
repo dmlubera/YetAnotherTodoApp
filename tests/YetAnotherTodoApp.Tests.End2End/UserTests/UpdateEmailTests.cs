@@ -7,7 +7,6 @@ using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.UserTests
@@ -50,17 +49,16 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
         }
 
         [Fact]
-        public async Task WithAlreadyUsedEmail_ShouldReturnBadRequestWithCustomError()
+        public async Task WithEmailInUse_ShouldReturnBadRequestWithCustomError()
         {
-            var expectedException = new UpdateEmailToAlreadyUsedValueException();
-
             var request = new UpdateEmailRequest
             {
-                Email = TestUser.Email
+                Email = "secondTestUser@yetanothertodoapp.com"
             };
+            var expectedException = new EmailInUseException(request.Email);
 
-            (var httpResponse, var errorResponse) =
-                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request));
+            (var httpResponse, var errorResponse)
+                = await HandleRequestAsync<ErrorResponse>(() => ActAsync(request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
