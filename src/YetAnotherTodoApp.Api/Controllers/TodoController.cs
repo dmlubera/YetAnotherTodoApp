@@ -29,7 +29,16 @@ namespace YetAnotherTodoApp.Api.Controllers
             _cache = cache;
         }
 
+        /// <summary>
+        /// Gets specified todo for authenticated user
+        /// </summary>
+        /// <response code="200">Returned specified todo for the authenticated user</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> GetTodosAsync()
         {
             var todos = await _queryDispatcher
@@ -37,7 +46,16 @@ namespace YetAnotherTodoApp.Api.Controllers
             return Ok(todos);
         }
 
+        /// <summary>
+        /// Gets all todos for authenticated user
+        /// </summary>
+        /// <response code="200">Returned all todos for the authenticated user</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> GetTodoAsync(Guid id)
         {
             var todo = await _queryDispatcher
@@ -46,7 +64,17 @@ namespace YetAnotherTodoApp.Api.Controllers
             return Ok(todo);
         }
 
+
+        /// <summary>
+        /// Creates todo for authenticated user
+        /// </summary>
+        /// <response code="201">The todo has been created</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> AddTodoAsync([FromBody] AddTodoRequest request)
         {
             var command = new AddTodoCommand(User.GetAuthenticatedUserId(), request.Title,
@@ -58,7 +86,16 @@ namespace YetAnotherTodoApp.Api.Controllers
             return Created($"/api/todo/{resourceId}", null);
         }
 
+        /// <summary>
+        /// Deletes the specified todo
+        /// </summary>
+        /// <response code="204">The todo has been deleted</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpDelete("{todoId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteTodoAsync(Guid todoId)
         {
             var command = new DeleteTodoCommand(User.GetAuthenticatedUserId(), todoId);
@@ -67,7 +104,16 @@ namespace YetAnotherTodoApp.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Updates the specified todo
+        /// </summary>
+        /// <response code="200">The todo has been updated</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPut("{todoId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateTodoAsync(Guid todoId, [FromBody] UpdateTodoRequest request)
         {
             var command = new UpdateTodoCommand(User.GetAuthenticatedUserId(), todoId,
@@ -77,7 +123,16 @@ namespace YetAnotherTodoApp.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Updates the status of the specified todo
+        /// </summary>
+        /// <response code="200">The todo's status has been updated</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPut("{todoId}/status")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateTodoStatusAsync(Guid todoId, [FromBody] UpdateTodoStatusRequest request)
         {
             var command = new UpdateTodoStatusCommand(User.GetAuthenticatedUserId(), todoId, request.Status);
@@ -86,7 +141,16 @@ namespace YetAnotherTodoApp.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Updates the priority of the specified todo
+        /// </summary>
+        /// <response code="200">The todo's priority has been updated</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPut("{todoId}/priority")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateTodoPriorityAsync(Guid todoId, [FromBody] UpdateTodoPriorityRequest request)
         {
             var command = new UpdateTodoPriorityCommand(User.GetAuthenticatedUserId(), todoId, request.Priority);

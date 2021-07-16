@@ -20,7 +20,16 @@ namespace YetAnotherTodoApp.Api.Controllers
             _cache = cache;
         }
 
+        /// <summary>
+        /// Registers the user
+        /// </summary>
+        /// <response code="201">The user has been successfully registered</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPost("sign-up")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> SignUpAsync([FromBody] SignUpRequest request)
         {
             var command = new SignUpCommand(request.Username.ToLower(), request.Email.ToLower(), request.Password);
@@ -30,7 +39,16 @@ namespace YetAnotherTodoApp.Api.Controllers
             return Created($"/api/users/{userId}", null);
         }
 
+        /// <summary>
+        /// Logs the user in and gets the JWT token 
+        /// </summary>
+        /// <response code="200">User has been successfully authenticated</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPost("sign-in")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> SignInAsync([FromBody] SignInRequest request)
         {
             var command = new SignInCommand(request.Email.ToLower(), request.Password);

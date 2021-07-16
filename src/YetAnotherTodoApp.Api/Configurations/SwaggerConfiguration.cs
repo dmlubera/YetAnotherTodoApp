@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using YetAnotherTodoApp.Api.Settings;
 
 namespace YetAnotherTodoApp.Api.Configurations
@@ -22,6 +26,8 @@ namespace YetAnotherTodoApp.Api.Configurations
                     Version = "v1",
                     Title = swaggerSettings.Name
                 });
+
+                opts.ExampleFilters();
 
                 opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -45,7 +51,13 @@ namespace YetAnotherTodoApp.Api.Configurations
                         new List<string>()
                     }
                 });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                opts.IncludeXmlComments(xmlPath);
             });
+
+            services.AddSwaggerExamplesFromAssemblyOf<Startup>();
         }
 
         public static void AddSwaggerMiddleware(this IApplicationBuilder app, IConfiguration configuration)
