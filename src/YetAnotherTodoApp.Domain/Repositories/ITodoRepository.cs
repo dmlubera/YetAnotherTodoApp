@@ -7,7 +7,6 @@ namespace YetAnotherTodoApp.Domain.Repositories
 {
     public interface ITodoRepository
     {
-        Task<Todo> GetTodoAsync(Guid id);
         Task<IList<Todo>> GetAllForUserAsync(Guid userId);
         Task<Todo> GetForUserAsync(Guid todoId, Guid userId);
         Task SaveChangesAsync();

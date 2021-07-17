@@ -18,12 +18,14 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         protected Todo() { }
 
-        public Todo(string title, DateTime finishDate)
+        public Todo(string title, DateTime finishDate, string description = null, TodoPriority priority = TodoPriority.Normal)
         {
             Id = Guid.NewGuid();
             Title = Title.Create(title);
             FinishDate = FinishDate.Create(finishDate);
-            Priority = TodoPriority.Normal;
+            if (description is { })
+                Description = description;
+            Priority = priority;
             UpdateAuditInfo();
         }
 

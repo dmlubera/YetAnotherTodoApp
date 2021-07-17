@@ -9,6 +9,7 @@ namespace YetAnotherTodoApp.Application.DTOs
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string TodoList { get; set; }
         public DateTime FinishDate { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TodoStatus Status { get; set; }

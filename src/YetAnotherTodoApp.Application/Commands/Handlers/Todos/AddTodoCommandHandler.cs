@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
 using YetAnotherTodoApp.Domain.Entities;
+using YetAnotherTodoApp.Domain.Enums;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
@@ -19,7 +20,9 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
         public async Task HandleAsync(AddTodoCommand command)
         {
             var user = await _repository.GetByIdAsync(command.UserId);
-            var todo = new Todo(command.Title, command.FinishDate);
+            var todo = new Todo(command.Title, command.FinishDate, command.Description,
+                command.Priority ?? TodoPriority.Normal);
+            
             if (command.Steps.Count != 0)
                 todo.AddSteps(command.Steps.Select(x => new Step(x.Title, x.Description)).ToList());
 

@@ -10,7 +10,8 @@ namespace YetAnotherTodoApp.Application.Mappers.Profiles
         {
             CreateMap<Todo, TodoDto>()
                 .ForMember(x => x.Title, opt => opt.MapFrom(x => x.Title.Value))
-                .ForMember(x => x.FinishDate, opt => opt.MapFrom(x => x.FinishDate.Value));
+                .ForMember(x => x.FinishDate, opt => opt.MapFrom(x => x.FinishDate.Value))
+                .ForMember(x => x.TodoList, opt => opt.MapFrom(x => x.TodoList.Title.Value));
         }
     }
 }

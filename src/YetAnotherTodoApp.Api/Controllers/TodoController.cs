@@ -30,9 +30,9 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         /// <summary>
-        /// Gets specified todo for authenticated user
+        /// Gets all todos for authenticated user
         /// </summary>
-        /// <response code="200">Returned specified todo for the authenticated user</response>
+        /// <response code="200">Returned all todos for the authenticated user</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
         [HttpGet]
@@ -47,9 +47,9 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         /// <summary>
-        /// Gets all todos for authenticated user
+        /// Gets specified todo for authenticated user
         /// </summary>
-        /// <response code="200">Returned all todos for the authenticated user</response>
+        /// <response code="200">Returned specified todo for the authenticated user</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
         [HttpGet("{id}")]
@@ -78,7 +78,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> AddTodoAsync([FromBody] AddTodoRequest request)
         {
             var command = new AddTodoCommand(User.GetAuthenticatedUserId(), request.Title,
-                request.Project, request.FinishDate, request.Steps);
+                request.Project, request.FinishDate, request.Description, request.Priority, request.Steps);
 
             await _commandDispatcher.DispatchAsync(command);
 
