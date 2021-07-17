@@ -64,7 +64,7 @@ namespace YetAnotherTodoApp.Api.Controllers
 
         /// <summary>
         /// Created todo list
-        /// /// </summary>
+        /// </summary>
         /// <response code="201">The todo list has been created</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
@@ -83,11 +83,11 @@ namespace YetAnotherTodoApp.Api.Controllers
 
         /// <summary>
         /// Updates the specified todo list
-        /// /// </summary>
+        /// </summary>
         /// <response code="200">The todo list has been updated</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("{todolistId}")]
+        [HttpPut("{todoListId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -100,7 +100,7 @@ namespace YetAnotherTodoApp.Api.Controllers
 
         /// <summary>
         /// Deletes the specified todo list
-        /// /// </summary>
+        /// </summary>
         /// <response code="204">The todo list has been deleted</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>

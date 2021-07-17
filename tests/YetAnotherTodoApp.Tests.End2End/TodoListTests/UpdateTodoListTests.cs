@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.TodoLists;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Tests.End2End.Dummies;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
@@ -55,7 +56,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         public async Task WithExistingTitle_ShouldReturnBadRequestWithCustomError()
         {
             var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
-            var expectedException = new Application.Exceptions.TodoListWithGivenTitleAlreadyExistsException(todoListToUpdate.Title.Value);
+            var expectedException = new TodoListWithGivenTitleAlreadyExistsException(todoListToUpdate.Title.Value);
 
             var request = new UpdateTodoListRequest
             {
@@ -64,6 +65,25 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
 
             (var httpResponse, var errorResponse) =
                 await HandleRequestAsync<ErrorResponse>(() => ActAsync(todoListToUpdate.Id, request));
+
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().Be(expectedException.Code);
+            errorResponse.Message.Should().Be(expectedException.Message);
+        }
+
+        [Fact]
+        public async Task OnInbox_ShouldReturnBadRequestWithCustomError()
+        {
+            var inbox = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
+            var expectedException = new InboxModificationIsNotAllowedException();
+
+            var request = new UpdateTodoListRequest
+            {
+                Title = "Work stuff"
+            };
+
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(inbox.Id, request));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);
