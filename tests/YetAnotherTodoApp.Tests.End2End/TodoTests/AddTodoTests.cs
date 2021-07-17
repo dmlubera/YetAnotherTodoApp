@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -63,7 +64,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             {
                 Title = "TodoWithActions",
                 FinishDate = DateTime.UtcNow.Date,
-                Steps = new []
+                Steps = new List<StepDto>
                 {
                     new StepDto { Title = "ActionOne" },
                     new StepDto { Title = "ActionTwo" }

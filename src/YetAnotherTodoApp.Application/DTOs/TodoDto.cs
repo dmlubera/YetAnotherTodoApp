@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using YetAnotherTodoApp.Domain.Enums;
 
@@ -15,5 +16,6 @@ namespace YetAnotherTodoApp.Application.DTOs
         public TodoStatus Status { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TodoPriority Priority { get; set; }
+        public List<StepDto> Steps { get; set; }
     }
 }
