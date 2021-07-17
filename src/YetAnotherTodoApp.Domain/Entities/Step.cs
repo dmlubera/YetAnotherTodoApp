@@ -19,5 +19,18 @@ namespace YetAnotherTodoApp.Domain.Entities
             Description = description;
             UpdateAuditInfo();
         }
+
+        public void Complete()
+        {
+            IsFinished = true;
+            LastModifiedAt = DateTime.UtcNow;
+        }
+
+        public void Update(string title, string description)
+        {
+            Title = Title.Create(title);
+            Description = description;
+            LastModifiedAt = DateTime.UtcNow;
+        }
     }
 }

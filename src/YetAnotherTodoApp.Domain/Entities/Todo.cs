@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using YetAnotherTodoApp.Domain.Enums;
 using YetAnotherTodoApp.Domain.ValueObjects;
 
@@ -51,5 +52,11 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         public void AddSteps(IEnumerable<Step> steps)
             => _steps.AddRange(steps);
+
+        public void RemoveStep(Guid stepId)
+        {
+            var step = _steps.FirstOrDefault(x => x.Id == stepId);
+            _steps.Remove(step);
+        }
     }
 }

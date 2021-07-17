@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YetAnotherTodoApp.Api.Extensions;
+using YetAnotherTodoApp.Api.Models.Steps;
 using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
+using YetAnotherTodoApp.Application.Commands.Models.Steps;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Queries;
@@ -154,6 +156,80 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdateTodoPriorityAsync(Guid todoId, [FromBody] UpdateTodoPriorityRequest request)
         {
             var command = new UpdateTodoPriorityCommand(User.GetAuthenticatedUserId(), todoId, request.Priority);
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Adds the step to the specified todo
+        /// </summary>
+        /// <response code="201">The step has been added to the specified todo</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
+        [HttpPost("{todoId}/steps")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> AddStepAsync(Guid todoId, [FromBody] AddStepRequest request)
+        {
+            var command = new AddStepCommand(User.GetAuthenticatedUserId(), todoId, request.Title, request.Description);
+            await _commandDispatcher.DispatchAsync(command);
+
+            var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
+            return Created($"/api/todo/{resourceId}", null);
+        }
+
+
+        /// <summary>
+        /// Deletes the step from the specified todo
+        /// </summary>
+        /// <response code="204">The step has been deleted from the specified todo</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
+        [HttpDelete("{todoId}/steps/{stepId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteStepAsync(Guid todoId, Guid stepId)
+        {
+            var command = new DeleteStepCommand(User.GetAuthenticatedUserId(), todoId, stepId);
+            await _commandDispatcher.DispatchAsync(command);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Completes the step
+        /// </summary>
+        /// <response code="200">The step has been completed</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
+        [HttpPut("steps/{stepId}/complete")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> CompleteStepAsync(Guid stepId)
+        {
+            var command = new CompleteStepCommand(User.GetAuthenticatedUserId(), stepId);
+            await _commandDispatcher.DispatchAsync(command);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Updates the step
+        /// </summary>
+        /// <response code="200">The step has been updated</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
+        [HttpPut("steps/{stepId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdateStepAsync(Guid stepId, [FromBody] UpdateStepRequest request)
+        {
+            var command = new UpdateStepCommand(User.GetAuthenticatedUserId(), stepId, request.Title, request.Description);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
