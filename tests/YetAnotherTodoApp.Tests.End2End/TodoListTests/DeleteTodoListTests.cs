@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
@@ -20,7 +19,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingId_ShouldReturnNoContentAndRemoveResourceFromDatabase()
         {
-            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestTodoList.Title);
+            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToRemove.Id));
 
@@ -33,7 +32,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingIdOfTodoListContainingTodoWithAssignedSteps_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
         {
-            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListWithAssignedTodo.Title);
+            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoListWithAssignedTodo);
             
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToRemove.Id));
 

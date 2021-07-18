@@ -11,7 +11,6 @@ using YetAnotherTodoApp.Api;
 using YetAnotherTodoApp.Api.Models.Auths;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Infrastructure.DAL;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 
 namespace YetAnotherTodoApp.Tests.End2End
 {
@@ -40,8 +39,8 @@ namespace YetAnotherTodoApp.Tests.End2End
         {
             var request = new SignInRequest
             {
-                Email = TestUser.Email,
-                Password = TestUser.Password
+                Email = TestDbConsts.TestUserEmail,
+                Password = TestDbConsts.TestUserPassword
             };
             var response = await TestClient.PostAsync("api/auth/sign-in", GetContent(request));
             return JsonConvert.DeserializeObject<AuthSuccessResponse>(await response.Content.ReadAsStringAsync()).Token;

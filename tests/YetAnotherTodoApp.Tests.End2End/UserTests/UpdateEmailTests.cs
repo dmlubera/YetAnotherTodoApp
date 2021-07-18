@@ -21,7 +21,7 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
         {
             var request = new UpdateEmailRequest
             {
-                Email = "updatedEmail@yetanothertodoapp.com"
+                Email = "newjanedoesemail@yetanothertodoapp.com"
             };
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(request));

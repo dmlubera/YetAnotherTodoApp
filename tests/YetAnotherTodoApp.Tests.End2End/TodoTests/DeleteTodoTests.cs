@@ -31,7 +31,9 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WithExistingIdOfTodoWithAssignedTasks_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
         {
-            var todoToDelete = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Title.Value == "TodoWithAssignedStep");
+            var todoToDelete = User.TodoLists
+                .SelectMany(x => x.Todos)
+                .FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodo);
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoToDelete.Id));
 

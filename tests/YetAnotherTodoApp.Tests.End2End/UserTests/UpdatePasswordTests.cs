@@ -7,7 +7,6 @@ using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.UserTests
@@ -41,7 +40,7 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
             var expectedException = new UpdatePasswordToAlreadyUsedValueException();
             var request = new UpdatePasswordRequest
             {
-                Password = TestUser.Password
+                Password = TestDbConsts.TestUserPassword
             };
 
             (var httpResponse, var errorResponse) =

@@ -22,8 +22,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
         {
             var request = new SignUpRequest
             {
-                Username = "UniqueUsername",
-                Email = "uniqueusername@yetanothertodoapp.com",
+                Username = "janedoe",
+                Email = "janedoe@yetanothertodoapp.com",
                 Password = "secretPassword"
             };
 
@@ -43,7 +43,7 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
         {
             var request = new SignUpRequest
             {
-                Username = "NewUniqueUsername",
+                Username = "janedoe",
                 Email = email,
                 Password = "secretPassword"
             };
@@ -57,14 +57,14 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
 
         [Theory]
         [InlineData(" @yetanothertodoapp.com")]
-        [InlineData("testuseryetanothertodoapp.com")]
-        [InlineData("testuser@yetanothertodoapp")]
+        [InlineData("janedoeyetanothertodoapp.com")]
+        [InlineData("janedoe@yetanothertodoapp")]
         public async Task WithInvalidEmailFormat_ShouldReturnBadRequestWithCustomError(string email)
         {
             var expectedException = new InvalidEmailFormatException(email);
             var request = new SignUpRequest
             {
-                Username = "NewUniqueUsername",
+                Username = "janedoe",
                 Email = email,
                 Password = "secretPassword"
             };
@@ -85,7 +85,7 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
             var expectedException = new EmailInUseException(email);
             var request = new SignUpRequest
             {
-                Username = "NewUniqueUsername",
+                Username = "janedoe",
                 Email = email,
                 Password = "secretPassword"
             };
@@ -107,7 +107,7 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
             var request = new SignUpRequest
             {
                 Username = username,
-                Email = "uniqueusername@yetanothertodoapp.com",
+                Email = "janedoe@yetanothertodoapp.com",
                 Password = "secretPassword"
             };
 
@@ -127,7 +127,7 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
             var request = new SignUpRequest
             {
                 Username = username,
-                Email = "newuniqueusername@yetanothertodoapp.com",
+                Email = "janedoe@yetanothertodoapp.com",
                 Password = "secretPassword"
             };
 
@@ -148,8 +148,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
         {
             var request = new SignUpRequest
             {
-                Username = "testuser1",
-                Email = "test@yetanothertodoapp.com",
+                Username = "janedoe",
+                Email = "janedoe@yetanothertodoapp.com",
                 Password = password
             };
 

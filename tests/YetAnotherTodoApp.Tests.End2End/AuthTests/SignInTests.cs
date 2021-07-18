@@ -20,8 +20,8 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
         {
             var request = new SignInRequest
             {
-                Email = "testuser@yetanothertodoapp.com",
-                Password = "secretPassword"
+                Email = TestDbConsts.TestUserEmail,
+                Password = TestDbConsts.TestUserPassword
             };
 
             (var httpResponse, var jwtResponse) = 
@@ -37,7 +37,7 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
             var expectedException = new InvalidCredentialsException();
             var request = new SignInRequest
             {
-                Email = "testuser@yetanothertodoapp.com",
+                Email = TestDbConsts.TestUserEmail,
                 Password = "wrongSecretPassword"
             };
 

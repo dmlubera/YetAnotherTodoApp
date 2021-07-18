@@ -54,7 +54,9 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task ToDoneWhenTodoHasUnfinishedSteps_ShouldReturnCustomError()
         {
-            var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Title.Value == "TodoWithAssignedStep");
+            var todoToUpdate = User.TodoLists
+                .SelectMany(x => x.Todos)
+                .FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodo);
             var expectedException = new CannotChangeStatusToDoneOfTodoWithUnfinishedStepException();
             var request = new UpdateTodoStatusRequest
             {

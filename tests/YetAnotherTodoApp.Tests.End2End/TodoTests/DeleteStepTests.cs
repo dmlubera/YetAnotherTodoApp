@@ -19,8 +19,9 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WhenStepExist_ShouldDeleteStepAndSaveChangesToDatabase()
         {
-            var stepTodDelete = User.TodoLists.SelectMany(x => x.Todos)
-                .FirstOrDefault(x => x.Title.Value == "TodoWithAssignedStep")
+            var stepTodDelete = User.TodoLists
+                .SelectMany(x => x.Todos)
+                .FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodo)
                 .Steps.FirstOrDefault();
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(stepTodDelete.Todo.Id, stepTodDelete.Id));

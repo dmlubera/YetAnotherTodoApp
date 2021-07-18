@@ -21,7 +21,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         {
             var request = new AddTodoListRequest
             {
-                Title = "TestTodoList"
+                Title = "Work stuff"
             };
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(request));

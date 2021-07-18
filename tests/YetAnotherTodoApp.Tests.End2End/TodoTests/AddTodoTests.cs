@@ -62,12 +62,12 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var request = new AddTodoRequest
             {
-                Title = "TodoWithActions",
+                Title = "TodoWithSteps",
                 FinishDate = DateTime.UtcNow.Date,
                 Steps = new List<StepRequestDto>
                 {
-                    new StepRequestDto { Title = "ActionOne" },
-                    new StepRequestDto { Title = "ActionTwo" }
+                    new StepRequestDto { Title = "First" },
+                    new StepRequestDto { Title = "Second" }
                 }
             };
 
@@ -87,7 +87,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var request = new AddTodoRequest
             {
-                Title = "TodoWithInvalidData",
+                Title = "TodoWithInvalidDate",
                 FinishDate = DateTime.UtcNow.AddDays(-1).Date
             };
             var expectedException = new DateCannotBeEarlierThanTodayDateException(request.FinishDate);
@@ -120,7 +120,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var request = new
             {
-                Title = "test"
+                Title = "TodoWithoutDate"
             };
 
             (var httpResponse, var errorResponse) =

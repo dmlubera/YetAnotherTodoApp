@@ -61,7 +61,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault();
             var request = new
             {
-                Title = "test"
+                Title = "UpdatedTitle"
             };
 
             (var httpResponse, var errorResponse) =

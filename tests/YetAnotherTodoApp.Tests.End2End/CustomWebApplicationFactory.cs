@@ -8,7 +8,6 @@ using System.Linq;
 using YetAnotherTodoApp.Application.Helpers;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Infrastructure.DAL;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 
 namespace YetAnotherTodoApp.Tests.End2End
 {
@@ -39,31 +38,41 @@ namespace YetAnotherTodoApp.Tests.End2End
 
         private void InitializeDbForTests(YetAnotherTodoAppDbContext dbContext)
         {
-            User = CreateUser(TestUser.Username, TestUser.Email, TestUser.Password);
-            User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").AddTodo(new Todo("TodoAssignedToInbox", DateTime.UtcNow.Date));
-            var todoWithAssignedStep = new Todo("TodoWithAssignedStep", DateTime.UtcNow.Date);
-            todoWithAssignedStep.AddSteps(new[] { new Step("StepOne") });
-            User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").AddTodo(todoWithAssignedStep);
-            var todoList = new TodoList(TestTodoList.Title);
-            var todoListWithAssignedTodo = new TodoList(TodoListWithAssignedTodo.Title);
-            todoListWithAssignedTodo.AddTodo(new Todo("AssignedTestTodo", DateTime.UtcNow.Date));
-            var todoListForUpdateTests = new TodoList(TodoListForUpdateTests.Title);
+            User = CreateTestUser(TestDbConsts.TestUserUsername, TestDbConsts.TestUserEmail, TestDbConsts.TestUserPassword);
+            User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox")
+                .AddTodo(CreateTestTodo(TestDbConsts.TestTodo));
 
-            User.AddTodoList(todoList);
-            User.AddTodoList(todoListWithAssignedTodo);
-            User.AddTodoList(todoListForUpdateTests);
+            User.AddTodoList(new TodoList(TestDbConsts.TestTodoList));
+            User.AddTodoList(CreateTodoListWithAssignedTodo(TestDbConsts.TestTodoListWithAssignedTodo));
+
             dbContext.Users.Add(User);
-            dbContext.Users.Add(CreateUser("secondTestUser", "secondTestUser@yetanothertodoapp.com", "superSecretPassword"));
+            dbContext.Users.Add(CreateTestUser("secondTestUser", "secondTestUser@yetanothertodoapp.com", "superSecretPassword"));
             dbContext.SaveChanges();
         }
 
-        private User CreateUser(string username, string email, string password)
+        private static User CreateTestUser(string username, string email, string password)
         {
             var encrypter = new Encrypter();
             var salt = encrypter.GetSalt();
             var hash = encrypter.GetHash(password, salt);
 
             return new User(username, email, hash, salt);
+        }
+
+        private static Todo CreateTestTodo(string title)
+        {
+            var todo = new Todo(title, DateTime.UtcNow.Date);
+            todo.AddSteps(new[] { new Step("First") });
+
+            return todo;
+        }
+
+        private static TodoList CreateTodoListWithAssignedTodo(string title)
+        {
+            var todoList = new TodoList(title);
+            todoList.AddTodo(new Todo("Assigned", DateTime.UtcNow.Date));
+
+            return todoList;
         }
     }
 }

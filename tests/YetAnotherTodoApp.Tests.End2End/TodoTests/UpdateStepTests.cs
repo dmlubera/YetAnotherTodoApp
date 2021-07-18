@@ -21,8 +21,9 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WithValidData_ShouldReturnOkAndUpdateStepInDatabase()
         {
-            var stepToUpdate = User.TodoLists.SelectMany(x => x.Todos)
-                .FirstOrDefault(x => x.Title.Value == "TodoWithAssignedStep")
+            var stepToUpdate = User.TodoLists
+                .SelectMany(x => x.Todos)
+                .FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodo)
                 .Steps.FirstOrDefault();
             var request = new UpdateStepRequest
             {
@@ -62,7 +63,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var request = new
             {
-                Description = "Description"
+                Description = "UpdatedDescription"
             };
 
             (var httpResponse, var errorResponse) =

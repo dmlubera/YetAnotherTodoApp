@@ -6,7 +6,6 @@ using Xunit;
 using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.UserTests
@@ -30,8 +29,6 @@ namespace YetAnotherTodoApp.Tests.End2End.UserTests
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             var user = await DbContext.GetAsync<User>(User.Id);
 
-            user.Email.Value.Should().BeEquivalentTo(TestUser.Email);
-            user.Username.Value.Should().BeEquivalentTo(TestUser.Username);
             user.Name.FirstName.Should().BeEquivalentTo("John");
             user.Name.LastName.Should().BeEquivalentTo("Doe");
         }

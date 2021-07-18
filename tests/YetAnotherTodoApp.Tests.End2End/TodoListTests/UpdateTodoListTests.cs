@@ -9,7 +9,6 @@ using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.TodoLists;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
@@ -22,10 +21,10 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithValidData_ShouldReturnOkAndUpdateResourceInDatabase()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
             var request = new UpdateTodoListRequest
             {
-                Title = "UpdatedTitle"
+                Title = "Not important stuff"
             };
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToUpdate.Id, request));
@@ -38,7 +37,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithInvalidData_ShouldReturnValidationError()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
 
             var request = new UpdateTodoListRequest
             {
@@ -55,7 +54,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingTitle_ShouldReturnBadRequestWithCustomError()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
             var expectedException = new TodoListWithGivenTitleAlreadyExistsException(todoListToUpdate.Title.Value);
 
             var request = new UpdateTodoListRequest
@@ -79,7 +78,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
 
             var request = new UpdateTodoListRequest
             {
-                Title = "Work stuff"
+                Title = "Not important stuff"
             };
 
             (var httpResponse, var errorResponse) =
