@@ -8,6 +8,8 @@ using Xunit;
 using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Domain.Entities;
+using YetAnotherTodoApp.Domain.Enums;
+using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoTests
@@ -23,7 +25,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
             var request = new UpdateTodoStatusRequest
             {
-                Status = Domain.Enums.TodoStatus.InProgress
+                Status = TodoStatus.InProgress
             };
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoToUpdate.Id, request));
@@ -47,6 +49,24 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Errors.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task ToDoneWhenTodoHasUnfinishedSteps_ShouldReturnCustomError()
+        {
+            var todoToUpdate = User.TodoLists.SelectMany(x => x.Todos).FirstOrDefault(x => x.Title.Value == "TodoWithAssignedStep");
+            var expectedException = new CannotChangeStatusToDoneOfTodoWithUnfinishedStepException();
+            var request = new UpdateTodoStatusRequest
+            {
+                Status = TodoStatus.Done
+            };
+
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(todoToUpdate.Id, request));
+
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().Be(expectedException.Code);
+            errorResponse.Message.Should().Be(expectedException.Message);
         }
     }
 }

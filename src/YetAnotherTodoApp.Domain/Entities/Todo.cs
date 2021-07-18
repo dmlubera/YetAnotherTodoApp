@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using YetAnotherTodoApp.Domain.Enums;
+using YetAnotherTodoApp.Domain.Exceptions;
 using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
@@ -40,6 +41,9 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         public void UpdateStatus(TodoStatus updatedStatus)
         {
+            if (updatedStatus == TodoStatus.Done && _steps.Any(x => !x.IsFinished))
+                throw new CannotChangeStatusToDoneOfTodoWithUnfinishedStepException();
+
             Status = updatedStatus;
             LastModifiedAt = DateTime.UtcNow;
         }
