@@ -1,4 +1,4 @@
-﻿namespace YetAnotherTodoApp.Tests.End2End
+﻿namespace YetAnotherTodoApp.Api.Models.Errors
 {
     public class ErrorResponse
     {
