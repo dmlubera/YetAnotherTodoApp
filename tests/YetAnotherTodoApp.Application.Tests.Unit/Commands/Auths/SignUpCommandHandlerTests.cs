@@ -32,11 +32,11 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
         [Fact]
         public async Task HandleAsync_WhenEmailAlreadyExists_ThenShouldThrownAnException()
         {
-            var command = CreateCommandFixture();
-            _userRepositoryMock.Setup(x => x.CheckIfEmailIsInUseAsync(command.Email))
+            var commandFixture = CreateCommandFixture();
+            _userRepositoryMock.Setup(x => x.CheckIfEmailIsInUseAsync(commandFixture.Email))
                 .ReturnsAsync(true);
 
-            var exception = await Record.ExceptionAsync(async () => await _handler.HandleAsync(command));
+            var exception = await Record.ExceptionAsync(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Should().BeOfType<EmailInUseException>();
@@ -51,7 +51,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
             _userRepositoryMock.Setup(x => x.CheckIfUsernameIsInUseAsync(command.Username))
                 .ReturnsAsync(true);
 
-            var exception = await Record.ExceptionAsync(async () => await _handler.HandleAsync(command));
+            var exception = await Record.ExceptionAsync(() => _handler.HandleAsync(command));
 
             exception.Should().NotBeNull();
             exception.Should().BeOfType<UsernameInUseException>();

@@ -59,7 +59,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
             _encrypterMock.Setup(x => x.GetHash(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(userFixture.Password.Hash);
 
-            var exception = await Assert.ThrowsAsync<UpdatePasswordToAlreadyUsedValueException>(async () => await _handler.HandleAsync(commandFixture));
+            var exception = await Assert.ThrowsAsync<UpdatePasswordToAlreadyUsedValueException>(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Code.Should().Be(expectedException.Code);

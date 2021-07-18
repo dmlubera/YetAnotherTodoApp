@@ -50,7 +50,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
             _repositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(userFixture);
 
-            var exception = await Assert.ThrowsAsync<EmailInUseException>(async () => await _handler.HandleAsync(commandFixture));
+            var exception = await Assert.ThrowsAsync<EmailInUseException>(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Code.Should().Be(expectedException.Code);

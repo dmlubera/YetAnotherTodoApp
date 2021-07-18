@@ -34,11 +34,11 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
         [Fact]
         public async Task HandleAsync_WhenUserWithGivenUsernameDoesNotExist_ThenShouldThrowAnException()
         {
-            var command = CreateCommandFixture();
-            _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email))
+            var commandFixture = CreateCommandFixture();
+            _userRepositoryMock.Setup(x => x.GetByEmailAsync(commandFixture.Email))
                 .ReturnsAsync(() => null);
 
-            var exception = await Record.ExceptionAsync(async () => await _handler.HandleAsync(command));
+            var exception = await Record.ExceptionAsync(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Should().BeOfType<InvalidCredentialsException>();
@@ -47,14 +47,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
         [Fact]
         public async Task HandleAsync_WhenGivenPasswordIsNotValid_ThenShouldThrowAnException()
         {
-            var command = CreateCommandFixture();
+            var commandFixture = CreateCommandFixture();
             var user = UserFixture.Create(); 
-            _userRepositoryMock.Setup(x => x.GetByEmailAsync(command.Email))
+            _userRepositoryMock.Setup(x => x.GetByEmailAsync(commandFixture.Email))
                 .ReturnsAsync(user);
-            _encrypterMock.Setup(x => x.GetHash(command.Password, user.Password.Salt))
+            _encrypterMock.Setup(x => x.GetHash(commandFixture.Password, user.Password.Salt))
                 .Returns(new Faker().Random.String2(32));
 
-            var exception = await Record.ExceptionAsync(async () => await _handler.HandleAsync(command));
+            var exception = await Record.ExceptionAsync(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Should().BeOfType<InvalidCredentialsException>();

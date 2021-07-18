@@ -26,28 +26,28 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
         [Fact]
         public async Task WhenValidData_ShouldUpdateTitleAndSaveChanges()
         {
-            var commandFixutre = CreateCommandFixture();
+            var commandFixture = CreateCommandFixture();
             var todoListFixture = TodoListFixture.Create();
             _repositoryMock.Setup(x => x.CheckIfUserHasGotTodoListWithGivenTitle(It.IsAny<Guid>(), It.IsAny<string>()))
                 .ReturnsAsync(false);
             _repositoryMock.Setup(x => x.GetForUserAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .ReturnsAsync(todoListFixture);
 
-            await _handler.HandleAsync(commandFixutre);
+            await _handler.HandleAsync(commandFixture);
 
-            todoListFixture.Title.Value.Should().Be(commandFixutre.Title);
+            todoListFixture.Title.Value.Should().Be(commandFixture.Title);
             _repositoryMock.Verify(x => x.SaveChangesAsync());
         }
 
         [Fact]
         public async Task WhenTodoListWithGivenNameAlreadyExists_ShouldThrowCustomException()
         {
-            var commandFixutre = CreateCommandFixture();
-            var expectedException = new TodoListWithGivenTitleAlreadyExistsException(commandFixutre.Title);
+            var commandFixture = CreateCommandFixture();
+            var expectedException = new TodoListWithGivenTitleAlreadyExistsException(commandFixture.Title);
             _repositoryMock.Setup(x => x.CheckIfUserHasGotTodoListWithGivenTitle(It.IsAny<Guid>(), It.IsAny<string>()))
                 .ReturnsAsync(true);
 
-            var exception = await Assert.ThrowsAsync<TodoListWithGivenTitleAlreadyExistsException>(async () => await _handler.HandleAsync(commandFixutre));
+            var exception = await Assert.ThrowsAsync<TodoListWithGivenTitleAlreadyExistsException>(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Code.Should().Be(expectedException.Code);
@@ -58,14 +58,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
         [Fact]
         public async Task WhenTodoListWithIdDoesNotExists_ShouldThrowCustomException()
         {
-            var commandFixutre = CreateCommandFixture();
-            var expectedException = new TodoListWithGivenIdDoesNotExistException(commandFixutre.TodoListId);
+            var commandFixture = CreateCommandFixture();
+            var expectedException = new TodoListWithGivenIdDoesNotExistException(commandFixture.TodoListId);
             _repositoryMock.Setup(x => x.CheckIfUserHasGotTodoListWithGivenTitle(It.IsAny<Guid>(), It.IsAny<string>()))
                 .ReturnsAsync(false);
             _repositoryMock.Setup(x => x.GetForUserAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .ReturnsAsync(() => null);
 
-            var exception = await Assert.ThrowsAsync<TodoListWithGivenIdDoesNotExistException>(async () => await _handler.HandleAsync(commandFixutre));
+            var exception = await Assert.ThrowsAsync<TodoListWithGivenIdDoesNotExistException>(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Code.Should().Be(expectedException.Code);

@@ -49,7 +49,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
             _repositoryMock.Setup(x => x.GetForUserAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .ReturnsAsync(() => null);
 
-            var exception = await Assert.ThrowsAsync<TodoWithGivenIdDoesNotExistException>(async () => await _handler.HandleAsync(commandFixture));
+            var exception = await Assert.ThrowsAsync<TodoWithGivenIdDoesNotExistException>(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Code.Should().Be(expectedException.Code);

@@ -44,7 +44,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
             var expectedException = new TodoWithGivenIdDoesNotExistException(commandFixture.TodoId);
             _repositoryMock.Setup(x => x.GetForUserAsync(It.IsAny<Guid>(), It.IsAny<Guid>()));
 
-            var exception = await Assert.ThrowsAsync<TodoWithGivenIdDoesNotExistException>(async () => await _handler.HandleAsync(commandFixture));
+            var exception = await Assert.ThrowsAsync<TodoWithGivenIdDoesNotExistException>(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Code.Should().Be(expectedException.Code);
