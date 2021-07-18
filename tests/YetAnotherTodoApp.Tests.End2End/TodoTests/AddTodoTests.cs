@@ -64,10 +64,10 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             {
                 Title = "TodoWithActions",
                 FinishDate = DateTime.UtcNow.Date,
-                Steps = new List<StepDto>
+                Steps = new List<StepRequestDto>
                 {
-                    new StepDto { Title = "ActionOne" },
-                    new StepDto { Title = "ActionTwo" }
+                    new StepRequestDto { Title = "ActionOne" },
+                    new StepRequestDto { Title = "ActionTwo" }
                 }
             };
 

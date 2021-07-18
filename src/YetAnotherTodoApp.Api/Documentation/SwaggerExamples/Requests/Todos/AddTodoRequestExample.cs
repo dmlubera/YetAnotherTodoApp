@@ -16,13 +16,13 @@ namespace YetAnotherTodoApp.Api.Documentation.SwaggerExamples.Requests.Todos
                 Project = "Not important stuff",
                 FinishDate = DateTime.UtcNow.AddDays(7).Date,
                 Priority = TodoPriority.Low,
-                Steps = new List<StepDto>
+                Steps = new List<StepRequestDto>
                 {
-                    new StepDto
+                    new StepRequestDto
                     {
                         Title = "Not important step"
                     },
-                    new StepDto
+                    new StepRequestDto
                     {
                         Title = "Really important step",
                         Description ="Should hurry up with this"

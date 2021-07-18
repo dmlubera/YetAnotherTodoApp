@@ -14,6 +14,7 @@ namespace YetAnotherTodoApp.Application.DI
                 cfg.AddProfile(new TodoListProfile());
                 cfg.AddProfile(new UserInfoProfile());
                 cfg.AddProfile(new StepProfile());
+                cfg.AddProfile(new StepRequestDtoProfile());
             });
 
             var mapper = mapperConfiguration.CreateMapper();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YetAnotherTodoApp.Api.Extensions;
@@ -23,12 +24,15 @@ namespace YetAnotherTodoApp.Api.Controllers
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher _queryDispatcher;
         private readonly ICache _cache;
+        private readonly IMapper _mapper;
 
-        public TodoController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, ICache cache)
+        public TodoController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher,
+            ICache cache, IMapper mapper)
         {
             _commandDispatcher = commandDispatcher;
             _queryDispatcher = queryDispatcher;
             _cache = cache;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -80,7 +84,8 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> AddTodoAsync([FromBody] AddTodoRequest request)
         {
             var command = new AddTodoCommand(User.GetAuthenticatedUserId(), request.Title,
-                request.Project, request.FinishDate, request.Description, request.Priority, request.Steps);
+                request.Project, request.FinishDate, request.Description, request.Priority,
+                _mapper.Map<IEnumerable<StepDto>>(request.Steps));
 
             await _commandDispatcher.DispatchAsync(command);
 
@@ -200,7 +205,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         /// <summary>
-        /// Completes the step
+        /// Completes the specified step
         /// </summary>
         /// <response code="200">The step has been completed</response>
         /// <response code="400">An error occured while processing a request</response>
@@ -218,7 +223,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         /// <summary>
-        /// Updates the step
+        /// Updates the specified step
         /// </summary>
         /// <response code="200">The step has been updated</response>
         /// <response code="400">An error occured while processing a request</response>
