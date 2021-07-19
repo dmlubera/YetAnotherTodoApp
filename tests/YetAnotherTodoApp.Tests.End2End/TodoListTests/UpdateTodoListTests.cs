@@ -1,16 +1,14 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Errors;
+using YetAnotherTodoApp.Api.Models.TodoLists;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
-using YetAnotherTodoApp.Domain.Exceptions;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
@@ -21,60 +19,74 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             => await TestClient.PutAsync($"/api/todolist/{id}", GetContent(request));
 
         [Fact]
-        public async Task WithValidData_ReturnsHttpStatusCodeOkAndUpdateResourceInDatabase()
+        public async Task WithValidData_ShouldReturnOkAndUpdateResourceInDatabase()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
             var request = new UpdateTodoListRequest
             {
-                Title = "UpdatedTitle"
+                Title = "Not important stuff"
             };
 
-            await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoListToUpdate.Id, request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToUpdate.Id, request));
+            var todoList = await DbContext.GetAsync<TodoList>(todoListToUpdate.Id);
 
-            var updatedResoruce = await DbContext.GetAsync<TodoList>(todoListToUpdate.Id);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            updatedResoruce.Title.Value.Should().Be(request.Title);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            todoList.Title.Value.Should().Be(request.Title);
         }
 
         [Fact]
-        public async Task WithInvalidData_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithInvalidData_ShouldReturnValidationError()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
-            var expectedException = new InvalidTitleException(string.Empty);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
 
             var request = new UpdateTodoListRequest
             {
                 Title = string.Empty
             };
 
-            await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoListToUpdate.Id, request);
-            var errorReponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(todoListToUpdate.Id, request));
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            errorReponse.Code.Should().Be(expectedException.Code);
-            errorReponse.Message.Should().Be(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task WithExistingTitle_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithExistingTitle_ShouldReturnBadRequestWithCustomError()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TodoListForUpdateTests.Title);
-            var expectedException = new Application.Exceptions.TodoListWithGivenTitleAlreadyExistsException(todoListToUpdate.Title.Value);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
+            var expectedException = new TodoListWithGivenTitleAlreadyExistsException(todoListToUpdate.Title.Value);
 
             var request = new UpdateTodoListRequest
             {
                 Title = todoListToUpdate.Title.Value
             };
 
-            await AuthenticateTestUserAsync();
-            var response = await ActAsync(todoListToUpdate.Id, request);
-            var errorReponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(todoListToUpdate.Id, request));
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            errorReponse.Code.Should().Be(expectedException.Code);
-            errorReponse.Message.Should().Be(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().Be(expectedException.Code);
+            errorResponse.Message.Should().Be(expectedException.Message);
+        }
+
+        [Fact]
+        public async Task OnInbox_ShouldReturnBadRequestWithCustomError()
+        {
+            var inbox = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
+            var expectedException = new InboxModificationIsNotAllowedException();
+
+            var request = new UpdateTodoListRequest
+            {
+                Title = "Not important stuff"
+            };
+
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(inbox.Id, request));
+
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().Be(expectedException.Code);
+            errorResponse.Message.Should().Be(expectedException.Message);
         }
     }
 }

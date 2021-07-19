@@ -1,25 +1,25 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Errors;
+using YetAnotherTodoApp.Api.Models.Todos;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Domain.Exceptions;
-using YetAnotherTodoApp.Domain.ValueObjects;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoTests
 {
     public class AddTodoTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> ActAsync(AddTodoRequest request)
+        private async Task<HttpResponseMessage> ActAsync(object request)
             => await TestClient.PostAsync("/api/todo", GetContent(request));
 
         [Fact]
-        public async Task WithValidData_ReturnsHttpStatusCodeCreatedWithLocationHeaderAndSaveTodoToDatabase()
+        public async Task WithValidData_ShouldReturnCreatedAndAddResourceToDatabase()
         {
             var request = new AddTodoRequest
             {
@@ -28,20 +28,17 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 FinishDate = DateTime.UtcNow.Date
             };
 
-            await AuthenticateTestUserAsync();
-            var response = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
+            var todo = await DbContext.GetTodoWithReferencesAsync(httpResponse.Headers.Location.GetResourceId());
 
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-            var todoId = response.Headers.Location.GetResourceId();
-
-            var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             todo.TodoList.Title.Value.Should().Be(request.Project);
             todo.Title.Value.Should().Be(request.Title);
-            todo.FinishDate.Should().Be(request.FinishDate);
+            todo.FinishDate.Value.Should().Be(request.FinishDate);
         }
 
         [Fact]
-        public async Task WithoutProjectName_ReturnsHttpStatusCodeCreatedWithLocationHeaderAndAddToInboxAndSaveTodoToDatabase()
+        public async Task WithoutProjectName_ShuldReturnCreatedAndAddToInboxAndSaveResourceToDatabase()
         {
             var request = new AddTodoRequest
             {
@@ -49,70 +46,88 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
                 FinishDate = DateTime.UtcNow.Date
             };
 
-            await AuthenticateTestUserAsync();
-            var response = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-            var todoId = response.Headers.Location.GetResourceId();
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+            httpResponse.Headers.Location.Should().NotBeNull();
 
-            var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
+            var todo = await DbContext.GetTodoWithReferencesAsync(httpResponse.Headers.Location.GetResourceId());
             todo.TodoList.Title.Value.Should().Be("Inbox");
             todo.Title.Value.Should().Be(request.Title);
-            todo.FinishDate.Should().Be(request.FinishDate);
+            todo.FinishDate.Value.Should().Be(request.FinishDate);
         }
 
         [Fact]
-        public async Task WithTasks_ReturnsHttpStatusCodeCreatedWithLocationHeaderAndSaveResourcesToDatabase()
+        public async Task WithTasks_ShouldReturnCreateddSaveResourcesToDatabase()
         {
             var request = new AddTodoRequest
             {
-                Title = "TodoWithActions",
+                Title = "TodoWithSteps",
                 FinishDate = DateTime.UtcNow.Date,
-                Steps = new []
+                Steps = new List<StepRequestDto>
                 {
-                    new StepDto { Title = "ActionOne" },
-                    new StepDto { Title = "ActionTwo" }
+                    new StepRequestDto { Title = "First" },
+                    new StepRequestDto { Title = "Second" }
                 }
             };
 
-            await AuthenticateTestUserAsync();
-            var response = await ActAsync(request);
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-            var todoId = response.Headers.Location.GetResourceId();
-            var todo = await DbContext.GetTodoWithReferencesAsync(todoId);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+            httpResponse.Headers.Location.Should().NotBeNull();
+
+            var todo = await DbContext.GetTodoWithReferencesAsync(httpResponse.Headers.Location.GetResourceId());
             todo.Title.Value.Should().Be(request.Title);
-            todo.FinishDate.Should().Be(request.FinishDate);
+            todo.FinishDate.Value.Should().Be(request.FinishDate);
             todo.Steps.Count.Should().Be(request.Steps.Count);
         }
 
         [Fact]
-        public async Task WithFinishDateEarlierThanToday_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        public async Task WithFinishDateEarlierThanToday_ShouldReturnBadRequestWithCustomError()
         {
             var request = new AddTodoRequest
             {
-                Title = "TodoWithInvalidData",
+                Title = "TodoWithInvalidDate",
                 FinishDate = DateTime.UtcNow.AddDays(-1).Date
             };
             var expectedException = new DateCannotBeEarlierThanTodayDateException(request.FinishDate);
 
-            await AuthenticateTestUserAsync();
-            var response = await ActAsync(request);
-            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request));
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);
             errorResponse.Message.Should().Be(expectedException.Message);
         }
 
-        public async Task WithoutTitle_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        [Fact]
+        public async Task WithoutTitle_ShouldReturnValidationError()
         {
-            // should be implemented after adding FluentValidation
+            var request = new
+            {
+                FinishDate = DateTime.UtcNow.Date
+            };
+
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
+
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
-        public async Task WithoutFinishDate_ReturnsHttpStatusCodeBadRequestWithCustomException()
+        [Fact]
+        public async Task WithoutFinishDate_ShouldReturnValidationError()
         {
-            // should be implemented after adding FluentValidation
+            var request = new
+            {
+                Title = "TodoWithoutDate"
+            };
+
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
+
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
     }
 }

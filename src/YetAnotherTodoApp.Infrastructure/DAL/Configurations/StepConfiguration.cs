@@ -12,7 +12,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Configurations
             builder.Property(x => x.Id).IsRequired().ValueGeneratedNever();
 
             // Value Objects
-            builder.OwnsOne(x => x.Title);
+            builder.OwnsOne(x => x.Title).Property(x => x.Value).HasColumnName("Title");
         }
     }
 }

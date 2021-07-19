@@ -1,11 +1,10 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Domain.Entities;
+using YetAnotherTodoApp.Application.DTOs;
 
 namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
 {
@@ -15,14 +14,13 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             => await TestClient.GetAsync("/api/todolist/");
 
         [Fact]
-        public async Task WithoutFilters_ReturnsHttpStatusCodeOkWithAllTodoLists()
+        public async Task WithoutFilters_ShouldReturnOkWithAllTodoLists()
         {
-            await AuthenticateTestUserAsync();
-            var response = await ActAsync();
+            (var httpResponse, var todoLists) =
+                await HandleRequestAsync<IList<TodoListDto>>(() => ActAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var resources = JsonConvert.DeserializeObject<List<TodoList>>(await response.Content.ReadAsStringAsync());
-            resources.Count.Should().BeGreaterThan(0);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            todoLists.Count.Should().BeGreaterThan(0);
         }
 
         public async Task WithPagination_ReturnsHttpStatusCodeOkWithPaginatedTodoLists()

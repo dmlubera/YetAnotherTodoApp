@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -7,10 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Api;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Auths;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Infrastructure.DAL;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
 
 namespace YetAnotherTodoApp.Tests.End2End
 {
@@ -32,18 +32,38 @@ namespace YetAnotherTodoApp.Tests.End2End
         protected static StringContent GetContent(object value)
             => new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, MediaTypeNames.Application.Json);
 
-        public async Task AuthenticateTestUserAsync()
+        protected async Task AuthenticateTestUserAsync()
             => TestClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", await GetJwtTokenAsync());
 
         private async Task<string> GetJwtTokenAsync()
         {
             var request = new SignInRequest
             {
-                Email = TestUser.Email,
-                Password = TestUser.Password
+                Email = TestDbConsts.TestUserEmail,
+                Password = TestDbConsts.TestUserPassword
             };
             var response = await TestClient.PostAsync("api/auth/sign-in", GetContent(request));
             return JsonConvert.DeserializeObject<AuthSuccessResponse>(await response.Content.ReadAsStringAsync()).Token;
+        }
+
+        protected async Task<HttpResponseMessage> HandleRequestAsync(Func<Task<HttpResponseMessage>> func, bool requireAuthentication = true)
+        {
+            if (requireAuthentication)
+                await AuthenticateTestUserAsync();
+
+            return await func();
+        }
+
+        protected async Task<(HttpResponseMessage httpResponseMessage, TResult responseContent)> HandleRequestAsync<TResult>(Func<Task<HttpResponseMessage>> func, bool requireAuthentication = true)
+            where TResult : class
+        {
+            if (requireAuthentication)
+                await AuthenticateTestUserAsync();
+
+            var httpResponse = await func();
+            var responseContent = JsonConvert.DeserializeObject<TResult>(await httpResponse.Content.ReadAsStringAsync());
+
+            return (httpResponse, responseContent);
         }
     }
 }

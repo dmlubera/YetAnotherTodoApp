@@ -16,15 +16,15 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             => await TestClient.GetAsync("api/todo");
 
         [Fact]
-        public async Task WithoutAnyFilters_ReturnsHttpStatusCodeOkWithAllTodos()
+        public async Task WithoutAnyFilters_ShouldReturnOkWithAllTodos()
         {
             var expectedTodos = User.TodoLists.SelectMany(x => x.Todos).ToList();
 
             await AuthenticateTestUserAsync();
-            var response = await ActAsync();
-            var todos = JsonConvert.DeserializeObject<IList<TodoDto>>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var todos) =
+                await HandleRequestAsync<IList<TodoDto>>(() => ActAsync());
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             todos.Count.Should().Be(expectedTodos.Count);
         }
 

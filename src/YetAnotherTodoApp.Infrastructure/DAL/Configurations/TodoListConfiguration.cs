@@ -13,11 +13,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Configurations
 
             builder.HasMany(x => x.Todos)
                 .WithOne(x => x.TodoList)
-                .HasForeignKey("todoListId")
+                .HasForeignKey("TodoListId")
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Value Objects
-            builder.OwnsOne(x => x.Title);
+            builder.OwnsOne(x => x.Title).Property(x => x.Value).HasColumnName("Title");
         }
     }
 }

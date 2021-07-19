@@ -10,10 +10,8 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
     {
         private readonly YetAnotherTodoAppDbContext _dbContext;
 
-        public UserRepository(YetAnotherTodoAppDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        public UserRepository(YetAnotherTodoAppDbContext dbContext) 
+            => _dbContext = dbContext;
 
         public async Task AddAsync(User user)
         {

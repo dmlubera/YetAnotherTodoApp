@@ -3,11 +3,9 @@ using YetAnotherTodoApp.Application.Helpers;
 
 namespace YetAnotherTodoApp.Application.DI
 {
-    public static class HelpersModuleInstaller
+    internal static class HelpersModuleInstaller
     {
-        public static void RegisterHelpersModule(this IServiceCollection services)
-        {
-            services.AddScoped<IEncrypter, Encrypter>();
-        }
+        internal static void RegisterHelpersModule(this IServiceCollection services)
+            => services.AddSingleton<IEncrypter, Encrypter>();
     }
 }

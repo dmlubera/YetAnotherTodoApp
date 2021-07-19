@@ -36,12 +36,12 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("todoId")
+                    b.Property<Guid?>("TodoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("todoId");
+                    b.HasIndex("TodoId");
 
                     b.ToTable("Steps");
                 });
@@ -57,9 +57,6 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FinishDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -69,12 +66,12 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("todoListId")
+                    b.Property<Guid?>("TodoListId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("todoListId");
+                    b.HasIndex("TodoListId");
 
                     b.ToTable("Todos");
                 });
@@ -90,12 +87,12 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("userId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TodoLists");
                 });
@@ -120,7 +117,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                 {
                     b.HasOne("YetAnotherTodoApp.Domain.Entities.Todo", "Todo")
                         .WithMany("Steps")
-                        .HasForeignKey("todoId")
+                        .HasForeignKey("TodoId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Title", "Title", b1 =>
@@ -129,6 +126,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
+                                .HasColumnName("Title")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("StepId");
@@ -144,8 +142,25 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                 {
                     b.HasOne("YetAnotherTodoApp.Domain.Entities.TodoList", "TodoList")
                         .WithMany("Todos")
-                        .HasForeignKey("todoListId")
+                        .HasForeignKey("TodoListId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.FinishDate", "FinishDate", b1 =>
+                        {
+                            b1.Property<Guid>("TodoId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<DateTime>("Value")
+                                .HasColumnName("FinishDate")
+                                .HasColumnType("datetime2");
+
+                            b1.HasKey("TodoId");
+
+                            b1.ToTable("Todos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TodoId");
+                        });
 
                     b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Title", "Title", b1 =>
                         {
@@ -153,6 +168,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
+                                .HasColumnName("Title")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("TodoId");
@@ -168,7 +184,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                 {
                     b.HasOne("YetAnotherTodoApp.Domain.Entities.User", "User")
                         .WithMany("TodoLists")
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.OwnsOne("YetAnotherTodoApp.Domain.ValueObjects.Title", "Title", b1 =>
@@ -177,6 +193,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
+                                .HasColumnName("Title")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("TodoListId");
@@ -196,6 +213,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
+                                .HasColumnName("Email")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("UserId");
@@ -212,9 +230,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("FirstName")
+                                .HasColumnName("FirstName")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("LastName")
+                                .HasColumnName("LastName")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("UserId");
@@ -231,9 +251,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Hash")
+                                .HasColumnName("PasswordHash")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("Salt")
+                                .HasColumnName("PasswordSalt")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("UserId");
@@ -250,6 +272,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
+                                .HasColumnName("Username")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("UserId");

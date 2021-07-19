@@ -9,13 +9,15 @@ namespace YetAnotherTodoApp.Domain.Entities
     public class User : BaseEntity
     {
         private readonly List<TodoList> _todoLists = new List<TodoList>();
-        public virtual Username Username { get; private set; }
-        public virtual Name Name { get; private set; }
-        public virtual Email Email { get; private set; }
-        public virtual Password Password { get; private set; }
-        public virtual IReadOnlyCollection<TodoList> TodoLists => _todoLists.AsReadOnly();
+        public Username Username { get; private set; }
+        public Name Name { get; private set; }
+        public Email Email { get; private set; }
+        public Password Password { get; private set; }
+        public IReadOnlyCollection<TodoList> TodoLists => _todoLists.AsReadOnly();
 
-        protected User() { }
+        protected User()
+        {
+        }
 
         public User(string username, string email, string password, string salt)
         {
@@ -24,7 +26,7 @@ namespace YetAnotherTodoApp.Domain.Entities
             Email = Email.Create(email);
             Password = Password.Create(password, salt);
             AddTodoList(new TodoList("Inbox"));
-            CreatedAt = DateTime.UtcNow;
+            UpdateAuditInfo();
         }
 
         public void AddTodoList(TodoList todoList)
@@ -35,8 +37,16 @@ namespace YetAnotherTodoApp.Domain.Entities
             _todoLists.Add(todoList);
         }
 
-        public void RemoveTodoList(TodoList todoList)
-            => _todoLists.Remove(todoList);
+        public void DeleteTodoList(Guid id)
+        {
+            var todoList = _todoLists.FirstOrDefault(x => x.Id == id);
+            if (todoList is null)
+                throw new TodoListWithGivenIdDoesNotExistException(id);
+            if (todoList.Title.Value == "Inbox")
+                throw new InboxDeletionIsNotAllowedException();
+
+           _todoLists.Remove(todoList);
+        }
 
         public void UpdateUserInfo(string firstName, string lastname)
         {

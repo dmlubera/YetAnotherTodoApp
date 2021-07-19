@@ -1,109 +1,68 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Errors;
+using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Application.Exceptions;
-using YetAnotherTodoApp.Domain.Exceptions;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
+using YetAnotherTodoApp.Domain.Entities;
+using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.UserTests
 {
     public class UpdateEmailTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> UpdateEmailAsync(UpdateEmailRequest request)
+        private async Task<HttpResponseMessage> ActAsync(UpdateEmailRequest request)
             => await TestClient.PutAsync("api/users/email", GetContent(request));
 
-        private async Task<HttpResponseMessage> SignUpAsync(SignUpRequest request)
-            => await TestClient.PostAsync("api/auth/sign-up", GetContent(request));
-
-        private async Task<HttpResponseMessage> SingInAsync(SignInRequest request)
-            => await TestClient.PostAsync("api/auth/sign-in", GetContent(request));
-
-        private async Task<HttpResponseMessage> GetUserInfoAsync()
-            => await TestClient.GetAsync("api/users/");
-
         [Fact]
-        public async Task UpdateEmail_WithValidData_ReturnsOk()
+        public async Task WithValidData_ShouldReturnOkAndUpdateUserInfoInDatabase()
         {
-            var signUpRequest = new SignUpRequest
+            var request = new UpdateEmailRequest
             {
-                Username = "userforemailupdate",
-                Email = "userforemailupdate@yetantohertodoapp.com",
-                Password = "secretPassword"
-            };
-            var signInRequest = new SignInRequest
-            {
-                Email = signUpRequest.Email,
-                Password = signUpRequest.Password
-            };
-            var updateEmailRequest = new UpdateEmailRequest
-            {
-                Email = "updatedEmail@yetanothertodoapp.com"
+                Email = "newjanedoesemail@yetanothertodoapp.com"
             };
 
-            var signUpResponse = await SignUpAsync(signUpRequest);
-            signUpResponse.EnsureSuccessStatusCode();
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
-            var signInResponse = await SingInAsync(signInRequest);
-            signInResponse.EnsureSuccessStatusCode();
-
-            var jwtToken = JsonConvert.DeserializeObject<AuthSuccessResponse>(await signInResponse.Content.ReadAsStringAsync()).Token;
-
-            TestClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", jwtToken);
-
-            var updateEmailResponse = await UpdateEmailAsync(updateEmailRequest);
-            updateEmailResponse.EnsureSuccessStatusCode();
-
-            var updatedUserInfo = await GetUserInfoAsync();
-            updatedUserInfo.EnsureSuccessStatusCode();
-
-            var content = JsonConvert.DeserializeObject<UserInfoResponse>(await updatedUserInfo.Content.ReadAsStringAsync());
-            
-            content.Email.Should().BeEquivalentTo(updateEmailRequest.Email);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            var user = await DbContext.GetAsync<User>(User.Id);
+            user.Email.Value.Should().BeEquivalentTo(request.Email);
         }
 
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task UpdateEmailAsync_WithInvalidEmailFormat_ReturnsBadRequest(string email)
+        public async Task WithInvalidEmailFormat_ShouldReturnValidationError(string email)
         {
-            var expectedException = new InvalidEmailFormatException(email);
-            await AuthenticateTestUserAsync();
             var request = new UpdateEmailRequest
             {
                 Email = email
             };
 
-            var response = await UpdateEmailAsync(request);
-            var exception = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Code.Should().BeEquivalentTo(expectedException.Code);
-            exception.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task UpdateEmailAsync_WithAlreadyUsedEmail_ReturnsBadRequest()
+        public async Task WithEmailInUse_ShouldReturnBadRequestWithCustomError()
         {
-            await AuthenticateTestUserAsync();
-            var expectedException = new UpdateEmailToAlreadyUsedValueException();
-
             var request = new UpdateEmailRequest
             {
-                Email = TestUser.Email
+                Email = "secondTestUser@yetanothertodoapp.com"
             };
+            var expectedException = new EmailInUseException(request.Email);
 
-            var response = await UpdateEmailAsync(request);
-            var exception = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse)
+                = await HandleRequestAsync<ErrorResponse>(() => ActAsync(request));
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Code.Should().BeEquivalentTo(expectedException.Code);
-            exception.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
-
     }
 }

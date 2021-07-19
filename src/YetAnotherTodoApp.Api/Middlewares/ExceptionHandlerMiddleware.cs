@@ -4,6 +4,7 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Domain.Exceptions;
 using ApplicationException = YetAnotherTodoApp.Application.Exceptions.ApplicationException;
 
@@ -51,8 +52,8 @@ namespace YetAnotherTodoApp.Api.Middlewares
                 default: break;
             }
 
-            var response = new { code = errorCode, message = message };
-            var payload = JsonConvert.SerializeObject(response);
+            var errorResponse = new ErrorResponse { Code = errorCode, Message = message };
+            var payload = JsonConvert.SerializeObject(errorResponse);
             context.Response.ContentType = MediaTypeNames.Application.Json;
             context.Response.StatusCode = (int)statusCode;
 

@@ -1,85 +1,72 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models;
-using YetAnotherTodoApp.Domain.Exceptions;
-using YetAnotherTodoApp.Tests.End2End.Dummies;
+using YetAnotherTodoApp.Api.Models.Errors;
+using YetAnotherTodoApp.Api.Models.Users;
+using YetAnotherTodoApp.Domain.Entities;
+using YetAnotherTodoApp.Tests.End2End.Helpers;
 
 namespace YetAnotherTodoApp.Tests.End2End.UserTests
 {
     public class UpdateUserInfoTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> UpdateUserInfoAsync(UpdateUserInfoRequest request)
+        private async Task<HttpResponseMessage> ActAsync(UpdateUserInfoRequest request)
             => await TestClient.PutAsync($"api/users", GetContent(request));
 
-        private async Task<HttpResponseMessage> GetUserInfoAsync()
-            => await TestClient.GetAsync($"api/users");
-
         [Fact]
-        public async Task UpdateUserInfo_WithValidData_ShouldUpdateUserInfo()
+        public async Task WithValidData_ShouldReturnOkAndUpdateUserInDatabase()
         {
-            await AuthenticateTestUserAsync();
-
             var request = new UpdateUserInfoRequest
             {
                 FirstName = "John",
                 LastName = "Doe"
             };
 
-            var updateUserInfoResponse = await UpdateUserInfoAsync(request);
-            updateUserInfoResponse.EnsureSuccessStatusCode();
+            var httpResponse = await HandleRequestAsync(() => ActAsync(request));
 
-            var userInfoResponse = await GetUserInfoAsync();
-            var updatedUserInfo = JsonConvert.DeserializeObject<UserInfoResponse>(await userInfoResponse.Content.ReadAsStringAsync());
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            var user = await DbContext.GetAsync<User>(User.Id);
 
-            updatedUserInfo.Email.Should().BeEquivalentTo(TestUser.Email);
-            updatedUserInfo.Username.Should().BeEquivalentTo(TestUser.Username);
-            updatedUserInfo.FirstName.Should().BeEquivalentTo("John");
-            updatedUserInfo.LastName.Should().BeEquivalentTo("Doe");
+            user.Name.FirstName.Should().BeEquivalentTo("John");
+            user.Name.LastName.Should().BeEquivalentTo("Doe");
         }
 
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task UpdateUserInfo_WithInvalidFirstName_ShouldThrowAnException(string firstName)
+        public async Task WithInvalidFirstName_ShouldReturnValidationError(string firstName)
         {
-            var expectedException = new InvalidFirstNameException(firstName);
-            await AuthenticateTestUserAsync();
-
             var request = new UpdateUserInfoRequest
             {
                 FirstName = firstName,
                 LastName = "Doe"
             };
 
-            var response = await UpdateUserInfoAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
 
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
 
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task UpdateUserInfo_WithInvalidLastName_ShouldThrowAnException(string lastName)
+        public async Task WithInvalidLastName_ShouldReturnValidationError(string lastName)
         {
-            var expectedException = new InvalidLastNameException(lastName);
-            await AuthenticateTestUserAsync();
-
             var request = new UpdateUserInfoRequest
             {
                 FirstName = "John",
                 LastName = lastName
             };
 
-            var response = await UpdateUserInfoAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ValidationErrorResponse>(() => ActAsync(request));
 
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Errors.Should().NotBeEmpty();
         }
     }
 }

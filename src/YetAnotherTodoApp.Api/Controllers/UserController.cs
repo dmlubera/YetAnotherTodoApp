@@ -2,15 +2,17 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Extensions;
+using YetAnotherTodoApp.Api.Models.Users;
 using YetAnotherTodoApp.Application.Commands;
-using YetAnotherTodoApp.Application.Commands.Models;
+using YetAnotherTodoApp.Application.Commands.Models.Users;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Queries;
-using YetAnotherTodoApp.Application.Queries.Models;
+using YetAnotherTodoApp.Application.Queries.Models.Users;
 
 namespace YetAnotherTodoApp.Api.Controllers
 {
+    [Authorize]
     [Route("api/users/")]
     public class UserController : ControllerBase
     {
@@ -23,59 +25,70 @@ namespace YetAnotherTodoApp.Api.Controllers
             _queryDispatcher = queryDispatcher;
         }
 
-        [Authorize]
+        /// <summary>
+        /// Gets user info of authenticated user
+        /// </summary>
+        /// <response code="200">Returned user info of authenticated user</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> GetUserInfoAsync()
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var userInfo = await _queryDispatcher.HandleAsync<GetUserInfoQuery, UserInfoDto>(new GetUserInfoQuery { UserId = userId });
-
+            var userInfo = await _queryDispatcher.HandleAsync<GetUserInfoQuery, UserInfoDto>(new GetUserInfoQuery { UserId = User.GetAuthenticatedUserId() });
             return Ok(userInfo);
         }
 
-        [Authorize]
+        /// <summary>
+        /// Updates user info
+        /// </summary>
+        /// <response code="200">The user info has been updated</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateUserInfoAsync([FromBody] UpdateUserInfoRequest request)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateUserInfoCommand
-            {
-                UserId = userId,
-                FirstName = request.FirstName,
-                LastName = request.LastName
-            };
+            var command = new UpdateUserInfoCommand(User.GetAuthenticatedUserId(), request.FirstName, request.LastName);
             await _commandDispatcher.DispatchAsync(command);
-
             return Ok();
         }
 
-        [Authorize]
+        /// <summary>
+        /// Changes email address
+        /// </summary>
+        /// <response code="200">The email address has been changed</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPut("email")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateEmailAsync([FromBody] UpdateEmailRequest request)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdateEmailCommand
-            {
-                UserId = userId,
-                Email = request.Email
-            };
+            var command = new UpdateEmailCommand(User.GetAuthenticatedUserId(), request.Email);
             await _commandDispatcher.DispatchAsync(command);
-
             return Ok();
         }
 
-        [Authorize]
+        /// <summary>
+        /// Changes password
+        /// </summary>
+        /// <response code="200">The password address has been changed</response>
+        /// <response code="400">An error occured while processing a request</response>
+        /// <response code="500">Internal Server Error</response>
         [HttpPut("password")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> UpdatePasswordEmail([FromBody] UpdatePasswordRequest request)
         {
-            var userId = User.Identity.IsAuthenticated ? Guid.Parse(User.Identity.Name) : Guid.Empty;
-            var command = new UpdatePasswordCommand
-            {
-                UserId = userId,
-                Password = request.Password
-            };
+            var command = new UpdatePasswordCommand(User.GetAuthenticatedUserId(), request.Password);
             await _commandDispatcher.DispatchAsync(command);
-
             return Ok();
         }
     }

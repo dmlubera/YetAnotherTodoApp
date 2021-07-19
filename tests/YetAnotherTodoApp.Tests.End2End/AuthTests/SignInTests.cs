@@ -4,7 +4,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using YetAnotherTodoApp.Api.Models;
+using YetAnotherTodoApp.Api.Models.Auths;
+using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Exceptions;
 
@@ -12,45 +13,45 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
 {
     public class SignInTests : IntegrationTestBase
     {
-        private async Task<HttpResponseMessage> AuthenticateAsync(SignInRequest request)
+        private async Task<HttpResponseMessage> ActAsync(SignInRequest request)
             => await TestClient.PostAsync("api/auth/sign-in", GetContent(request));
 
         [Fact]
-        public async Task SignInAsync_WithValidCredentials_ReturnsJwtToken()
+        public async Task WithValidCredentials_ShouldReturnOkAndJwtToken()
         {
             var request = new SignInRequest
             {
-                Email = "testuser@yetanothertodoapp.com",
-                Password = "secretPassword"
+                Email = TestDbConsts.TestUserEmail,
+                Password = TestDbConsts.TestUserPassword
             };
 
-            var response = await AuthenticateAsync(request);
-            var content = JsonConvert.DeserializeObject<JwtDto>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var jwtResponse) = 
+                await HandleRequestAsync<JwtDto>(() => ActAsync(request), requireAuthentication: false);
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            content.Token.Should().NotBeNullOrEmpty();
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            jwtResponse.Token.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
-        public async Task SignInAsync_WithInvalidCredentials_ReturnsBadRequest()
+        public async Task WithInvalidCredentials_ShouldReturnBadRequestWithCustomError()
         {
             var expectedException = new InvalidCredentialsException();
             var request = new SignInRequest
             {
-                Email = "testuser@yetanothertodoapp.com",
+                Email = TestDbConsts.TestUserEmail,
                 Password = "wrongSecretPassword"
             };
 
-            var response = await AuthenticateAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
 
         [Fact]
-        public async Task SignInAsync_WithNonExistingUserAccount_ReturnsBadRequest()
+        public async Task WithNonExistingUserAccount_ShouldReturnBadRequestWithCustomError()
         {
             var expectedException = new InvalidCredentialsException();
             var request = new SignInRequest
@@ -59,12 +60,12 @@ namespace YetAnotherTodoApp.Tests.End2End.AuthTests
                 Password = "secretPassword"
             };
 
-            var response = await AuthenticateAsync(request);
-            var content = JsonConvert.DeserializeObject<ErrorResponse>(await response.Content.ReadAsStringAsync());
+            (var httpResponse, var errorResponse) =
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(request), requireAuthentication: false);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            content.Code.Should().BeEquivalentTo(expectedException.Code);
-            content.Message.Should().BeEquivalentTo(expectedException.Message);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            errorResponse.Code.Should().BeEquivalentTo(expectedException.Code);
+            errorResponse.Message.Should().BeEquivalentTo(expectedException.Message);
         }
     }
 }
