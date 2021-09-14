@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -15,12 +16,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
     public class UpdateTodoPriorityCommandHandlerTests
     {
         private readonly Mock<ITodoRepository> _repositoryMock;
+        private readonly Mock<ILogger<UpdateTodoPriorityCommandHandler>> _loggerMock;
         private readonly UpdateTodoPriorityCommandHandler _handler;
 
         public UpdateTodoPriorityCommandHandlerTests()
         {
             _repositoryMock = new Mock<ITodoRepository>();
-            _handler = new UpdateTodoPriorityCommandHandler(_repositoryMock.Object);
+            _loggerMock = new Mock<ILogger<UpdateTodoPriorityCommandHandler>>();
+            _handler = new UpdateTodoPriorityCommandHandler(_repositoryMock.Object, _loggerMock.Object);
         }
 
         [Fact]

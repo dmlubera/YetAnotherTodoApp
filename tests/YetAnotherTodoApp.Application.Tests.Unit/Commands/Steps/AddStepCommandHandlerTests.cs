@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Linq;
@@ -18,13 +19,15 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Steps
     {
         private readonly Mock<ITodoRepository> _repositoryMock;
         private readonly Mock<ICache> _cacheMock;
+        private readonly Mock<ILogger<AddStepCommandHandler>> _loggerMock;
         private readonly AddStepCommandHandler _handler;
 
         public AddStepCommandHandlerTests()
         {
             _repositoryMock = new Mock<ITodoRepository>();
             _cacheMock = new Mock<ICache>();
-            _handler = new AddStepCommandHandler(_repositoryMock.Object, _cacheMock.Object);
+            _loggerMock = new Mock<ILogger<AddStepCommandHandler>>();
+            _handler = new AddStepCommandHandler(_repositoryMock.Object, _cacheMock.Object, _loggerMock.Object);
         }
 
         [Fact]

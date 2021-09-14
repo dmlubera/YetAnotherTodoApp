@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Models.Steps;
@@ -12,9 +13,15 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Steps
     {
         private readonly ITodoRepository _repository;
         private readonly ICache _cache;
+        private readonly ILogger<AddStepCommandHandler> _logger;
 
-        public AddStepCommandHandler(ITodoRepository repository, ICache cache)
-            => (_repository, _cache) = (repository, cache);
+        public AddStepCommandHandler(ITodoRepository repository, ICache cache,
+            ILogger<AddStepCommandHandler> logger)
+        {
+            _repository = repository;
+            _cache = cache;
+            _logger = logger;
+        }
 
         public async Task HandleAsync(AddStepCommand command)
         {
@@ -28,6 +35,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Steps
             _cache.Set(command.CacheTokenId.ToString(), todo.Id, TimeSpan.FromSeconds(99));
 
             await _repository.SaveChangesAsync();
+
+            _logger.LogTrace($"Step with ID: {step.Id} has been added to Todo with ID: {todo.Id}");
         }
     }
 }

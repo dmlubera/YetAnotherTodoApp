@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
 using YetAnotherTodoApp.Application.Exceptions;
@@ -9,9 +10,13 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
     public class DeleteTodoCommandHandler : ICommandHandler<DeleteTodoCommand>
     {
         private readonly IUserRepository _repository;
+        private readonly ILogger<DeleteTodoCommandHandler> _logger;
 
-        public DeleteTodoCommandHandler(IUserRepository repository) 
-            => _repository = repository;
+        public DeleteTodoCommandHandler(IUserRepository repository, ILogger<DeleteTodoCommandHandler> logger)
+        {
+            _repository = repository;
+            _logger = logger;
+        }
 
         public async Task HandleAsync(DeleteTodoCommand command)
         {
@@ -24,6 +29,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
             todoList.DeleteTodo(command.TodoId);
 
             await _repository.SaveChangesAsync();
+
+            _logger.LogTrace($"Todo with ID: {command.TodoId} has been deleted from Todo List with ID: {todoList.Id}");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models.Users;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Repositories;
@@ -8,9 +9,13 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
     public class UpdateEmailCommandHandler : ICommandHandler<UpdateEmailCommand>
     {
         private readonly IUserRepository _repository;
+        private readonly ILogger<UpdateEmailCommandHandler> _logger;
 
-        public UpdateEmailCommandHandler(IUserRepository repository)
-            => _repository = repository;
+        public UpdateEmailCommandHandler(IUserRepository repository, ILogger<UpdateEmailCommandHandler> logger)
+        {
+            _repository = repository;
+            _logger = logger;
+        }
 
         public async Task HandleAsync(UpdateEmailCommand command)
         {
@@ -21,6 +26,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
             user.UpdateEmail(command.Email);
 
             await _repository.SaveChangesAsync();
+
+            _logger.LogTrace($"Email of user with ID: {user.Id} has been updated.");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -17,13 +18,15 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
     {
         private readonly Mock<IUserRepository> _repositoryMock;
         private readonly Mock<IEncrypter> _encrypterMock;
+        private readonly Mock<ILogger<UpdatePasswordCommandHandler>> _loggerMock;
         private readonly UpdatePasswordCommandHandler _handler;
 
         public UpdatePasswordCommandHandlerTests()
         {
             _repositoryMock = new Mock<IUserRepository>();
             _encrypterMock = new Mock<IEncrypter>();
-            _handler = new UpdatePasswordCommandHandler(_repositoryMock.Object, _encrypterMock.Object);
+            _loggerMock = new Mock<ILogger<UpdatePasswordCommandHandler>>();
+            _handler = new UpdatePasswordCommandHandler(_repositoryMock.Object, _encrypterMock.Object, _loggerMock.Object);
         }
 
         [Fact]

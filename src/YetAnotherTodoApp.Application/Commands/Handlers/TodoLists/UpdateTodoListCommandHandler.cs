@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Repositories;
@@ -8,9 +9,13 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
     public class UpdateTodoListCommandHandler : ICommandHandler<UpdateTodoListCommand>
     {
         private readonly ITodoListRepository _repository;
+        private readonly ILogger<UpdateTodoListCommandHandler> _logger;
 
-        public UpdateTodoListCommandHandler(ITodoListRepository repository)
-            => _repository = repository;
+        public UpdateTodoListCommandHandler(ITodoListRepository repository, ILogger<UpdateTodoListCommandHandler> logger)
+        {
+            _repository = repository;
+            _logger = logger;
+        }
 
         public async Task HandleAsync(UpdateTodoListCommand command)
         {
@@ -26,6 +31,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
             todoList.UpdateTitle(command.Title);
 
             await _repository.SaveChangesAsync();
+
+            _logger.LogTrace($"Todo List with ID: {todoList.Id} has been updated.");
         }
     }
 }

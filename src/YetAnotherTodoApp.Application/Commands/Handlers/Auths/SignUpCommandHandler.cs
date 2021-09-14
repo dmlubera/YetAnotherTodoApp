@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Models.Auths;
@@ -14,12 +15,15 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Auths
         private readonly IUserRepository _repository;
         private readonly IEncrypter _encrypter;
         private readonly ICache _cache;
+        private readonly ILogger<SignUpCommandHandler> _logger;
 
-        public SignUpCommandHandler(IUserRepository repository, IEncrypter encrypter, ICache cache)
+        public SignUpCommandHandler(IUserRepository repository, IEncrypter encrypter,
+            ICache cache, ILogger<SignUpCommandHandler> logger)
         {
             _repository = repository;
             _encrypter = encrypter;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task HandleAsync(SignUpCommand command)
@@ -37,6 +41,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Auths
             _cache.SetResourceIdentifier(command.CacheTokenId, user.Id);
 
             await _repository.AddAsync(user);
+
+            _logger.LogTrace($"User with ID: {user.Id} has been created.");
         }
     }
 }

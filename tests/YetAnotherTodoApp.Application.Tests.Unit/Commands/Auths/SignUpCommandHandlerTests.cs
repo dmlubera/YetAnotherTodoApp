@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<IEncrypter> _encrypterMock;
         private readonly Mock<ICache> _memoryCacheMock;
+        private readonly Mock<ILogger<SignUpCommandHandler>> _loggerMock;
         private readonly SignUpCommandHandler _handler;
 
         public SignUpCommandHandlerTests()
@@ -26,7 +28,9 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
             _userRepositoryMock = new Mock<IUserRepository>();
             _encrypterMock = new Mock<IEncrypter>();
             _memoryCacheMock = new Mock<ICache>();
-            _handler = new SignUpCommandHandler(_userRepositoryMock.Object, _encrypterMock.Object, _memoryCacheMock.Object);
+            _loggerMock = new Mock<ILogger<SignUpCommandHandler>>();
+            _handler = new SignUpCommandHandler(_userRepositoryMock.Object, _encrypterMock.Object,
+                _memoryCacheMock.Object, _loggerMock.Object);
         }
 
         [Fact]

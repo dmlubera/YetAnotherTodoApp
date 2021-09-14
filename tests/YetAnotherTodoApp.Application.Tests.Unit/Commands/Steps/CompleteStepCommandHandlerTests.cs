@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -15,12 +16,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Steps
     public class CompleteStepCommandHandlerTests
     {
         private readonly Mock<IStepRepository> _repositoryMock;
+        private readonly Mock<ILogger<CompleteStepCommandHandler>> _loggerMock;
         private readonly CompleteStepCommandHandler _handler;
 
         public CompleteStepCommandHandlerTests()
         {
             _repositoryMock = new Mock<IStepRepository>();
-            _handler = new CompleteStepCommandHandler(_repositoryMock.Object);
+            _loggerMock = new Mock<ILogger<CompleteStepCommandHandler>>();
+            _handler = new CompleteStepCommandHandler(_repositoryMock.Object, _loggerMock.Object);
         }
 
         [Fact]

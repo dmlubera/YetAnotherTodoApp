@@ -1,18 +1,18 @@
 @api = https://localhost:5001/api
 
 ### Create account
-POST {{api}}/auth/register
+POST {{api}}/auth/sign-up
 Content-Type: application/json
 
 {
-    "username": "test1234",
-    "email": "test1231@test.com",
+    "username": "test12345",
+    "email": "test12315@test.com",
     "password": "test1231"
 }
 
 ### Sign-in
 # @name sign_in
-POST {{api}}/auth/login
+POST {{api}}/auth/sign-in
 Content-Type: application/json
 
 {
@@ -67,11 +67,11 @@ Content-Type: application/json
 {
     "title": "test123",
     "project": "totallynewproject",
-    "finishDate": "2021-04-11"
+    "finishDate": "2021-10-11"
 }
 
 ###
-@todoId = fedff631-dd0a-43c3-b57c-7eaf7db7a7d8
+@todoId = 695dea24-bb65-4300-b0e8-f7d7df93956a
 
 ### Delete todo
 DELETE {{api}}/todo/{{todoId}}
@@ -85,7 +85,7 @@ Content-Type: application/json
 {
     "title": "New name",
     "description": "New description",
-    "finishDate": "2021-04-11"
+    "finishDate": "2021-11-11"
 }
 
 ### Update todo status
@@ -109,6 +109,8 @@ Content-Type: application/json
 ### Get todolists
 GET {{api}}/todolist
 Authorization: Bearer {{accessToken}}
+
+
 
 
 @todolistId = c7050053-8b1a-44a5-bb61-122297f916a3

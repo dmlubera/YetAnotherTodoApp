@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Linq;
@@ -16,12 +17,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
     public class DeleteTodoCommandHandlerTests
     {
         private readonly Mock<IUserRepository> _repositoryMock;
+        private readonly Mock<ILogger<DeleteTodoCommandHandler>> _loggerMock;
         private readonly DeleteTodoCommandHandler _handler;
 
         public DeleteTodoCommandHandlerTests()
         {
             _repositoryMock = new Mock<IUserRepository>();
-            _handler = new DeleteTodoCommandHandler(_repositoryMock.Object);
+            _loggerMock = new Mock<ILogger<DeleteTodoCommandHandler>>();
+            _handler = new DeleteTodoCommandHandler(_repositoryMock.Object, _loggerMock.Object);
         }
 
         [Fact]

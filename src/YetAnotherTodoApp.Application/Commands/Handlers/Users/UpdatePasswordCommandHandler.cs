@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models.Users;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Helpers;
@@ -10,9 +11,14 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
     {
         private readonly IUserRepository _repository;
         private readonly IEncrypter _encrypter;
+        private readonly ILogger<UpdatePasswordCommandHandler> _logger;
 
-        public UpdatePasswordCommandHandler(IUserRepository repository, IEncrypter encrypter)
-            => (_repository, _encrypter) = (repository, encrypter);
+        public UpdatePasswordCommandHandler(IUserRepository repository, IEncrypter encrypter, ILogger<UpdatePasswordCommandHandler> logger)
+        {
+            _repository = repository;
+            _encrypter = encrypter;
+            _logger = logger;
+        }
 
         public async Task HandleAsync(UpdatePasswordCommand command)
         {
@@ -28,6 +34,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
             user.UpdatePassword(passwordHash, passwordSalt);
 
             await _repository.SaveChangesAsync();
+
+            _logger.LogTrace($"Password of user with ID: {user.Id} has been updated.");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Linq;
@@ -14,12 +15,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
     public class DeleteTodoListCommandHandlerTests
     {
         private readonly Mock<IUserRepository> _repositoryMock; 
+        private readonly Mock<ILogger<DeleteTodoListCommandHandler>> _loggerMock;
         private readonly DeleteTodoListCommandHandler _handler;
 
         public DeleteTodoListCommandHandlerTests()
         {
             _repositoryMock = new Mock<IUserRepository>();
-            _handler = new DeleteTodoListCommandHandler(_repositoryMock.Object);
+            _loggerMock = new Mock<ILogger<DeleteTodoListCommandHandler>>();
+            _handler = new DeleteTodoListCommandHandler(_repositoryMock.Object, _loggerMock.Object);
         }
 
         [Fact]

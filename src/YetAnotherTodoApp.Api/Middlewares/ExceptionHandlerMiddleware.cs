@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using YetAnotherTodoApp.Api.Models.Errors;
 using YetAnotherTodoApp.Domain.Exceptions;
@@ -13,10 +14,12 @@ namespace YetAnotherTodoApp.Api.Middlewares
     public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlerMiddleware> _logger;
 
-        public ExceptionHandlerMiddleware(RequestDelegate next)
+        public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -27,6 +30,7 @@ namespace YetAnotherTodoApp.Api.Middlewares
             }
             catch(Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 await HandleExceptionAsync(context, ex);
             }
         }

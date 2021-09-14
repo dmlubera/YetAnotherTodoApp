@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
         private readonly Mock<IJwtHelper> _jwtHelperMock;
         private readonly Mock<IEncrypter> _encrypterMock;
         private readonly Mock<ICache> _memoryCacheMock;
+        private readonly Mock<ILogger<SignInCommandHandler>> _loggerMock;
         private readonly SignInCommandHandler _handler;
 
         public SignInCommandHandlerTests()
@@ -28,7 +30,9 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands
             _jwtHelperMock = new Mock<IJwtHelper>();
             _encrypterMock = new Mock<IEncrypter>();
             _memoryCacheMock = new Mock<ICache>();
-            _handler = new SignInCommandHandler(_userRepositoryMock.Object, _jwtHelperMock.Object, _encrypterMock.Object, _memoryCacheMock.Object);
+            _loggerMock = new Mock<ILogger<SignInCommandHandler>>();
+            _handler = new SignInCommandHandler(_userRepositoryMock.Object, _jwtHelperMock.Object,
+                _encrypterMock.Object, _memoryCacheMock.Object, _loggerMock.Object);
         }
 
         [Fact]

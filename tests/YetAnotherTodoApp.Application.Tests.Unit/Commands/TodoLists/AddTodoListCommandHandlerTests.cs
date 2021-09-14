@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Linq;
@@ -17,13 +18,15 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
     {
         private readonly Mock<IUserRepository> _repositoryMock;
         private readonly Mock<ICache> _cacheMock;
+        private readonly Mock<ILogger<AddTodoListCommandHandler>> _loggerMock;
         private readonly AddTodoListCommandHandler _handler;
 
         public AddTodoListCommandHandlerTests()
         {
             _repositoryMock = new Mock<IUserRepository>();
             _cacheMock = new Mock<ICache>();
-            _handler = new AddTodoListCommandHandler(_repositoryMock.Object, _cacheMock.Object);
+            _loggerMock = new Mock<ILogger<AddTodoListCommandHandler>>();
+            _handler = new AddTodoListCommandHandler(_repositoryMock.Object, _cacheMock.Object, _loggerMock.Object);
         }
 
         [Fact]

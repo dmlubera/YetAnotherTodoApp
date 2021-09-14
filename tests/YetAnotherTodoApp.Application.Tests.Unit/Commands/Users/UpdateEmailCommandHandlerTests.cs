@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -15,12 +16,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
     public class UpdateEmailCommandHandlerTests
     {
         private readonly Mock<IUserRepository> _repositoryMock;
+        private readonly Mock<ILogger<UpdateEmailCommandHandler>> _loggerMock;
         private readonly UpdateEmailCommandHandler _handler;
 
         public UpdateEmailCommandHandlerTests()
         {
             _repositoryMock = new Mock<IUserRepository>();
-            _handler = new UpdateEmailCommandHandler(_repositoryMock.Object);
+            _loggerMock = new Mock<ILogger<UpdateEmailCommandHandler>>();
+            _handler = new UpdateEmailCommandHandler(_repositoryMock.Object, _loggerMock.Object);
         }
 
         [Fact]

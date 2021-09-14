@@ -1,9 +1,8 @@
 ﻿using Bogus;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Application.Commands.Handlers.Todos;
@@ -17,12 +16,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
     public class UpdateTodoCommandHandlerTests
     {
         private readonly Mock<ITodoRepository> _repositoryMock;
+        private readonly Mock<ILogger<UpdateTodoCommandHandler>> _loggerMock;
         private readonly UpdateTodoCommandHandler _handler;
 
         public UpdateTodoCommandHandlerTests()
         {
             _repositoryMock = new Mock<ITodoRepository>();
-            _handler = new UpdateTodoCommandHandler(_repositoryMock.Object);
+            _loggerMock = new Mock<ILogger<UpdateTodoCommandHandler>>();
+            _handler = new UpdateTodoCommandHandler(_repositoryMock.Object, _loggerMock.Object);
         }
 
         [Fact]
