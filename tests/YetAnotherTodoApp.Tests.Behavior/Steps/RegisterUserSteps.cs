@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using YetAnotherTodoApp.Tests.Behavior.Helpers;
@@ -10,11 +9,12 @@ namespace YetAnotherTodoApp.Tests.Behavior.Steps
     public class RegisterUserSteps : CustomWebApplicationFactory
     {
         private readonly HttpClient _httpClient;
-        private HttpResponseMessage _httpResponse;
+        private readonly ScenarioContext _scenarioContext;
 
-        public RegisterUserSteps(CustomWebApplicationFactory factory)
+        public RegisterUserSteps(CustomWebApplicationFactory factory, ScenarioContext scenarioContext)
         {
             _httpClient = factory.CreateClient();
+            _scenarioContext = scenarioContext;
         }
 
         [Given(@"a new user with (.*) and (.*)")]
@@ -27,14 +27,8 @@ namespace YetAnotherTodoApp.Tests.Behavior.Steps
                 Password = password
             };
 
-            _httpResponse = 
+            _scenarioContext["Response"] = 
                 await _httpClient.PostAsync("api/auth/sign-up", request.GetStringContent());
-        }
-
-        [Then(@"a server should return (.*)")]
-        public void TheStatusCodeShouldBe(int statusCode)
-        {
-            ((int)_httpResponse.StatusCode).Should().Be(statusCode);
         }
     }
 }

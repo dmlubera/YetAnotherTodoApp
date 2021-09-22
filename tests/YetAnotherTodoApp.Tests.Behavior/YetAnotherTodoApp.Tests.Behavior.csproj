@@ -17,10 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Hooks\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\YetAnotherTodoApp.Api\YetAnotherTodoApp.Api.csproj" />
   </ItemGroup>
 
