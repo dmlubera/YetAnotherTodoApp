@@ -75,6 +75,24 @@ namespace YetAnotherTodoApp.Tests.Behavior.Features
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 3
+#line hidden
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                        "email",
+                        "password"});
+            table2.AddRow(new string[] {
+                        "admin@yetanothertodoapp.com",
+                        "super$ecret"});
+#line 4
+ testRunner.Given("a user with credentials:", ((string)(null)), table2, "Given ");
+#line hidden
+#line 7
+ testRunner.And("credentials are valid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
         void System.IDisposable.Dispose()
         {
             this.TestTearDown();
@@ -83,17 +101,15 @@ namespace YetAnotherTodoApp.Tests.Behavior.Features
         [Xunit.SkippableTheoryAttribute(DisplayName="Successfully created Todo List")]
         [Xunit.TraitAttribute("FeatureTitle", "Create Todo List")]
         [Xunit.TraitAttribute("Description", "Successfully created Todo List")]
-        [Xunit.InlineDataAttribute("admin@yetanothertodoapp.com", "super$ecret", "Work stuff", "201", new string[0])]
-        public virtual void SuccessfullyCreatedTodoList(string email, string password, string title, string status_Code, string[] exampleTags)
+        [Xunit.InlineDataAttribute("Work stuff", "201", new string[0])]
+        public virtual void SuccessfullyCreatedTodoList(string title, string status_Code, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("email", email);
-            argumentsOfScenario.Add("password", password);
             argumentsOfScenario.Add("title", title);
             argumentsOfScenario.Add("status_code", status_Code);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Successfully created Todo List", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 3
+#line 9
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -113,16 +129,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 4
- testRunner.Given(string.Format("a user with {0} and {1}", email, password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 3
+this.FeatureBackground();
 #line hidden
-#line 5
- testRunner.And("credentials are valid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 6
+#line 10
  testRunner.When(string.Format("create a Todo List with {0}", title), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 7
+#line 11
  testRunner.Then(string.Format("a server should return {0}", status_Code), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -132,17 +145,15 @@ this.ScenarioInitialize(scenarioInfo);
         [Xunit.SkippableTheoryAttribute(DisplayName="Failed creating Todo List with title same as existing one")]
         [Xunit.TraitAttribute("FeatureTitle", "Create Todo List")]
         [Xunit.TraitAttribute("Description", "Failed creating Todo List with title same as existing one")]
-        [Xunit.InlineDataAttribute("admin@yetanothertodoapp.com", "super$ecret", "Inbox", "400", new string[0])]
-        public virtual void FailedCreatingTodoListWithTitleSameAsExistingOne(string email, string password, string title, string status_Code, string[] exampleTags)
+        [Xunit.InlineDataAttribute("Inbox", "400", new string[0])]
+        public virtual void FailedCreatingTodoListWithTitleSameAsExistingOne(string title, string status_Code, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("email", email);
-            argumentsOfScenario.Add("password", password);
             argumentsOfScenario.Add("title", title);
             argumentsOfScenario.Add("status_code", status_Code);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Failed creating Todo List with title same as existing one", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 13
+#line 17
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -162,16 +173,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 14
- testRunner.Given(string.Format("a user with {0} and {1}", email, password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 3
+this.FeatureBackground();
 #line hidden
-#line 15
- testRunner.And("credentials are valid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 16
+#line 18
  testRunner.When(string.Format("create a Todo List with {0}", title), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 17
+#line 19
  testRunner.Then(string.Format("a server should return {0}", status_Code), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -181,17 +189,15 @@ this.ScenarioInitialize(scenarioInfo);
         [Xunit.SkippableTheoryAttribute(DisplayName="Failed creating Todo List with empty title")]
         [Xunit.TraitAttribute("FeatureTitle", "Create Todo List")]
         [Xunit.TraitAttribute("Description", "Failed creating Todo List with empty title")]
-        [Xunit.InlineDataAttribute("admin@yetanothertodoapp.com", "super$ecret", "", "400", new string[0])]
-        public virtual void FailedCreatingTodoListWithEmptyTitle(string email, string password, string title, string status_Code, string[] exampleTags)
+        [Xunit.InlineDataAttribute("", "400", new string[0])]
+        public virtual void FailedCreatingTodoListWithEmptyTitle(string title, string status_Code, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("email", email);
-            argumentsOfScenario.Add("password", password);
             argumentsOfScenario.Add("title", title);
             argumentsOfScenario.Add("status_code", status_Code);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Failed creating Todo List with empty title", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 23
+#line 25
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -211,11 +217,8 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 24
- testRunner.Given(string.Format("a user with {0} and {1}", email, password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 25
- testRunner.And("credentials are valid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 3
+this.FeatureBackground();
 #line hidden
 #line 26
  testRunner.When(string.Format("create a Todo List with {0}", title), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");

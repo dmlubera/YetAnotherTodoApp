@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 using YetAnotherTodoApp.Tests.Behavior.Helpers;
 
 namespace YetAnotherTodoApp.Tests.Behavior.Steps
@@ -50,6 +51,20 @@ namespace YetAnotherTodoApp.Tests.Behavior.Steps
         public void FailedAuthentication()
         {
             _authResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Given(@"a user with credentials:")]
+        public async Task SignInWithGivenCredentials(Table table)
+        {
+            var credentials = table.CreateInstance<Credentials>();
+
+            _authResponse = await _httpClient.PostAsync("api/auth/sign-in", credentials.GetStringContent());
+            if (_authResponse.IsSuccessStatusCode)
+            {
+                var jwtToken = JsonConvert.DeserializeObject<AuthSuccessfulResponse>(await _authResponse.Content.ReadAsStringAsync()).Token;
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", jwtToken);
+            }
+            _scenarioContext["Response"] = _authResponse;
         }
     }
 }

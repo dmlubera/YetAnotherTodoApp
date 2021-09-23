@@ -75,6 +75,24 @@ namespace YetAnotherTodoApp.Tests.Behavior.Features
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 3
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "email",
+                        "password"});
+            table1.AddRow(new string[] {
+                        "admin@yetanothertodoapp.com",
+                        "super$ecret"});
+#line 4
+ testRunner.Given("a user with credentials:", ((string)(null)), table1, "Given ");
+#line hidden
+#line 7
+ testRunner.And("credentials are valid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
         void System.IDisposable.Dispose()
         {
             this.TestTearDown();
@@ -83,18 +101,16 @@ namespace YetAnotherTodoApp.Tests.Behavior.Features
         [Xunit.SkippableTheoryAttribute(DisplayName="Add Todo without specifing Todo List")]
         [Xunit.TraitAttribute("FeatureTitle", "Add Todo")]
         [Xunit.TraitAttribute("Description", "Add Todo without specifing Todo List")]
-        [Xunit.InlineDataAttribute("admin@yetanothertodoapp.com", "super$ecret", "Keep learning", "2038-01-19", "201", new string[0])]
-        public virtual void AddTodoWithoutSpecifingTodoList(string email, string password, string name, string finish_Date, string status_Code, string[] exampleTags)
+        [Xunit.InlineDataAttribute("Keep learning", "2038-01-19", "201", new string[0])]
+        public virtual void AddTodoWithoutSpecifingTodoList(string name, string finish_Date, string status_Code, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("email", email);
-            argumentsOfScenario.Add("password", password);
             argumentsOfScenario.Add("name", name);
             argumentsOfScenario.Add("finish_date", finish_Date);
             argumentsOfScenario.Add("status_code", status_Code);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add Todo without specifing Todo List", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 3
+#line 9
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -114,16 +130,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 4
- testRunner.Given(string.Format("a user with {0} and {1}", email, password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 3
+this.FeatureBackground();
 #line hidden
-#line 5
- testRunner.And("credentials are valid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 6
+#line 10
  testRunner.When(string.Format("add Todo with {0}, {1}", name, finish_Date), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 7
+#line 11
  testRunner.Then(string.Format("a server should return {0}", status_Code), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -133,19 +146,17 @@ this.ScenarioInitialize(scenarioInfo);
         [Xunit.SkippableTheoryAttribute(DisplayName="Add Todo with specifing non-existing Todo List")]
         [Xunit.TraitAttribute("FeatureTitle", "Add Todo")]
         [Xunit.TraitAttribute("Description", "Add Todo with specifing non-existing Todo List")]
-        [Xunit.InlineDataAttribute("admin@yetanothertodoapp.com", "super$ecret", "Keep learning", "2038-01-19", "Study stuff", "201", new string[0])]
-        public virtual void AddTodoWithSpecifingNon_ExistingTodoList(string email, string password, string name, string finish_Date, string todo_List, string status_Code, string[] exampleTags)
+        [Xunit.InlineDataAttribute("Keep learning", "2038-01-19", "Study stuff", "201", new string[0])]
+        public virtual void AddTodoWithSpecifingNon_ExistingTodoList(string name, string finish_Date, string todo_List, string status_Code, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("email", email);
-            argumentsOfScenario.Add("password", password);
             argumentsOfScenario.Add("name", name);
             argumentsOfScenario.Add("finish_date", finish_Date);
             argumentsOfScenario.Add("todo_list", todo_List);
             argumentsOfScenario.Add("status_code", status_Code);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add Todo with specifing non-existing Todo List", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 13
+#line 17
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -165,16 +176,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 14
- testRunner.Given(string.Format("a user with {0} and {1}", email, password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 3
+this.FeatureBackground();
 #line hidden
-#line 15
- testRunner.And("credentials are valid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 16
+#line 18
  testRunner.When(string.Format("add to {0} Todo with {1}, {2}", todo_List, name, finish_Date), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 17
+#line 19
  testRunner.Then(string.Format("a server should return {0}", status_Code), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -184,19 +192,17 @@ this.ScenarioInitialize(scenarioInfo);
         [Xunit.SkippableTheoryAttribute(DisplayName="Add Todo with specifing existing Todo List")]
         [Xunit.TraitAttribute("FeatureTitle", "Add Todo")]
         [Xunit.TraitAttribute("Description", "Add Todo with specifing existing Todo List")]
-        [Xunit.InlineDataAttribute("admin@yetanothertodoapp.com", "super$ecret", "Keep learning", "2038-01-19", "Inbox", "201", new string[0])]
-        public virtual void AddTodoWithSpecifingExistingTodoList(string email, string password, string name, string finish_Date, string todo_List, string status_Code, string[] exampleTags)
+        [Xunit.InlineDataAttribute("Keep learning", "2038-01-19", "Inbox", "201", new string[0])]
+        public virtual void AddTodoWithSpecifingExistingTodoList(string name, string finish_Date, string todo_List, string status_Code, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("email", email);
-            argumentsOfScenario.Add("password", password);
             argumentsOfScenario.Add("name", name);
             argumentsOfScenario.Add("finish_date", finish_Date);
             argumentsOfScenario.Add("todo_list", todo_List);
             argumentsOfScenario.Add("status_code", status_Code);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add Todo with specifing existing Todo List", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 23
+#line 25
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -216,11 +222,8 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 24
- testRunner.Given(string.Format("a user with {0} and {1}", email, password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 25
- testRunner.And("credentials are valid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 3
+this.FeatureBackground();
 #line hidden
 #line 26
  testRunner.When(string.Format("add to {0} Todo with {1}, {2}", todo_List, name, finish_Date), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
