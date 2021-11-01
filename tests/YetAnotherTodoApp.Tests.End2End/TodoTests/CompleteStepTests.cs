@@ -22,7 +22,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var stepToComplete = User.TodoLists
                 .SelectMany(x => x.Todos)
-                .FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodo)
+                .FirstOrDefault(x => x.Title == TestDbConsts.TestTodo)
                 .Steps.FirstOrDefault();
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(stepToComplete.Id));

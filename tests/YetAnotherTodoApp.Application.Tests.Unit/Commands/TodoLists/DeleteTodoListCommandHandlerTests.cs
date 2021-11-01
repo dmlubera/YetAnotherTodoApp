@@ -37,7 +37,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
             await _handler.HandleAsync(new DeleteTodoListCommand(userFixture.Id, todoListFixture.Id));
 
             userFixture.TodoLists
-                .FirstOrDefault(x => x.Title.Value == todoListFixture.Title.Value)
+                .FirstOrDefault(x => x.Title == todoListFixture.Title)
                 .Should().BeNull();
             _repositoryMock.Verify(x => x.SaveChangesAsync());
         }

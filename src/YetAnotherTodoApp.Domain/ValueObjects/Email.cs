@@ -31,6 +31,22 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public override int GetHashCode()
             => Value != null ? Value.GetHashCode() : 0;
 
+        public static implicit operator string(Email email) => email.Value;
+        
+        public static implicit operator Email(string value) => new Email(value);
+
+        public static bool operator ==(Email a, Email b)
+        {
+            if (ReferenceEquals(a, b)) return true;
+            if (a is not null && b is not null)
+                return a.Value.Equals(b.Value);
+
+            return false;
+        }
+
+        public static bool operator !=(Email a, Email b)
+            => !(a == b);
+
         public static Email Create(string email)
         {
             var regexPattern = @"^(\w[a-zA-Z0-9]|(\w[a-zA-Z0-9._][a-zA-Z0-9]))+@[a-zA-Z0-9.-]+\w+\.[a-zA-Z0-9]{2,6}$";

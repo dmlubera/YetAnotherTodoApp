@@ -30,6 +30,22 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public override int GetHashCode()
             => Value != null ? Value.GetHashCode() : 0;
 
+        public static implicit operator string(Title title) => title.Value;
+
+        public static implicit operator Title(string value) => new Title(value);
+
+        public static bool operator ==(Title a, Title b)
+        {
+            if (ReferenceEquals(a, b)) return true;
+            if (a is not null && b is not null)
+                return a.Value.Equals(b.Value);
+
+            return false;
+        }
+
+        public static bool operator !=(Title a, Title b)
+            => !(a == b);
+
         public static Title Create(string title)
         {
             if (string.IsNullOrWhiteSpace(title))

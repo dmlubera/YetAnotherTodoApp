@@ -25,7 +25,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
             var todoList = await _repository.GetForUserAsync(command.UserId, command.TodoListId);
             if (todoList is null)
                 throw new TodoListWithGivenIdDoesNotExistException(command.TodoListId);
-            if (todoList.Title.Value == "Inbox")
+            if (todoList.Title == "Inbox")
                 throw new InboxModificationIsNotAllowedException();
 
             todoList.UpdateTitle(command.Title);

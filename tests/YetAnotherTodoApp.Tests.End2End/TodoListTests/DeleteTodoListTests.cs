@@ -20,7 +20,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingId_ShouldReturnNoContentAndRemoveResourceFromDatabase()
         {
-            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
+            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoList);
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToRemove.Id));
 
@@ -33,7 +33,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingIdOfTodoListContainingTodoWithAssignedSteps_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
         {
-            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoListWithAssignedTodo);
+            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoListWithAssignedTodo);
             
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToRemove.Id));
 
@@ -62,7 +62,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task OnInbox_ShouldReturnBadRequestWithCustomError()
         {
-            var inbox = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
+            var inbox = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox");
             var expectedException = new InboxDeletionIsNotAllowedException();
 
             (var httpResponse, var errorResponse) =

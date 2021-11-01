@@ -21,7 +21,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WithValidData_ShouldReturnOkAndUpdateTodoInDatabase()
         {
-            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
+            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox").Todos.FirstOrDefault();
             var request = new UpdateTodoPriorityRequest
             {
                 Priority = TodoPriority.High
@@ -37,7 +37,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WithInvalidPriority_ShouldReturnValidationError()
         {
-            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
+            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox").Todos.FirstOrDefault();
             var request = new
             {
                 Priority = "unknown"

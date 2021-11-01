@@ -40,7 +40,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
             await _handler.HandleAsync(commandFixutre);
 
             userFixture.TodoLists
-                .FirstOrDefault(x => x.Title.Value == commandFixutre.Title)
+                .FirstOrDefault(x => x.Title == commandFixutre.Title)
                 .Should().NotBeNull();
             _repositoryMock.Verify(x => x.SaveChangesAsync());
             _cacheMock.Verify(x => x.Set(It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<TimeSpan>()));

@@ -31,6 +31,24 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public override int GetHashCode() 
             => Value != null ? Value.GetHashCode() : 0;
 
+        public static implicit operator string(Username username)
+            => username.Value;
+        
+        public static implicit operator Username(string value)
+            => new Username(value);
+
+        public static bool operator ==(Username a, Username b)
+        {
+            if (ReferenceEquals(a, b)) return true;
+            if (a is not null && b is not null)
+                return a.Value.Equals(b.Value);
+
+            return false;
+        }
+
+        public static bool operator !=(Username a, Username b)
+            => !(a == b);
+
         public static Username Create(string username)
         {
             var regexPattern = @"^\w[a-zA-Z0-9_]+\w{5,}$";

@@ -21,7 +21,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithValidData_ShouldReturnOkAndUpdateResourceInDatabase()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoList);
             var request = new UpdateTodoListRequest
             {
                 Title = "Not important stuff"
@@ -37,7 +37,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithInvalidData_ShouldReturnValidationError()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoList);
 
             var request = new UpdateTodoListRequest
             {
@@ -54,12 +54,12 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingTitle_ShouldReturnBadRequestWithCustomError()
         {
-            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodoList);
-            var expectedException = new TodoListWithGivenTitleAlreadyExistsException(todoListToUpdate.Title.Value);
+            var todoListToUpdate = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoList);
+            var expectedException = new TodoListWithGivenTitleAlreadyExistsException(todoListToUpdate.Title);
 
             var request = new UpdateTodoListRequest
             {
-                Title = todoListToUpdate.Title.Value
+                Title = todoListToUpdate.Title
             };
 
             (var httpResponse, var errorResponse) =
@@ -73,7 +73,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task OnInbox_ShouldReturnBadRequestWithCustomError()
         {
-            var inbox = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
+            var inbox = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox");
             var expectedException = new InboxModificationIsNotAllowedException();
 
             var request = new UpdateTodoListRequest

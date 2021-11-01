@@ -25,6 +25,24 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         public override int GetHashCode()
             => HashCode.Combine(Value);
 
+        public static implicit operator DateTime(FinishDate finishDate)
+            => finishDate.Value;
+
+        public static implicit operator FinishDate(DateTime value)
+            => new FinishDate(value);
+
+        public static bool operator ==(FinishDate a, FinishDate b)
+        {
+            if (ReferenceEquals(a, b)) return true;
+            if (a is not null && b is not null)
+                return a.Value.Equals(b.Value);
+
+            return false;
+        }
+
+        public static bool operator !=(FinishDate a, FinishDate b)
+            => !(a == b);
+
         public static FinishDate Create(DateTime date)
         {
             if (date.Date < DateTime.UtcNow.Date)

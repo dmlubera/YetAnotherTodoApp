@@ -35,12 +35,12 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
 
             if (string.IsNullOrWhiteSpace(command.Project))
             {
-                todoList = user.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
+                todoList = user.TodoLists.FirstOrDefault(x => x.Title == "Inbox");
                 todoList.AddTodo(todo);
             }
             else
             {
-                todoList = user.TodoLists.FirstOrDefault(x => x.Title.Value == command.Project);
+                todoList = user.TodoLists.FirstOrDefault(x => x.Title == command.Project);
                 if (todoList != null)
                     todoList.AddTodo(todo);
                 else

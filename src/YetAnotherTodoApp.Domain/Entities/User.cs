@@ -31,8 +31,8 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         public void AddTodoList(TodoList todoList)
         {
-            if (_todoLists.Any(x => x.Title.Value == todoList.Title.Value))
-                throw new TodoListWithGivenTitleAlreadyExistsException(todoList.Title.Value);
+            if (_todoLists.Any(x => x.Title == todoList.Title))
+                throw new TodoListWithGivenTitleAlreadyExistsException(todoList.Title);
 
             _todoLists.Add(todoList);
         }
@@ -42,7 +42,7 @@ namespace YetAnotherTodoApp.Domain.Entities
             var todoList = _todoLists.FirstOrDefault(x => x.Id == id);
             if (todoList is null)
                 throw new TodoListWithGivenIdDoesNotExistException(id);
-            if (todoList.Title.Value == "Inbox")
+            if (todoList.Title == "Inbox")
                 throw new InboxDeletionIsNotAllowedException();
 
            _todoLists.Remove(todoList);

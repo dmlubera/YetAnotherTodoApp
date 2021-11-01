@@ -20,7 +20,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WithExistingId_ShouldReturnNoContentAndRemoveResourceFromDatabase()
         {
-            var todoToDelete = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
+            var todoToDelete = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox").Todos.FirstOrDefault();
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoToDelete.Id));
 
@@ -34,7 +34,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var todoToDelete = User.TodoLists
                 .SelectMany(x => x.Todos)
-                .FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodo);
+                .FirstOrDefault(x => x.Title == TestDbConsts.TestTodo);
 
             var httpResponse = await HandleRequestAsync(() => ActAsync(todoToDelete.Id));
 

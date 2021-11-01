@@ -39,7 +39,7 @@ namespace YetAnotherTodoApp.Tests.End2End
         private void InitializeDbForTests(YetAnotherTodoAppDbContext dbContext)
         {
             User = CreateTestUser(TestDbConsts.TestUserUsername, TestDbConsts.TestUserEmail, TestDbConsts.TestUserPassword);
-            User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox")
+            User.TodoLists.FirstOrDefault(x => x.Title == "Inbox")
                 .AddTodo(CreateTestTodo(TestDbConsts.TestTodo));
 
             User.AddTodoList(new TodoList(TestDbConsts.TestTodoList));

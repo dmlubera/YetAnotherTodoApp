@@ -19,13 +19,13 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         [Fact]
         public async Task WithExistingId_ShouldReturnOkAndDto()
         {
-            var expectedTodoList = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox");
+            var expectedTodoList = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox");
 
             (var httpResponse, var todoList) =
                 await HandleRequestAsync<TodoListDto>(() => ActAsync(expectedTodoList.Id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            todoList.Title.Should().Be(expectedTodoList.Title.Value);
+            todoList.Title.Should().Be(expectedTodoList.Title);
         }
 
         [Fact]

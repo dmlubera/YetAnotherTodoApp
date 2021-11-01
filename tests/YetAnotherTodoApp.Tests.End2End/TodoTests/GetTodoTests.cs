@@ -20,14 +20,14 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WithExistingId_ShouldReturnsHttpStatusCodeOkAndDto()
         {
-            var expectedTodo = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
+            var expectedTodo = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox").Todos.FirstOrDefault();
 
             await AuthenticateTestUserAsync();
             (var httpResponse, var todo) =
                 await HandleRequestAsync<TodoDto>(() => ActAsync(expectedTodo.Id));
 
-            todo.Title.Should().Be(expectedTodo.Title.Value);
-            todo.FinishDate.Should().Be(expectedTodo.FinishDate.Value);
+            todo.Title.Should().Be(expectedTodo.Title);
+            todo.FinishDate.Should().Be(expectedTodo.FinishDate);
         }
 
         [Fact]

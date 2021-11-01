@@ -43,7 +43,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
             userFixture.TodoLists
                 .FirstOrDefault()
                 .Todos
-                .FirstOrDefault(x => x.Title.Value == commandFixture.Title)
+                .FirstOrDefault(x => x.Title == commandFixture.Title)
                 .Should().NotBeNull();
             _cacheMock.Verify(x => x.Set(commandFixture.CacheTokenId.ToString(), It.IsAny<Guid>(), It.IsAny<TimeSpan>()));
         }
@@ -61,9 +61,9 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
 
             userFixture.TodoLists.Count.Should().Be(2);
             userFixture.TodoLists
-                .FirstOrDefault(x => x.Title.Value == commandFixture.Project)
+                .FirstOrDefault(x => x.Title == commandFixture.Project)
                 .Todos
-                .FirstOrDefault(x => x.Title.Value == commandFixture.Title)
+                .FirstOrDefault(x => x.Title == commandFixture.Title)
                 .Should().NotBeNull();
             _cacheMock.Verify(x => x.Set(commandFixture.CacheTokenId.ToString(), It.IsAny<Guid>(), It.IsAny<TimeSpan>()));
         }
@@ -73,7 +73,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
         {
             var commandFixture = CreateCommandFixture();
             var todoList = new TodoList("Test");
-            commandFixture.Project = todoList.Title.Value;
+            commandFixture.Project = todoList.Title;
             var userFixture = UserFixture.Create();
             userFixture.AddTodoList(todoList);
             _repositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
@@ -83,9 +83,9 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
 
             userFixture.TodoLists.Count.Should().Be(2);
             userFixture.TodoLists
-                .FirstOrDefault(x => x.Title.Value == commandFixture.Project)
+                .FirstOrDefault(x => x.Title == commandFixture.Project)
                 .Todos
-                .FirstOrDefault(x => x.Title.Value == commandFixture.Title)
+                .FirstOrDefault(x => x.Title == commandFixture.Title)
                 .Should().NotBeNull();
             _cacheMock.Verify(x => x.Set(commandFixture.CacheTokenId.ToString(), It.IsAny<Guid>(), It.IsAny<TimeSpan>()));
         }

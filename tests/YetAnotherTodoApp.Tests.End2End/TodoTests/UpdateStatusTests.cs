@@ -22,7 +22,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WithValidData_ShouldReturnOkAndUpdateTodoInDatabase()
         {
-            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
+            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox").Todos.FirstOrDefault();
             var request = new UpdateTodoStatusRequest
             {
                 Status = TodoStatus.InProgress
@@ -38,7 +38,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WithInvalidStatus_ShouldReturnValidationError()
         {
-            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title.Value == "Inbox").Todos.FirstOrDefault();
+            var todoToUpdate = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox").Todos.FirstOrDefault();
             var request = new
             {
                 Status = "unknown"
@@ -56,7 +56,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var todoToUpdate = User.TodoLists
                 .SelectMany(x => x.Todos)
-                .FirstOrDefault(x => x.Title.Value == TestDbConsts.TestTodo);
+                .FirstOrDefault(x => x.Title == TestDbConsts.TestTodo);
             var expectedException = new CannotChangeStatusToDoneOfTodoWithUnfinishedStepException();
             var request = new UpdateTodoStatusRequest
             {

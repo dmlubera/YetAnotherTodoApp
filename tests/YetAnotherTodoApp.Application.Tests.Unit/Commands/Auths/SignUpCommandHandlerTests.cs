@@ -80,8 +80,8 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Auths
             await _handler.HandleAsync(command);
 
             _userRepositoryMock.Verify(x => x.AddAsync(It.Is<User>(x =>
-               x.Username.Value == command.Username &&
-               x.Email.Value == command.Email &&
+               x.Username == command.Username &&
+               x.Email == command.Email &&
                x.Password.Hash == passwordHash &&
                x.Password.Salt == passwordSalt)), Times.Once);
         }

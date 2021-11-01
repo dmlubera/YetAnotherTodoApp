@@ -41,7 +41,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Queries
             _repositoryMock.Setup(x => x.GetAllForUserAsync(query.UserId))
                 .ReturnsAsync(todoList.Todos.ToList());
             _mapperMock.Setup(x => x.Map<IEnumerable<TodoDto>>(It.IsAny<List<Todo>>()))
-                .Returns(new List<TodoDto>() { new TodoDto { Id = todo.Id, Title = todo.Title.Value, FinishDate = todo.FinishDate.Value } });
+                .Returns(new List<TodoDto>() { new TodoDto { Id = todo.Id, Title = todo.Title, FinishDate = todo.FinishDate } });
 
             var todos = await _handler.HandleAsync(query);
 
