@@ -6,7 +6,7 @@ using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
 {
-    public class User : BaseEntity
+    public class User : AuditableEntity
     {
         private readonly List<TodoList> _todoLists = new List<TodoList>();
         public Username Username { get; private set; }

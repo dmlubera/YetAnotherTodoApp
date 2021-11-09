@@ -10,11 +10,11 @@ namespace YetAnotherTodoApp.Tests.End2End.Helpers
     public static class DbContextHelper
     {
         public async static Task<IList<TEntity>> GetAsync<TEntity>(this YetAnotherTodoAppDbContext dbContext)
-            where TEntity : BaseEntity
+            where TEntity : AuditableEntity
             => await dbContext.Set<TEntity>().ToListAsync();
 
         public async static Task<TEntity> GetAsync<TEntity>(this YetAnotherTodoAppDbContext dbContext, Guid id)
-            where TEntity : BaseEntity
+            where TEntity : AuditableEntity
             => await dbContext.Set<TEntity>().FindAsync(id);
 
         public async static Task<Todo> GetTodoWithReferencesAsync(this YetAnotherTodoAppDbContext dbContext, Guid id)

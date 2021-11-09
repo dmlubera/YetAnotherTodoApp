@@ -3,7 +3,7 @@ using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
 {
-    public class Step : BaseEntity
+    public class Step : AuditableEntity
     {
         public Title Title { get; private set; }
         public string Description { get; private set; }

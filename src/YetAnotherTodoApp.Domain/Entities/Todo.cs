@@ -7,7 +7,7 @@ using YetAnotherTodoApp.Domain.ValueObjects;
 
 namespace YetAnotherTodoApp.Domain.Entities
 {
-    public class Todo : BaseEntity
+    public class Todo : AuditableEntity
     {
         private readonly List<Step> _steps = new List<Step>();
         public Title Title { get; private set; }
