@@ -14,7 +14,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL
         public YetAnotherTodoAppDbContext(DbContextOptions<YetAnotherTodoAppDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
