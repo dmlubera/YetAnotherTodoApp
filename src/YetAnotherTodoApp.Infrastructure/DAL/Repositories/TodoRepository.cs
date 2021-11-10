@@ -18,13 +18,13 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
         public async Task<IList<Todo>> GetAllForUserAsync(Guid userId)
             => await _dbContext.Set<Todo>()
                 .Include(x => x.TodoList)
-                .Include(x => x.Steps)
+                .Include(x => x.Tasks)
                 .Where(x => x.TodoList.User.Id == userId).ToListAsync();
 
         public async Task<Todo> GetForUserAsync(Guid todoId, Guid userId)
             => await _dbContext.Set<Todo>()
                 .Include(x => x.TodoList)
-                .Include(x => x.Steps)
+                .Include(x => x.Tasks)
                 .FirstOrDefaultAsync(x => x.Id == todoId && x.TodoList.User.Id == userId);
 
         public async Task SaveChangesAsync()

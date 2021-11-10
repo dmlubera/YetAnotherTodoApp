@@ -5,12 +5,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YetAnotherTodoApp.Api.Extensions;
-using YetAnotherTodoApp.Api.Models.Steps;
 using YetAnotherTodoApp.Api.Models.Todos;
+using YetAnotherTodoApp.Api.Models.TodoTasks;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
-using YetAnotherTodoApp.Application.Commands.Models.Steps;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
+using YetAnotherTodoApp.Application.Commands.Models.TodoTasks;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Queries;
 using YetAnotherTodoApp.Application.Queries.Models.Todos;
@@ -85,7 +85,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         {
             var command = new AddTodoCommand(User.GetAuthenticatedUserId(), request.Title,
                 request.Project, request.FinishDate, request.Description, request.Priority,
-                _mapper.Map<IEnumerable<StepDto>>(request.Steps));
+                _mapper.Map<IEnumerable<TodoTaskDto>>(request.Tasks));
 
             await _commandDispatcher.DispatchAsync(command);
 
@@ -167,18 +167,18 @@ namespace YetAnotherTodoApp.Api.Controllers
         }
 
         /// <summary>
-        /// Adds the step to the specified todo
+        /// Adds the task to the specified todo
         /// </summary>
-        /// <response code="201">The step has been added to the specified todo</response>
+        /// <response code="201">The task has been added to the specified todo</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPost("{todoId}/steps")]
+        [HttpPost("{todoId}/tasks")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> AddStepAsync(Guid todoId, [FromBody] AddStepRequest request)
+        public async Task<IActionResult> AddTodoTaskAsync(Guid todoId, [FromBody] AddTodoTaskRequest request)
         {
-            var command = new AddStepCommand(User.GetAuthenticatedUserId(), todoId, request.Title, request.Description);
+            var command = new AddTodoTaskCommand(User.GetAuthenticatedUserId(), todoId, request.Title, request.Description);
             await _commandDispatcher.DispatchAsync(command);
 
             var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
@@ -187,54 +187,54 @@ namespace YetAnotherTodoApp.Api.Controllers
 
 
         /// <summary>
-        /// Deletes the step from the specified todo
+        /// Deletes the taks from the specified todo
         /// </summary>
-        /// <response code="204">The step has been deleted from the specified todo</response>
+        /// <response code="204">The task has been deleted from the specified todo</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpDelete("{todoId}/steps/{stepId}")]
+        [HttpDelete("{todoId}/tasks/{taskId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> DeleteStepAsync(Guid todoId, Guid stepId)
+        public async Task<IActionResult> DeleteTodoTaskAsync(Guid todoId, Guid taskId)
         {
-            var command = new DeleteStepCommand(User.GetAuthenticatedUserId(), todoId, stepId);
+            var command = new DeleteTodoTaskCommand(User.GetAuthenticatedUserId(), todoId, taskId);
             await _commandDispatcher.DispatchAsync(command);
 
             return NoContent();
         }
 
         /// <summary>
-        /// Completes the specified step
+        /// Completes the specified task
         /// </summary>
-        /// <response code="200">The step has been completed</response>
+        /// <response code="200">The task has been completed</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("steps/{stepId}/complete")]
+        [HttpPut("tasks/{taskId}/complete")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CompleteStepAsync(Guid stepId)
+        public async Task<IActionResult> CompleteTodoTaskAsync(Guid taskId)
         {
-            var command = new CompleteStepCommand(User.GetAuthenticatedUserId(), stepId);
+            var command = new CompleteTodoTaskCommand(User.GetAuthenticatedUserId(), taskId);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();
         }
 
         /// <summary>
-        /// Updates the specified step
+        /// Updates the specified task
         /// </summary>
-        /// <response code="200">The step has been updated</response>
+        /// <response code="200">The task has been updated</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("steps/{stepId}")]
+        [HttpPut("tasks/{taskId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateStepAsync(Guid stepId, [FromBody] UpdateStepRequest request)
+        public async Task<IActionResult> UpdateTodoTaskAsync(Guid taskId, [FromBody] UpdateTodoTaskRequest request)
         {
-            var command = new UpdateStepCommand(User.GetAuthenticatedUserId(), stepId, request.Title, request.Description);
+            var command = new UpdateTodoTaskCommand(User.GetAuthenticatedUserId(), taskId, request.Title, request.Description);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();

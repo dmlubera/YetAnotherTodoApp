@@ -12,6 +12,6 @@ namespace YetAnotherTodoApp.Api.Models.Todos
         public string Project { get; set; }
         public DateTime FinishDate { get; set; }
         public TodoPriority? Priority { get; set; }
-        public ICollection<StepRequestDto> Steps { get; set; }
+        public ICollection<TodoTaskRequestDto> Tasks { get; set; }
     }
 }

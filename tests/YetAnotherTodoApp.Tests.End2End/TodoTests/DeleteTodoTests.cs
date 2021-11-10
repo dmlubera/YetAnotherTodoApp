@@ -40,9 +40,9 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
             var todo = await DbContext.GetAsync<Todo>(todoToDelete.Id);
-            var step = await DbContext.GetAsync<Step>(todoToDelete.Steps.FirstOrDefault().Id);
+            var task = await DbContext.GetAsync<TodoTask>(todoToDelete.Tasks.FirstOrDefault().Id);
             todo.Should().BeNull();
-            step.Should().BeNull();
+            task.Should().BeNull();
         }
 
         [Fact]

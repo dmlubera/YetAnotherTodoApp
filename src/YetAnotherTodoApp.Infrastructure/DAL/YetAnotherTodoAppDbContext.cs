@@ -9,7 +9,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL
         public DbSet<User> Users { get; set; }
         public DbSet<TodoList> TodoLists { get; set; }
         public DbSet<Todo> Todos { get; set; }
-        public DbSet<Step> Steps { get; set; }
+        public DbSet<TodoTask> TodoTasks { get; set; }
 
         public YetAnotherTodoAppDbContext(DbContextOptions<YetAnotherTodoAppDbContext> options)
             : base(options)

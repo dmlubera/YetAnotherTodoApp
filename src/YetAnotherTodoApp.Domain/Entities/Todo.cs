@@ -9,14 +9,14 @@ namespace YetAnotherTodoApp.Domain.Entities
 {
     public class Todo : AuditableEntity
     {
-        private readonly List<Step> _steps = new List<Step>();
+        private readonly List<TodoTask> _tasks = new List<TodoTask>();
         public Title Title { get; private set; }
         public string Description { get; private set; }
         public FinishDate FinishDate { get; private set; }
         public TodoStatus Status { get; private set; }
         public TodoPriority Priority { get; private set; }
         public TodoList TodoList { get; private set; }
-        public IReadOnlyCollection<Step> Steps => _steps.AsReadOnly();
+        public IReadOnlyCollection<TodoTask> Tasks => _tasks.AsReadOnly();
 
         protected Todo() { }
 
@@ -41,8 +41,8 @@ namespace YetAnotherTodoApp.Domain.Entities
 
         public void UpdateStatus(TodoStatus updatedStatus)
         {
-            if (updatedStatus == TodoStatus.Done && _steps.Any(x => !x.IsFinished))
-                throw new CannotChangeStatusToDoneOfTodoWithUnfinishedStepException();
+            if (updatedStatus == TodoStatus.Done && _tasks.Any(x => !x.IsFinished))
+                throw new CannotChangeStatusToDoneOfTodoWithUnfinishedTaskException();
 
             Status = updatedStatus;
             LastModifiedAt = DateTime.UtcNow;
@@ -54,13 +54,13 @@ namespace YetAnotherTodoApp.Domain.Entities
             LastModifiedAt = DateTime.UtcNow;
         }
 
-        public void AddSteps(IEnumerable<Step> steps)
-            => _steps.AddRange(steps);
+        public void AddTasks(IEnumerable<TodoTask> tasks)
+            => _tasks.AddRange(tasks);
 
-        public void RemoveStep(Guid stepId)
+        public void RemoveTask(Guid taskId)
         {
-            var step = _steps.FirstOrDefault(x => x.Id == stepId);
-            _steps.Remove(step);
+            var task = _tasks.FirstOrDefault(x => x.Id == taskId);
+            _tasks.Remove(task);
         }
     }
 }

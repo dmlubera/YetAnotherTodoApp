@@ -13,8 +13,8 @@ namespace YetAnotherTodoApp.Application.DI
                 cfg.AddProfile(new TodoProfile());
                 cfg.AddProfile(new TodoListProfile());
                 cfg.AddProfile(new UserInfoProfile());
-                cfg.AddProfile(new StepProfile());
-                cfg.AddProfile(new StepRequestDtoProfile());
+                cfg.AddProfile(new TodoTaskProfile());
+                cfg.AddProfile(new TodoTaskRequestDtoProfile());
             });
 
             var mapper = mapperConfiguration.CreateMapper();

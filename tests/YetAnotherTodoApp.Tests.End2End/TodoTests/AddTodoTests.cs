@@ -62,12 +62,12 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var request = new AddTodoRequest
             {
-                Title = "TodoWithSteps",
+                Title = "TodoWithTasks",
                 FinishDate = DateTime.UtcNow.Date,
-                Steps = new List<StepRequestDto>
+                Tasks = new List<TodoTaskRequestDto>
                 {
-                    new StepRequestDto { Title = "First" },
-                    new StepRequestDto { Title = "Second" }
+                    new TodoTaskRequestDto { Title = "First" },
+                    new TodoTaskRequestDto { Title = "Second" }
                 }
             };
 
@@ -79,7 +79,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todo = await DbContext.GetTodoWithReferencesAsync(httpResponse.Headers.Location.GetResourceId());
             todo.Title.Value.Should().Be(request.Title);
             todo.FinishDate.Value.Should().Be(request.FinishDate);
-            todo.Steps.Count.Should().Be(request.Steps.Count);
+            todo.Tasks.Count.Should().Be(request.Tasks.Count);
         }
 
         [Fact]

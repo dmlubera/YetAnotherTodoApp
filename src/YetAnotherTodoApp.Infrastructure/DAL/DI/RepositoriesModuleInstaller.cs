@@ -11,7 +11,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.DI
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ITodoListRepository, TodoListRepository>();
             services.AddTransient<ITodoRepository, TodoRepository>();
-            services.AddTransient<IStepRepository, StepRepository>();
+            services.AddTransient<ITodoTaskRepository, TodoTaskRepository>();
         }
     }
 }

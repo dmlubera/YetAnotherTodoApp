@@ -21,7 +21,7 @@ namespace YetAnotherTodoApp.Tests.End2End.Helpers
             => await dbContext
                         .Set<Todo>()
                             .Include(x => x.TodoList)
-                            .Include(x => x.Steps)
+                            .Include(x => x.Tasks)
                         .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

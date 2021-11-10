@@ -31,7 +31,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
         }
 
         [Fact]
-        public async Task WithExistingIdOfTodoListContainingTodoWithAssignedSteps_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
+        public async Task WithExistingIdOfTodoListContainingTodoWithAssignedTasks_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
         {
             var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoListWithAssignedTodo);
             

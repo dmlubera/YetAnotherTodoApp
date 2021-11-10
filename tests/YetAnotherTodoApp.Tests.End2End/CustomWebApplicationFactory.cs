@@ -62,7 +62,7 @@ namespace YetAnotherTodoApp.Tests.End2End
         private static Todo CreateTestTodo(string title)
         {
             var todo = new Todo(title, DateTime.UtcNow.Date);
-            todo.AddSteps(new[] { new Step("First") });
+            todo.AddTasks(new[] { new TodoTask("First") });
 
             return todo;
         }

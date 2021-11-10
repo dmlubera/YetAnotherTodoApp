@@ -1,14 +1,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Handlers.Auths;
-using YetAnotherTodoApp.Application.Commands.Handlers.Steps;
 using YetAnotherTodoApp.Application.Commands.Handlers.TodoLists;
 using YetAnotherTodoApp.Application.Commands.Handlers.Todos;
+using YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks;
 using YetAnotherTodoApp.Application.Commands.Handlers.Users;
 using YetAnotherTodoApp.Application.Commands.Models.Auths;
-using YetAnotherTodoApp.Application.Commands.Models.Steps;
 using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
+using YetAnotherTodoApp.Application.Commands.Models.TodoTasks;
 using YetAnotherTodoApp.Application.Commands.Models.Users;
 
 namespace YetAnotherTodoApp.Application.DI
@@ -30,10 +30,10 @@ namespace YetAnotherTodoApp.Application.DI
             services.AddTransient<ICommandHandler<UpdateTodoListCommand>, UpdateTodoListCommandHandler>();
             services.AddTransient<ICommandHandler<DeleteTodoListCommand>, DeleteTodoListCommandHandler>();
             services.AddTransient<ICommandHandler<SignInCommand>, SignInCommandHandler>();
-            services.AddTransient<ICommandHandler<AddStepCommand>, AddStepCommandHandler>();
-            services.AddTransient<ICommandHandler<DeleteStepCommand>, DeleteStepCommandHandler>();
-            services.AddTransient<ICommandHandler<CompleteStepCommand>, CompleteStepCommandHandler>();
-            services.AddTransient<ICommandHandler<UpdateStepCommand>, UpdateStepCommandHandler>();
+            services.AddTransient<ICommandHandler<AddTodoTaskCommand>, AddTodoTaskCommandHandler>();
+            services.AddTransient<ICommandHandler<DeleteTodoTaskCommand>, DeleteTodoTaskCommandHandler>();
+            services.AddTransient<ICommandHandler<CompleteTodoTaskCommand>, CompleteTodoTaskCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdateTodoTaskCommand>, UpdateTodoTaskCommandHandler>();
         }
     }
 }

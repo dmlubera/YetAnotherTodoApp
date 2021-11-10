@@ -16,6 +16,6 @@ namespace YetAnotherTodoApp.Application.DTOs
         public TodoStatus Status { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TodoPriority Priority { get; set; }
-        public List<StepDto> Steps { get; set; }
+        public List<TodoTaskDto> Tasks { get; set; }
     }
 }

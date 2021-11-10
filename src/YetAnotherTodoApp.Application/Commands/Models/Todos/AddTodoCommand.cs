@@ -14,12 +14,12 @@ namespace YetAnotherTodoApp.Application.Commands.Models.Todos
         public TodoPriority? Priority { get; set; }
         public string Project { get; set; }
         public DateTime FinishDate { get; set; }
-        public List<StepDto> Steps { get; set; } = new List<StepDto>();
+        public List<TodoTaskDto> Tasks { get; set; } = new List<TodoTaskDto>();
 
         protected AddTodoCommand() { }
 
         public AddTodoCommand(Guid userId, string title, string project, DateTime finishDate,
-            string description, TodoPriority? priority, IEnumerable<StepDto> steps)
+            string description, TodoPriority? priority, IEnumerable<TodoTaskDto> tasks)
         {
             UserId = userId;
             Title = title;
@@ -28,8 +28,8 @@ namespace YetAnotherTodoApp.Application.Commands.Models.Todos
             Project = project;
             FinishDate = finishDate;
             CacheTokenId = Guid.NewGuid();
-            if (steps is { })
-                Steps.AddRange(steps);
+            if (tasks is { })
+                Tasks.AddRange(tasks);
         }
     }
 }

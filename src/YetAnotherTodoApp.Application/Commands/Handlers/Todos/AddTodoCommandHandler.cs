@@ -30,8 +30,8 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
             var todo = new Todo(command.Title, command.FinishDate, command.Description,
                 command.Priority ?? TodoPriority.Normal);
             
-            if (command.Steps.Count != 0)
-                todo.AddSteps(command.Steps.Select(x => new Step(x.Title, x.Description)).ToList());
+            if (command.Tasks.Count != 0)
+                todo.AddTasks(command.Tasks.Select(x => new TodoTask(x.Title, x.Description)).ToList());
 
             if (string.IsNullOrWhiteSpace(command.Project))
             {
