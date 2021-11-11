@@ -18,7 +18,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             => await TestClient.DeleteAsync($"api/todo/{id}");
 
         [Fact]
-        public async Task WithExistingId_ShouldReturnNoContentAndRemoveResourceFromDatabase()
+        public async Task WithExistingId_ShouldReturnNoContentAndDeleteResourceFromDatabase()
         {
             var todoToDelete = User.TodoLists.FirstOrDefault(x => x.Title == "Inbox").Todos.FirstOrDefault();
 
@@ -30,7 +30,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         }
 
         [Fact]
-        public async Task WithExistingIdOfTodoWithAssignedTasks_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
+        public async Task WithExistingIdOfTodoWithAssignedTasks_ShouldReturnNoContentAndCascadeDeleteResourcesFromDatabase()
         {
             var todoToDelete = User.TodoLists
                 .SelectMany(x => x.Todos)

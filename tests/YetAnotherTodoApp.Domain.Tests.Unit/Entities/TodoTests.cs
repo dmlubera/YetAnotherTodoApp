@@ -122,11 +122,11 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         }
 
         [Fact]
-        public void RemoveTask_WhenValid_ThenShouldRemoveTask()
+        public void DeleteTask_WhenValid_ThenShouldDeleteTask()
         {
             var todo = CreateWithUnfinishedTask();
 
-            todo.RemoveTask(todo.Tasks.FirstOrDefault().Id);
+            todo.DeleteTask(todo.Tasks.FirstOrDefault().Id);
 
             todo.Tasks.Count.Should().Be(0);
         }

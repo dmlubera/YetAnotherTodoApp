@@ -18,28 +18,28 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
             => await TestClient.DeleteAsync($"/api/todolist/{id}");
 
         [Fact]
-        public async Task WithExistingId_ShouldReturnNoContentAndRemoveResourceFromDatabase()
+        public async Task WithExistingId_ShouldReturnNoContentAndDeleteResourceFromDatabase()
         {
-            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoList);
+            var todoListToDelete = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoList);
 
-            var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToRemove.Id));
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToDelete.Id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-            var todoList = await DbContext.GetAsync<TodoList>(todoListToRemove.Id);
+            var todoList = await DbContext.GetAsync<TodoList>(todoListToDelete.Id);
             todoList.Should().BeNull();
         }
 
         [Fact]
-        public async Task WithExistingIdOfTodoListContainingTodoWithAssignedTasks_ShouldReturnNoContentAndCascadeRemoveResourcesFromDatabase()
+        public async Task WithExistingIdOfTodoListContainingTodoWithAssignedTasks_ShouldReturnNoContentAndCascadeDeleteResourcesFromDatabase()
         {
-            var todoListToRemove = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoListWithAssignedTodo);
+            var todoListToDelete = User.TodoLists.FirstOrDefault(x => x.Title == TestDbConsts.TestTodoListWithAssignedTodo);
             
-            var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToRemove.Id));
+            var httpResponse = await HandleRequestAsync(() => ActAsync(todoListToDelete.Id));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
-            var todoList = await DbContext.GetAsync<TodoList>(todoListToRemove.Id);
-            var todo = await DbContext.GetAsync<Todo>(todoListToRemove.Todos.FirstOrDefault().Id);
+            var todoList = await DbContext.GetAsync<TodoList>(todoListToDelete.Id);
+            var todo = await DbContext.GetAsync<Todo>(todoListToDelete.Todos.FirstOrDefault().Id);
 
             todoList.Should().BeNull();
             todo.Should().BeNull();

@@ -21,7 +21,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks
             if (todo is null)
                 throw new TodoWithGivenIdDoesNotExistException(command.TodoId);
 
-            todo.RemoveTask(command.TaskId);
+            todo.DeleteTask(command.TaskId);
             await _repository.SaveChangesAsync();
         }
     }

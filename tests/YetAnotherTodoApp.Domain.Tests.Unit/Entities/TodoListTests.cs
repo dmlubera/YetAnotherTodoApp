@@ -39,7 +39,7 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         }
 
         [Fact]
-        public void DeleteTodo_WhenValidData_ThenShouldRemoveTodo()
+        public void DeleteTodo_WhenValidData_ThenShouldDeleteTodo()
         {
             var todoList = CreateTodoList();
             var todo = new Todo("Todo", DateTime.UtcNow.AddDays(1));

@@ -57,7 +57,7 @@ namespace YetAnotherTodoApp.Domain.Entities
         public void AddTasks(IEnumerable<TodoTask> tasks)
             => _tasks.AddRange(tasks);
 
-        public void RemoveTask(Guid taskId)
+        public void DeleteTask(Guid taskId)
         {
             var task = _tasks.FirstOrDefault(x => x.Id == taskId);
             _tasks.Remove(task);
