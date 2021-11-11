@@ -3,13 +3,13 @@ using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Domain.ValueObjects
 {
-    public class FinishDate : IEquatable<FinishDate>
+    public sealed class FinishDate : IEquatable<FinishDate>
     {
         public DateTime Value { get; private set; }
 
-        protected FinishDate() { }
+        private FinishDate() { }
 
-        protected FinishDate(DateTime value)
+        private FinishDate(DateTime value)
             => Value = value;
 
         public override bool Equals(object obj)
@@ -19,7 +19,7 @@ namespace YetAnotherTodoApp.Domain.ValueObjects
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Value == other.Value && Value == other.Value;
+            return Value == other.Value;
         }
 
         public override int GetHashCode()

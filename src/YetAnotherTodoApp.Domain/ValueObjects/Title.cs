@@ -3,13 +3,13 @@ using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Domain.ValueObjects
 {
-    public class Title : IEquatable<Title>
+    public sealed class Title : IEquatable<Title>
     {
         public string Value { get; private set; }
 
-        protected Title() { }
+        private Title() { }
 
-        protected Title(string value)
+        private Title(string value)
             => Value = value;
 
         public bool Equals(Title other)

@@ -3,14 +3,14 @@ using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Domain.ValueObjects
 {
-    public class Password : IEquatable<Password>
+    public sealed class Password : IEquatable<Password>
     {
         public string Hash { get; private set; }
         public string Salt { get; private set; }
 
-        protected Password() { }
+        private Password() { }
 
-        protected Password(string hash, string salt)
+        private Password(string hash, string salt)
             => (Hash, Salt) = (hash, salt);
 
         public bool Equals(Password other)

@@ -64,7 +64,6 @@ namespace YetAnotherTodoApp.Domain.Tests.Unit.Entities
         public void UpdateStatus_WhenStatusToUpdateIsDoneButTodoHasUnfinishedTasks_ThenShouldTrownAnException()
         {
             var todo = CreateWithUnfinishedTask();
-            var expectedException = new CannotChangeStatusToDoneOfTodoWithUnfinishedTaskException();
 
             Assert.Throws<CannotChangeStatusToDoneOfTodoWithUnfinishedTaskException>(() => todo.UpdateStatus(TodoStatus.Done));
         }

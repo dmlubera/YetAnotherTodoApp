@@ -43,7 +43,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Queries
             _mapperMock.Setup(x => x.Map<IEnumerable<TodoDto>>(It.IsAny<List<Todo>>()))
                 .Returns(new List<TodoDto>() { new TodoDto { Id = todo.Id, Title = todo.Title, FinishDate = todo.FinishDate } });
 
-            var todos = await _handler.HandleAsync(query);
+            await _handler.HandleAsync(query);
 
             _mapperMock.Verify(x => x.Map<IEnumerable<TodoDto>>(todoList.Todos), Times.Once);
         }

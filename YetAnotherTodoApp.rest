@@ -5,9 +5,9 @@ POST {{api}}/auth/sign-up
 Content-Type: application/json
 
 {
-    "username": "test12345",
-    "email": "test12315@test.com",
-    "password": "test1231"
+    "username": "superUser",
+    "email": "superUser@test.com",
+    "password": "super$ecret"
 }
 
 ### Sign-in
@@ -16,8 +16,8 @@ POST {{api}}/auth/sign-in
 Content-Type: application/json
 
 {
-    "email": "test1231@test.com",
-    "password": "test1231"
+    "email": "newSuperUser@test.com",
+    "password": "newSuper$ecret"
 }
 
 ###
@@ -33,8 +33,8 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "firstName": "UpdatedFirstName",
-    "lastName": "UpdatedLastName"
+    "firstName": "John",
+    "lastName": "Doe"
 }
 
 ### Update user email
@@ -43,7 +43,7 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "email": "test1234@test.com"
+    "email": "newSuperUser@test.com"
 }
 
 ### Update user password
@@ -52,7 +52,7 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "password": "test123456"
+    "password": "newSuper$ecret"
 }
 
 ### Get todos

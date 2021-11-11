@@ -15,8 +15,8 @@ namespace YetAnotherTodoApp.Api.Filters
             {
                 var errorsInModelState = context.ModelState
                     .Where(x => x.Value.Errors.Count > 0)
-                    .ToList()
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Errors.Select(x => x.ErrorMessage)).ToArray();
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Errors.Select(x => x.ErrorMessage))
+                    .ToArray();
 
                 var errorResponse = new ValidationErrorResponse();
 

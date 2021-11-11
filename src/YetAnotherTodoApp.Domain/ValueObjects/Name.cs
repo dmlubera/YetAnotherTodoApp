@@ -4,14 +4,14 @@ using YetAnotherTodoApp.Domain.Exceptions;
 
 namespace YetAnotherTodoApp.Domain.ValueObjects
 {
-    public class Name : IEquatable<Name>
+    public sealed class Name : IEquatable<Name>
     {
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
 
-        protected Name() { }
+        private Name() { }
 
-        protected Name(string firstName, string lastName)
+        private Name(string firstName, string lastName)
             => (FirstName, LastName) = (firstName, lastName);
 
         public bool Equals(Name other)
