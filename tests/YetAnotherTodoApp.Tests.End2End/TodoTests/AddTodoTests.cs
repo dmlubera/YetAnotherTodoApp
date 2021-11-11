@@ -23,8 +23,8 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         {
             var request = new AddTodoRequest
             {
-                Title = "TodoWithSpecifiedProject",
-                Project = "Inbox",
+                Title = "TodoWithSpecifiedTodoList",
+                TodoList = "Inbox",
                 FinishDate = DateTime.UtcNow.Date
             };
 
@@ -32,17 +32,17 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
             var todo = await DbContext.GetTodoWithReferencesAsync(httpResponse.Headers.Location.GetResourceId());
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-            todo.TodoList.Title.Value.Should().Be(request.Project);
+            todo.TodoList.Title.Value.Should().Be(request.TodoList);
             todo.Title.Value.Should().Be(request.Title);
             todo.FinishDate.Value.Should().Be(request.FinishDate);
         }
 
         [Fact]
-        public async Task WithoutProjectName_ShuldReturnCreatedAndAddToInboxAndSaveResourceToDatabase()
+        public async Task WithoutTodoListName_ShuldReturnCreatedAndAddToInboxAndSaveResourceToDatabase()
         {
             var request = new AddTodoRequest
             {
-                Title = "TodoWithoutSpecifiedProject",
+                Title = "TodoWithoutSpecifiedTodoList",
                 FinishDate = DateTime.UtcNow.Date
             };
 

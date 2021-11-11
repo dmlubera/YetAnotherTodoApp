@@ -31,7 +31,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
         }
 
         [Fact]
-        public async Task WithoutSpecifiedProject_ShouldAddTodoToInboxAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
+        public async Task WithoutSpecifiedTodoList_ShouldAddTodoToInboxAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
         {
             var commandFixture = CreateCommandFixture();
             var userFixture = UserFixture.Create();
@@ -49,10 +49,10 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
         }
 
         [Fact]
-        public async Task WithSpecifiedProjectWhichDoesNotExistYet_ShouldCreateTodoListThenAddTodoAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
+        public async Task WithSpecifiedTodoListWhichDoesNotExistYet_ShouldCreateTodoListThenAddTodoAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
         {
             var commandFixture = CreateCommandFixture();
-            commandFixture.Project = "Test";
+            commandFixture.TodoList = "Test";
             var userFixture = UserFixture.Create();
             _repositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(userFixture);
@@ -61,7 +61,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
 
             userFixture.TodoLists.Count.Should().Be(2);
             userFixture.TodoLists
-                .FirstOrDefault(x => x.Title == commandFixture.Project)
+                .FirstOrDefault(x => x.Title == commandFixture.TodoList)
                 .Todos
                 .FirstOrDefault(x => x.Title == commandFixture.Title)
                 .Should().NotBeNull();
@@ -69,11 +69,11 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
         }
 
         [Fact]
-        public async Task WithSpecifiedProjectWhichExistYet_ShouldAddTodoAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
+        public async Task WithSpecifiedTodoListhichExistYet_ShouldAddTodoAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
         {
             var commandFixture = CreateCommandFixture();
             var todoList = new TodoList("Test");
-            commandFixture.Project = todoList.Title;
+            commandFixture.TodoList = todoList.Title;
             var userFixture = UserFixture.Create();
             userFixture.AddTodoList(todoList);
             _repositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
@@ -83,7 +83,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
 
             userFixture.TodoLists.Count.Should().Be(2);
             userFixture.TodoLists
-                .FirstOrDefault(x => x.Title == commandFixture.Project)
+                .FirstOrDefault(x => x.Title == commandFixture.TodoList)
                 .Todos
                 .FirstOrDefault(x => x.Title == commandFixture.Title)
                 .Should().NotBeNull();

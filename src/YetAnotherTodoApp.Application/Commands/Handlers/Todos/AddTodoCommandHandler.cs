@@ -33,19 +33,19 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
             if (command.Tasks.Count != 0)
                 todo.AddTasks(command.Tasks.Select(x => new TodoTask(x.Title, x.Description)).ToList());
 
-            if (string.IsNullOrWhiteSpace(command.Project))
+            if (string.IsNullOrWhiteSpace(command.TodoList))
             {
                 todoList = user.TodoLists.FirstOrDefault(x => x.Title == "Inbox");
                 todoList.AddTodo(todo);
             }
             else
             {
-                todoList = user.TodoLists.FirstOrDefault(x => x.Title == command.Project);
+                todoList = user.TodoLists.FirstOrDefault(x => x.Title == command.TodoList);
                 if (todoList != null)
                     todoList.AddTodo(todo);
                 else
                 {
-                    todoList = new TodoList(command.Project);
+                    todoList = new TodoList(command.TodoList);
                     todoList.AddTodo(todo);
                     user.AddTodoList(todoList);
                 }

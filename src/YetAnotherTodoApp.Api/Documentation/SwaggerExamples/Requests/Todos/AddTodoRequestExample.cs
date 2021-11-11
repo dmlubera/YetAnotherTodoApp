@@ -13,7 +13,7 @@ namespace YetAnotherTodoApp.Api.Documentation.SwaggerExamples.Requests.Todos
             => new AddTodoRequest
             {
                 Title = "Something not really important",
-                Project = "Not important stuff",
+                TodoList = "Not important stuff",
                 FinishDate = DateTime.UtcNow.AddDays(7).Date,
                 Priority = TodoPriority.Low,
                 Tasks = new List<TodoTaskRequestDto>

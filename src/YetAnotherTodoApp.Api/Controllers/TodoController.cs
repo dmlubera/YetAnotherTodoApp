@@ -84,7 +84,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> AddTodoAsync([FromBody] AddTodoRequest request)
         {
             var command = new AddTodoCommand(User.GetAuthenticatedUserId(), request.Title,
-                request.Project, request.FinishDate, request.Description, request.Priority,
+                request.TodoList, request.FinishDate, request.Description, request.Priority,
                 _mapper.Map<IEnumerable<TodoTaskDto>>(request.Tasks));
 
             await _commandDispatcher.DispatchAsync(command);

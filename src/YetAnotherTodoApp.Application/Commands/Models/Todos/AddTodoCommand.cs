@@ -12,20 +12,20 @@ namespace YetAnotherTodoApp.Application.Commands.Models.Todos
         public string Title { get; set; }
         public string Description { get; set; }
         public TodoPriority? Priority { get; set; }
-        public string Project { get; set; }
+        public string TodoList { get; set; }
         public DateTime FinishDate { get; set; }
         public List<TodoTaskDto> Tasks { get; set; } = new List<TodoTaskDto>();
 
         protected AddTodoCommand() { }
 
-        public AddTodoCommand(Guid userId, string title, string project, DateTime finishDate,
+        public AddTodoCommand(Guid userId, string title, string todoList, DateTime finishDate,
             string description, TodoPriority? priority, IEnumerable<TodoTaskDto> tasks)
         {
             UserId = userId;
             Title = title;
             Description = description;
             Priority = priority;
-            Project = project;
+            TodoList = todoList;
             FinishDate = finishDate;
             CacheTokenId = Guid.NewGuid();
             if (tasks is { })

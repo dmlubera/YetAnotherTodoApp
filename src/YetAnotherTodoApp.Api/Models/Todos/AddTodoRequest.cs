@@ -9,7 +9,7 @@ namespace YetAnotherTodoApp.Api.Models.Todos
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Project { get; set; }
+        public string TodoList { get; set; }
         public DateTime FinishDate { get; set; }
         public TodoPriority? Priority { get; set; }
         public ICollection<TodoTaskRequestDto> Tasks { get; set; }

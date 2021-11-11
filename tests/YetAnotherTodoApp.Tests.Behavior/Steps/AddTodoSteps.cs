@@ -37,7 +37,7 @@ namespace YetAnotherTodoApp.Tests.Behavior.Steps
             {
                 Title = title,
                 FinishDate = DateTime.Parse(finishDate),
-                Project = todoList
+                TodoList = todoList
             };
 
             _scenarioContext["Response"] = 
