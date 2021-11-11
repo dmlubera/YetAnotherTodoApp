@@ -31,10 +31,10 @@ namespace YetAnotherTodoApp.Domain.Entities
             UpdateAuditInfo();
         }
 
-        public void Update(string title, string descrtiption, DateTime finishDate)
+        public void Update(string title, string description, DateTime finishDate)
         {
             Title = Title.Create(title);
-            Description = descrtiption;
+            Description = description;
             FinishDate = FinishDate.Create(finishDate);
             LastModifiedAt = DateTime.UtcNow;
         }
