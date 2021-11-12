@@ -36,6 +36,7 @@ namespace YetAnotherTodoApp.Api
 
             services.RegisterApplicationModule();
             services.RegisterInfrastructureModule(Configuration);
+            services.AddTransactionalDecorator();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
