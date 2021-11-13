@@ -12,6 +12,5 @@ namespace YetAnotherTodoApp.Domain.Repositories
         Task<bool> CheckIfUsernameIsInUseAsync(string username);
         Task<User> GetByIdAsync(Guid id);
         Task UpdateAsync(User user);
-        Task SaveChangesAsync();
     }
 }

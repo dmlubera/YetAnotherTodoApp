@@ -12,6 +12,5 @@ namespace YetAnotherTodoApp.Domain.Repositories
         Task<TodoList> GetForUserAsync(Guid userId, Guid todoListId);
         Task<bool> CheckIfUserHasGotTodoListWithGivenTitle(Guid userId, string title);
         Task UpdateAsync(TodoList todoList);
-        Task SaveChangesAsync();
     }
 }

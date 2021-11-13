@@ -23,8 +23,5 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
             _dbContext.Update(task);
             await _dbContext.SaveChangesAsync();
         }
-
-        public async Task SaveChangesAsync()
-            => await _dbContext.SaveChangesAsync();
     }
 }
