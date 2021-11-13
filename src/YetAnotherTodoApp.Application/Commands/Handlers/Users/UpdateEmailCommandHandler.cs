@@ -25,7 +25,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
 
             user.UpdateEmail(command.Email);
 
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(user);
 
             _logger.LogTrace($"Email of user with ID: {user.Id} has been updated.");
         }

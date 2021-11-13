@@ -9,6 +9,7 @@ using YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks;
 using YetAnotherTodoApp.Application.Commands.Models.TodoTasks;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
@@ -27,7 +28,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
         }
 
         [Fact]
-        public async Task WhenTodoExists_ShouldDeleteTaskAndSaveChangesToDatabase()
+        public async Task WhenTodoExists_ShouldDeleteTaskAndUpdateTodo()
         {
             var commandFixture = CreateCommandFixture();
             var todoTaskFixture = TodoTaskFixture.Create();
@@ -41,7 +42,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
             await _handler.HandleAsync(commandFixture);
 
             todoFixture.Tasks.Count.Should().Be(0);
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<Todo>()));
         }
 
         [Fact]

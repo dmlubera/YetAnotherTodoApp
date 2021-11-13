@@ -11,6 +11,7 @@ using YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks;
 using YetAnotherTodoApp.Application.Commands.Models.TodoTasks;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
@@ -31,7 +32,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
         }
 
         [Fact]
-        public async Task WithValidData_ShouldAddTaskToTodoAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
+        public async Task WithValidData_ShouldAddTaskToTodoAndInvokeUpdateAsyncAndSetIdentifierToCache()
         {
             var commandFixture = CreateCommandFixture();
             var todoFixture = TodoFixture.Create();
@@ -44,7 +45,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
             var task = todoFixture.Tasks.FirstOrDefault();
             task.Title.Value.Should().Be(commandFixture.Title);
             task.Description.Should().Be(commandFixture.Description);
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<Todo>()));
             _cacheMock.Verify(x => x.Set(commandFixture.CacheTokenId.ToString(), It.IsAny<Guid>(), It.IsAny<TimeSpan>()));
         }
 

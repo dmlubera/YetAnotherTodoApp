@@ -33,7 +33,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
 
             user.UpdatePassword(passwordHash, passwordSalt);
 
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(user);
 
             _logger.LogTrace($"Password of user with ID: {user.Id} has been updated.");
         }

@@ -7,6 +7,7 @@ namespace YetAnotherTodoApp.Domain.Repositories
     public interface ITodoTaskRepository
     {
         Task<TodoTask> GetForUserAsync(Guid taskId, Guid userId);
+        Task UpdateAsync(TodoTask task);
         Task SaveChangesAsync();
     }
 }

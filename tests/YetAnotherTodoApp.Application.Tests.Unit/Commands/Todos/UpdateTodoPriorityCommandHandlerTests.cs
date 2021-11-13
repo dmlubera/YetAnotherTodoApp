@@ -8,6 +8,7 @@ using YetAnotherTodoApp.Application.Commands.Handlers.Todos;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Enums;
 using YetAnotherTodoApp.Domain.Repositories;
 
@@ -27,7 +28,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
         }
 
         [Fact]
-        public async Task WhenValidData_ThenShouldUpdatePriorityAndSaveChanges()
+        public async Task WhenValidData_ThenShouldUpdatePriorityAndSaveChangesToDatabase()
         {
             var commandFixture = CreateCommandFixture();
             var todoFixture = TodoFixture.Create();
@@ -37,7 +38,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
             await _handler.HandleAsync(commandFixture);
 
             todoFixture.Priority.Should().Be(commandFixture.Priority);
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<Todo>()));
         }
 
         [Fact]

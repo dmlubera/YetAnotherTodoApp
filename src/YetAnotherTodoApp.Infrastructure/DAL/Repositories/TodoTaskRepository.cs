@@ -18,6 +18,12 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
         public async Task<TodoTask> GetForUserAsync(Guid taskId, Guid userId)
             => await _dbContext.TodoTasks.FirstOrDefaultAsync(x => x.Id == taskId && x.Todo.TodoList.User.Id == userId);
 
+        public async Task UpdateAsync(TodoTask task)
+        {
+            _dbContext.Update(task);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task SaveChangesAsync()
             => await _dbContext.SaveChangesAsync();
     }

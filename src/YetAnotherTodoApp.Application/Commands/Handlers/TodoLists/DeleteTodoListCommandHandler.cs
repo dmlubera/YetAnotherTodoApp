@@ -22,7 +22,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
 
             user.DeleteTodoList(command.TodoListId);
 
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(user);
 
             _logger.LogTrace($"Todo List with ID: {command.TodoListId} has been deleted.");
         }

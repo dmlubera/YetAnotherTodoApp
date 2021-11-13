@@ -34,7 +34,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks
 
             _cache.Set(command.CacheTokenId.ToString(), todo.Id, TimeSpan.FromSeconds(99));
 
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(todo);
 
             _logger.LogTrace($"Task with ID: {task.Id} has been added to Todo with ID: {todo.Id}");
         }

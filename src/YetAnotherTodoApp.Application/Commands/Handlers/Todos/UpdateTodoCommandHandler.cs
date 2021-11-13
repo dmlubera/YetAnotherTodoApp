@@ -24,7 +24,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
                 throw new TodoWithGivenIdDoesNotExistException(command.TodoId);
             todo.Update(command.Title, command.Description, command.FinishDate);
 
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(todo);
 
             _logger.LogTrace($"Todo with ID: {todo.Id} has been updated.");
         }

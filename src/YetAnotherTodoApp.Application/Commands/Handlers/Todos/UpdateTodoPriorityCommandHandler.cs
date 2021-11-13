@@ -26,7 +26,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
             if (todo.Priority != command.Priority)
             {
                 todo.UpdatePriority(command.Priority);
-                await _repository.SaveChangesAsync();
+                await _repository.UpdateAsync(todo);
 
                 _logger.LogTrace($"Priority of todo with ID: {todo.Id} has been updated to {todo.Priority}.");
             }

@@ -30,7 +30,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
 
             todoList.UpdateTitle(command.Title);
 
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(todoList);
 
             _logger.LogTrace($"Todo List with ID: {todoList.Id} has been updated.");
         }

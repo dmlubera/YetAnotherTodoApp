@@ -9,6 +9,7 @@ using YetAnotherTodoApp.Application.Commands.Handlers.Todos;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
@@ -27,7 +28,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
         }
 
         [Fact]
-        public async Task WhenValidaData_ThenShouldUpdateTodoAndSaveChanges()
+        public async Task WhenValidaData_ThenShouldUpdateTodoAndSaveChangesToDatabase()
         {
             var commandFixture = CreateCommandFixture();
             var todoFixture = TodoFixture.Create();
@@ -39,7 +40,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
             todoFixture.Title.Value.Should().Be(commandFixture.Title);
             todoFixture.FinishDate.Value.Should().Be(commandFixture.FinishDate.Date);
             todoFixture.Description.Should().Be(commandFixture.Description);
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<Todo>()));
         }
 
         [Fact]

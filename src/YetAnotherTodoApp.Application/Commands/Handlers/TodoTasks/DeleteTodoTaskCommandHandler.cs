@@ -22,7 +22,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks
                 throw new TodoWithGivenIdDoesNotExistException(command.TodoId);
 
             todo.DeleteTask(command.TaskId);
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(todo);
         }
     }
 }

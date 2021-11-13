@@ -8,6 +8,7 @@ using Xunit;
 using YetAnotherTodoApp.Application.Commands.Handlers.TodoLists;
 using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
@@ -26,7 +27,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
         }
 
         [Fact]
-        public async Task WhenTodoListExists_ShouldDeleteTodoListAndSaveChanges()
+        public async Task WhenTodoListExists_ShouldDeleteTodoListAndUpdateUser()
         {
             var userFixture = UserFixture.Create();
             var todoListFixture = TodoListFixture.Create();
@@ -39,7 +40,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
             userFixture.TodoLists
                 .FirstOrDefault(x => x.Title == todoListFixture.Title)
                 .Should().BeNull();
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<User>()));
         }
     }
 }

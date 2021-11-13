@@ -31,7 +31,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
         }
 
         [Fact]
-        public async Task WithoutSpecifiedTodoList_ShouldAddTodoToInboxAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
+        public async Task WithoutSpecifiedTodoList_ShouldAddTodoToInboxAndInvokeUpdateAsyncAndSetIdentifierToCache()
         {
             var commandFixture = CreateCommandFixture();
             var userFixture = UserFixture.Create();
@@ -45,6 +45,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
                 .Todos
                 .FirstOrDefault(x => x.Title == commandFixture.Title)
                 .Should().NotBeNull();
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<User>()));
             _cacheMock.Verify(x => x.Set(commandFixture.CacheTokenId.ToString(), It.IsAny<Guid>(), It.IsAny<TimeSpan>()));
         }
 

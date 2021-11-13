@@ -20,7 +20,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
             var user = await _repository.GetByIdAsync(command.UserId);
             user.UpdateUserInfo(command.FirstName, command.LastName);
 
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(user);
 
             _logger.LogTrace($"User's info of user with ID: {user.Id} has been updated.");
         }

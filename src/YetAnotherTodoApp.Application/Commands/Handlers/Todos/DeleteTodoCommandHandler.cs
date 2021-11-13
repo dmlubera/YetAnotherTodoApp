@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
 using YetAnotherTodoApp.Application.Exceptions;
@@ -9,10 +8,10 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
 {
     public class DeleteTodoCommandHandler : ICommandHandler<DeleteTodoCommand>
     {
-        private readonly IUserRepository _repository;
+        private readonly ITodoListRepository _repository;
         private readonly ILogger<DeleteTodoCommandHandler> _logger;
 
-        public DeleteTodoCommandHandler(IUserRepository repository, ILogger<DeleteTodoCommandHandler> logger)
+        public DeleteTodoCommandHandler(ITodoListRepository repository, ILogger<DeleteTodoCommandHandler> logger)
         {
             _repository = repository;
             _logger = logger;
@@ -20,16 +19,14 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
 
         public async Task HandleAsync(DeleteTodoCommand command)
         {
-            var user = await _repository.GetByIdAsync(command.UserId);
-            
-            var todoList = user.TodoLists.FirstOrDefault(x => x.Todos.Any(x => x.Id == command.TodoId));
+            var todoList = await _repository.GetByBelongTodo(command.UserId, command.TodoId);
             if (todoList is null)
                 throw new TodoWithGivenIdDoesNotExistException(command.TodoId);
-
+            
             todoList.DeleteTodo(command.TodoId);
 
-            await _repository.SaveChangesAsync();
-
+            await _repository.UpdateAsync(todoList);
+            
             _logger.LogTrace($"Todo with ID: {command.TodoId} has been deleted from Todo List with ID: {todoList.Id}");
         }
     }

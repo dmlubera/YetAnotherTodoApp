@@ -10,6 +10,7 @@ using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Handlers.TodoLists;
 using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
@@ -30,7 +31,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
         }
 
         [Fact]
-        public async Task WhenValidData_ShouldAddTodoListAndInvokeSaveChangesAsyncAndSetIdentifierToCache()
+        public async Task WhenValidData_ShouldAddTodoListAndInvokeUpdateAsyncAndSetIdentifierToCache()
         {
             var commandFixutre = CreateCommandFixture();
             var userFixture = UserFixture.Create();
@@ -42,7 +43,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
             userFixture.TodoLists
                 .FirstOrDefault(x => x.Title == commandFixutre.Title)
                 .Should().NotBeNull();
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<User>()));
             _cacheMock.Verify(x => x.Set(It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<TimeSpan>()));
         }
 

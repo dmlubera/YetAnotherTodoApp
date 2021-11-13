@@ -22,7 +22,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks
 
             task.Update(command.Title, command.Description);
 
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(task);
 
             _logger.LogTrace($"Task with ID: {task.Id} has been updated.");
         }

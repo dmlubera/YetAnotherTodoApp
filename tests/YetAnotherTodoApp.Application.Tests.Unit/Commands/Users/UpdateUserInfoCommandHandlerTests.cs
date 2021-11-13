@@ -8,6 +8,7 @@ using Xunit;
 using YetAnotherTodoApp.Application.Commands.Handlers.Users;
 using YetAnotherTodoApp.Application.Commands.Models.Users;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
@@ -26,7 +27,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
         }
 
         [Fact]
-        public async Task WhenValidData_ThenShouldUpdateUserInfoAndSaveChanges()
+        public async Task WhenValidData_ThenShouldUpdateUserInfoAndSaveChangesToDatabase()
         {
             var commandFixture = CreateCommandFixture();
             var userFixture = UserFixture.Create();
@@ -37,7 +38,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
 
             userFixture.Name.FirstName.Should().Be(commandFixture.FirstName);
             userFixture.Name.LastName.Should().Be(commandFixture.LastName);
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<User>()));
         }
 
         private UpdateUserInfoCommand CreateCommandFixture()

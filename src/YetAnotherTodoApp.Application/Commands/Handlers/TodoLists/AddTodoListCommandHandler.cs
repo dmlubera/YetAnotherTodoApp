@@ -27,7 +27,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
             var user = await _repository.GetByIdAsync(command.UserId);
             var todoList = new TodoList(command.Title);
             user.AddTodoList(todoList);
-            await _repository.SaveChangesAsync();
+            await _repository.UpdateAsync(user);
 
             _cache.Set(command.CacheTokenId.ToString(), todoList.Id, TimeSpan.FromSeconds(99));
 

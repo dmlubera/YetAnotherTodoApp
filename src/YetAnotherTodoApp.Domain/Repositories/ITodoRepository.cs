@@ -9,6 +9,7 @@ namespace YetAnotherTodoApp.Domain.Repositories
     {
         Task<IList<Todo>> GetAllForUserAsync(Guid userId);
         Task<Todo> GetForUserAsync(Guid todoId, Guid userId);
+        Task UpdateAsync(Todo todo);
         Task SaveChangesAsync();
     }
 }

@@ -9,6 +9,7 @@ using YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks;
 using YetAnotherTodoApp.Application.Commands.Models.TodoTasks;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
@@ -39,7 +40,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
 
             todoTaskFixture.Title.Value.Should().Be(commandFixture.Title);
             todoTaskFixture.Description.Should().Be(commandFixture.Description);
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<TodoTask>()));
         }
 
         [Fact]

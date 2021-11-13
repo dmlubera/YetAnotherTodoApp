@@ -9,6 +9,7 @@ using YetAnotherTodoApp.Application.Commands.Handlers.TodoLists;
 using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
 using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
+using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
@@ -27,7 +28,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
         }
 
         [Fact]
-        public async Task WhenValidData_ShouldUpdateTitleAndSaveChanges()
+        public async Task WhenValidData_ShouldUpdateTitleAndSaveChangesToDatabase()
         {
             var commandFixture = CreateCommandFixture();
             var todoListFixture = TodoListFixture.Create();
@@ -39,7 +40,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
             await _handler.HandleAsync(commandFixture);
 
             todoListFixture.Title.Value.Should().Be(commandFixture.Title);
-            _repositoryMock.Verify(x => x.SaveChangesAsync());
+            _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<TodoList>()));
         }
 
         [Fact]
