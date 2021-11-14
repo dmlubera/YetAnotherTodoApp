@@ -7,7 +7,7 @@ using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Queries.Handlers.Todos
 {
-    public class GetTodoQueryHandler : IQueryHandler<GetTodoQuery, TodoDto>
+    public class GetTodoQueryHandler : IQueryHandler<GetTodoQuery, DetailedTodoDto>
     {
         private readonly ITodoRepository _repository;
         private readonly IMapper _mapper;
@@ -15,13 +15,13 @@ namespace YetAnotherTodoApp.Application.Queries.Handlers.Todos
         public GetTodoQueryHandler(ITodoRepository repository, IMapper mapper)
             => (_repository, _mapper) = (repository, mapper);
 
-        public async Task<TodoDto> HandleAsync(GetTodoQuery query)
+        public async Task<DetailedTodoDto> HandleAsync(GetTodoQuery query)
         {
             var todo = await _repository.GetForUserAsync(query.TodoId, query.UserId);
             if (todo is null)
                 throw new TodoWithGivenIdDoesNotExistException(query.TodoId);
 
-            return _mapper.Map<TodoDto>(todo);
+            return _mapper.Map<DetailedTodoDto>(todo);
         }
     }
 }

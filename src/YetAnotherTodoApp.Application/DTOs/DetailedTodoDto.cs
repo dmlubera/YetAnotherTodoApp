@@ -5,7 +5,7 @@ using YetAnotherTodoApp.Domain.Enums;
 
 namespace YetAnotherTodoApp.Application.DTOs
 {
-    public class TodoDto
+    public class DetailedTodoDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -16,6 +16,6 @@ namespace YetAnotherTodoApp.Application.DTOs
         public TodoStatus Status { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TodoPriority Priority { get; set; }
-        public int TasksNumber { get; set; }
+        public List<TodoTaskDto> Tasks { get; set; }
     }
 }

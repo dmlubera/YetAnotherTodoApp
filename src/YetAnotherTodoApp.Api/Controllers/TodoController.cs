@@ -65,7 +65,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> GetTodoAsync(Guid id)
         {
             var todo = await _queryDispatcher
-                .HandleAsync<GetTodoQuery, TodoDto>(new GetTodoQuery(User.GetAuthenticatedUserId(), id));
+                .HandleAsync<GetTodoQuery, DetailedTodoDto>(new GetTodoQuery(User.GetAuthenticatedUserId(), id));
 
             return Ok(todo);
         }

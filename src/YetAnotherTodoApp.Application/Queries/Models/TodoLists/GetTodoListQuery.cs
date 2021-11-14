@@ -3,7 +3,7 @@ using YetAnotherTodoApp.Application.DTOs;
 
 namespace YetAnotherTodoApp.Application.Queries.Models.TodoLists
 {
-    public class GetTodoListQuery : IQuery<TodoListDto>
+    public class GetTodoListQuery : IQuery<DetailedTodoListDto>
     {
         public Guid UserId { get; set; }
         public Guid TodoListId { get; set; }

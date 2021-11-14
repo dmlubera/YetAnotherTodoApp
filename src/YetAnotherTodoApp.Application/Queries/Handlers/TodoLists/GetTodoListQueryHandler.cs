@@ -7,7 +7,7 @@ using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Queries.Handlers.TodoLists
 {
-    public class GetTodoListQueryHandler : IQueryHandler<GetTodoListQuery, TodoListDto>
+    public class GetTodoListQueryHandler : IQueryHandler<GetTodoListQuery, DetailedTodoListDto>
     {
         private readonly ITodoListRepository _repository;
         private readonly IMapper _mapper;
@@ -15,13 +15,13 @@ namespace YetAnotherTodoApp.Application.Queries.Handlers.TodoLists
         public GetTodoListQueryHandler(ITodoListRepository repository, IMapper mapper)
             => (_repository, _mapper) = (repository, mapper);
 
-        public async Task<TodoListDto> HandleAsync(GetTodoListQuery query)
+        public async Task<DetailedTodoListDto> HandleAsync(GetTodoListQuery query)
         {
             var todoList = await _repository.GetForUserAsync(query.UserId, query.TodoListId);
             if (todoList is null)
                 throw new TodoListWithGivenIdDoesNotExistException(query.TodoListId);
 
-            return _mapper.Map<TodoListDto>(todoList);
+            return _mapper.Map<DetailedTodoListDto>(todoList);
         }
     }
 }

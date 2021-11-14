@@ -17,9 +17,9 @@ namespace YetAnotherTodoApp.Application.DI
         {
             services.AddTransient<IQueryHandler<GetTodosQuery, IEnumerable<TodoDto>>, GetTodosQueryHandler>();
             services.AddTransient<IQueryHandler<GetTodoListsQuery, IEnumerable<TodoListDto>>, GetTodoListsQueryHandler>();
-            services.AddTransient<IQueryHandler<GetTodoListQuery, TodoListDto>, GetTodoListQueryHandler>();
+            services.AddTransient<IQueryHandler<GetTodoListQuery, DetailedTodoListDto>, GetTodoListQueryHandler>();
             services.AddTransient<IQueryHandler<GetUserInfoQuery, UserInfoDto>, GetUserInforQueryHandler>();
-            services.AddTransient<IQueryHandler<GetTodoQuery, TodoDto>, GetTodoQueryHandler>();
+            services.AddTransient<IQueryHandler<GetTodoQuery, DetailedTodoDto>, GetTodoQueryHandler>();
         }
     }
 }

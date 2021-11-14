@@ -16,7 +16,9 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
             => _dbContext = dbContext;
 
         public async Task<IEnumerable<TodoList>> GetAllForUserAsync(Guid userId)
-           => await _dbContext.TodoLists.Where(x => x.User.Id == userId).ToListAsync();
+           => await _dbContext.TodoLists
+                .Include(x => x.Todos)
+                .Where(x => x.User.Id == userId).ToListAsync();
 
         public async Task<TodoList> GetForUserByTodoIdAsync(Guid userId, Guid todoId)
             => await _dbContext.TodoLists
@@ -24,7 +26,10 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
                 .FirstOrDefaultAsync(x => x.User.Id == userId && x.Todos.Any(x => x.Id == todoId));
 
         public async Task<TodoList> GetForUserAsync(Guid userId, Guid todoListId)
-            => await _dbContext.TodoLists.FirstOrDefaultAsync(x => x.User.Id == userId && x.Id == todoListId);
+            => await _dbContext.TodoLists
+                .Include(x => x.Todos)
+                    .ThenInclude(x => x.Tasks)
+                .FirstOrDefaultAsync(x => x.User.Id == userId && x.Id == todoListId);
 
         public async Task<bool> CheckIfUserHasGotTodoListWithGivenTitle(Guid userId, string title)
             => await _dbContext.TodoLists.AnyAsync(x => x.User.Id == userId && x.Title.Value == title);
