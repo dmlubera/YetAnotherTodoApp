@@ -58,7 +58,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="200">Returned specified todo for the authenticated user</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -99,7 +99,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="204">The todo has been deleted</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpDelete("{todoId}")]
+        [HttpDelete("{todoId:guid}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -117,7 +117,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="200">The todo has been updated</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("{todoId}")]
+        [HttpPut("{todoId:guid}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -136,7 +136,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="200">The todo's status has been updated</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("{todoId}/status")]
+        [HttpPut("{todoId:guid}/status")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -154,7 +154,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="200">The todo's priority has been updated</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("{todoId}/priority")]
+        [HttpPut("{todoId:guid}/priority")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -172,7 +172,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="201">The task has been added to the specified todo</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPost("{todoId}/tasks")]
+        [HttpPost("{todoId:guid}/tasks")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -192,7 +192,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="204">The task has been deleted from the specified todo</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpDelete("{todoId}/tasks/{taskId}")]
+        [HttpDelete("{todoId:guid}/tasks/{taskId:guid}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -210,7 +210,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="200">The task has been completed</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("tasks/{taskId}/complete")]
+        [HttpPut("tasks/{taskId:guid}/complete")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -228,7 +228,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="200">The task has been updated</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("tasks/{taskId}")]
+        [HttpPut("tasks/{taskId:guid}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]

@@ -51,7 +51,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="200">Returned specified todo lists for the authenticated user</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -78,7 +78,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             await _commandDispatcher.DispatchAsync(command);
             var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
 
-            return Created($"api/todolist/{resourceId}", null);
+            return Created($"api/todolists/{resourceId}", null);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="200">The todo list has been updated</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpPut("{todoListId}")]
+        [HttpPut("{todoListId:guid}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -104,7 +104,7 @@ namespace YetAnotherTodoApp.Api.Controllers
         /// <response code="204">The todo list has been deleted</response>
         /// <response code="400">An error occured while processing a request</response>
         /// <response code="500">Internal Server Error</response>
-        [HttpDelete("{todoListId}")]
+        [HttpDelete("{todoListId:guid}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
