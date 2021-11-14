@@ -13,7 +13,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
     public class GetAllTodosTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync()
-            => await TestClient.GetAsync("api/todo");
+            => await TestClient.GetAsync("api/todos");
 
         [Fact]
         public async Task WithoutAnyFilters_ShouldReturnOkWithAllTodos()

@@ -11,7 +11,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
     public class GetAllTodoListsTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync()
-            => await TestClient.GetAsync("/api/todolist/");
+            => await TestClient.GetAsync("/api/todolists/");
 
         [Fact]
         public async Task WithoutFilters_ShouldReturnOkWithAllTodoLists()

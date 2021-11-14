@@ -21,7 +21,7 @@ namespace YetAnotherTodoApp.Tests.Behavior.Steps
                 Title = title
             };
 
-            _scenarioContext["Response"] = await _httpClient.PostAsync("api/todolist/", request.GetStringContent());
+            _scenarioContext["Response"] = await _httpClient.PostAsync("api/todolists/", request.GetStringContent());
         }
     }
 }

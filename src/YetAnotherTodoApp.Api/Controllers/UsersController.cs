@@ -14,12 +14,12 @@ namespace YetAnotherTodoApp.Api.Controllers
 {
     [Authorize]
     [Route("api/users/")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher _queryDispatcher;
 
-        public UserController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+        public UsersController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
         {
             _commandDispatcher = commandDispatcher;
             _queryDispatcher = queryDispatcher;

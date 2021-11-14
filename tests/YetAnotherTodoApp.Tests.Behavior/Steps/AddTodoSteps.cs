@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using YetAnotherTodoApp.Tests.Behavior.Helpers;
@@ -27,7 +24,7 @@ namespace YetAnotherTodoApp.Tests.Behavior.Steps
             };
 
             _scenarioContext["Response"] =
-                await _httpClient.PostAsync("api/todo", request.GetStringContent());
+                await _httpClient.PostAsync("api/todos", request.GetStringContent());
         }
 
         [When(@"add to (.*) Todo with (.*), (.*)")]
@@ -41,7 +38,7 @@ namespace YetAnotherTodoApp.Tests.Behavior.Steps
             };
 
             _scenarioContext["Response"] = 
-                await _httpClient.PostAsync("api/todo", request.GetStringContent());
+                await _httpClient.PostAsync("api/todos", request.GetStringContent());
         }
     }
 }

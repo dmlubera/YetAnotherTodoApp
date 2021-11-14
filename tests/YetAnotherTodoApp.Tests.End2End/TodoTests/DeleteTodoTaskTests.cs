@@ -15,7 +15,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
     public class DeleteTodoTaskTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid todoId, Guid taskId)
-            => await TestClient.DeleteAsync($"api/todo/{todoId}/tasks/{taskId}");
+            => await TestClient.DeleteAsync($"api/todos/{todoId}/tasks/{taskId}");
 
         [Fact]
         public async Task WhenTodoTaskExist_ShouldDeleteTodoTaskAndSaveChangesToDatabase()

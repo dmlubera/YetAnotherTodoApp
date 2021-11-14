@@ -14,7 +14,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
     public class GetTodoListTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid id)
-            => await TestClient.GetAsync($"/api/todolist/{id}");
+            => await TestClient.GetAsync($"/api/todolists/{id}");
 
         [Fact]
         public async Task WithExistingId_ShouldReturnOkAndDto()

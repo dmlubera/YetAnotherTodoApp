@@ -16,7 +16,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
     public class UpdateTodoTaskTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid taskId, object request)
-            => await TestClient.PutAsync($"api/todo/tasks/{taskId}", GetContent(request));
+            => await TestClient.PutAsync($"api/todos/tasks/{taskId}", GetContent(request));
 
         [Fact]
         public async Task WithValidData_ShouldReturnOkAndUpdateTodoTaskInDatabase()

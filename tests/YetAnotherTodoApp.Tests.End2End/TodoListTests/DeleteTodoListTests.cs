@@ -15,7 +15,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
     public class DeleteTodoListTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid id)
-            => await TestClient.DeleteAsync($"/api/todolist/{id}");
+            => await TestClient.DeleteAsync($"/api/todolists/{id}");
 
         [Fact]
         public async Task WithExistingId_ShouldReturnNoContentAndDeleteResourceFromDatabase()

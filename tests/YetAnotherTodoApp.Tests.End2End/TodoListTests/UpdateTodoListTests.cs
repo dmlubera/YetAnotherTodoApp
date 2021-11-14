@@ -16,7 +16,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
     public class UpdateTodoListTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid id, UpdateTodoListRequest request)
-            => await TestClient.PutAsync($"/api/todolist/{id}", GetContent(request));
+            => await TestClient.PutAsync($"/api/todolists/{id}", GetContent(request));
 
         [Fact]
         public async Task WithValidData_ShouldReturnOkAndUpdateResourceInDatabase()

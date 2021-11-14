@@ -14,7 +14,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoListTests
     public class AddTodoListTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(AddTodoListRequest request)
-            => await TestClient.PostAsync("api/todolist/", GetContent(request));
+            => await TestClient.PostAsync("api/todolists/", GetContent(request));
 
         [Fact]
         public async Task WithValidData_ShouldReturnCreatedAndAddResourceToDatabase()

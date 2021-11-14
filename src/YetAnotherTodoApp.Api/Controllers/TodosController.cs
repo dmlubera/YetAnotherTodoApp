@@ -18,15 +18,15 @@ using YetAnotherTodoApp.Application.Queries.Models.Todos;
 namespace YetAnotherTodoApp.Api.Controllers
 {
     [Authorize]
-    [Route("api/todo/")]
-    public class TodoController : ControllerBase
+    [Route("api/todos/")]
+    public class TodosController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher _queryDispatcher;
         private readonly ICache _cache;
         private readonly IMapper _mapper;
 
-        public TodoController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher,
+        public TodosController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher,
             ICache cache, IMapper mapper)
         {
             _commandDispatcher = commandDispatcher;
@@ -90,7 +90,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             await _commandDispatcher.DispatchAsync(command);
 
             var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
-            return Created($"/api/todo/{resourceId}", null);
+            return Created($"/api/todos/{resourceId}", null);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace YetAnotherTodoApp.Api.Controllers
             await _commandDispatcher.DispatchAsync(command);
 
             var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
-            return Created($"/api/todo/{resourceId}", null);
+            return Created($"/api/todos/{resourceId}", null);
         }
 
 

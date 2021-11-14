@@ -15,7 +15,7 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
     public class GetTodoTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid id)
-            => await TestClient.GetAsync($"/api/todo/{id}");
+            => await TestClient.GetAsync($"/api/todos/{id}");
 
         [Fact]
         public async Task WithExistingId_ShouldReturnsHttpStatusCodeOkAndDto()

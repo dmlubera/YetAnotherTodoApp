@@ -15,14 +15,14 @@ using YetAnotherTodoApp.Application.Queries.Models.TodoLists;
 namespace YetAnotherTodoApp.Api.Controllers
 {
     [Authorize]
-    [Route("api/todolist/")]
-    public class TodoListController : ControllerBase
+    [Route("api/todolists/")]
+    public class TodoListsController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher _queryDispatcher;
         private readonly ICache _cache;
 
-        public TodoListController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, ICache cache)
+        public TodoListsController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, ICache cache)
         {
             _commandDispatcher = commandDispatcher;
             _queryDispatcher = queryDispatcher;
