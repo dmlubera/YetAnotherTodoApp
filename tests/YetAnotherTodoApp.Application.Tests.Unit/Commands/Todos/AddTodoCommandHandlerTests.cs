@@ -9,6 +9,7 @@ using Xunit;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Handlers.Todos;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
@@ -89,6 +90,22 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
                 .FirstOrDefault(x => x.Title == commandFixture.Title)
                 .Should().NotBeNull();
             _cacheMock.Verify(x => x.Set(commandFixture.CacheTokenId.ToString(), It.IsAny<Guid>(), It.IsAny<TimeSpan>()));
+        }
+
+        [Fact]
+        public async Task WhenUserNotExist_ShouldThrowCustomExcepion()
+        {
+            var commandFixture = CreateCommandFixture();
+            var expectedException = new UserNotExistException(commandFixture.UserId);
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(() => null);
+
+            var exception = await Assert.ThrowsAsync<UserNotExistException>(() => _handler.HandleAsync(commandFixture));
+
+            exception.Should().NotBeNull();
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
 
         private AddTodoCommand CreateCommandFixture()

@@ -19,7 +19,7 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
 
         public async Task HandleAsync(DeleteTodoCommand command)
         {
-            var todoList = await _repository.GetByBelongTodo(command.UserId, command.TodoId);
+            var todoList = await _repository.GetForUserByTodoIdAsync(command.UserId, command.TodoId);
             if (todoList is null)
                 throw new TodoWithGivenIdDoesNotExistException(command.TodoId);
             

@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
 
@@ -25,6 +26,10 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoLists
         public async Task HandleAsync(AddTodoListCommand command)
         {
             var user = await _repository.GetByIdAsync(command.UserId);
+
+            if (user is null)
+                throw new UserNotExistException(command.UserId);
+
             var todoList = new TodoList(command.Title);
             user.AddTodoList(todoList);
             await _repository.UpdateAsync(user);

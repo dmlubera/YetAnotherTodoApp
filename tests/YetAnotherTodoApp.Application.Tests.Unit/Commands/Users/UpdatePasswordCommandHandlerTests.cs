@@ -70,6 +70,22 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Users
             exception.Message.Should().Be(expectedException.Message);
         }
 
+        [Fact]
+        public async Task WhenUserNotExist_ShouldThrowCustomExcepion()
+        {
+            var commandFixture = CreateCommandFixture();
+            var expectedException = new UserNotExistException(commandFixture.UserId);
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(() => null);
+
+            var exception = await Assert.ThrowsAsync<UserNotExistException>(() => _handler.HandleAsync(commandFixture));
+
+            exception.Should().NotBeNull();
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
+        }
+
         private UpdatePasswordCommand CreateCommandFixture()
             => new Faker<UpdatePasswordCommand>()
                 .CustomInstantiator(x => Activator.CreateInstance(typeof(UpdatePasswordCommand), nonPublic: true) as UpdatePasswordCommand)

@@ -18,7 +18,7 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
         public async Task<IEnumerable<TodoList>> GetAllForUserAsync(Guid userId)
            => await _dbContext.TodoLists.Where(x => x.User.Id == userId).ToListAsync();
 
-        public async Task<TodoList> GetByBelongTodo(Guid userId, Guid todoId)
+        public async Task<TodoList> GetForUserByTodoIdAsync(Guid userId, Guid todoId)
             => await _dbContext.TodoLists
                 .Include(x => x.Todos)
                 .FirstOrDefaultAsync(x => x.User.Id == userId && x.Todos.Any(x => x.Id == todoId));

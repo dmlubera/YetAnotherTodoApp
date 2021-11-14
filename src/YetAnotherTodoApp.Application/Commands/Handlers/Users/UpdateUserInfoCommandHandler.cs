@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Commands.Models.Users;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Repositories;
 
 namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
@@ -18,6 +19,10 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
         public async Task HandleAsync(UpdateUserInfoCommand command)
         {
             var user = await _repository.GetByIdAsync(command.UserId);
+
+            if (user is null)
+                throw new UserNotExistException(command.UserId);
+
             user.UpdateUserInfo(command.FirstName, command.LastName);
 
             await _repository.UpdateAsync(user);

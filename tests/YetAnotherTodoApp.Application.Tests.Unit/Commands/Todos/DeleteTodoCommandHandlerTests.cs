@@ -36,7 +36,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
             commandFixture.TodoId = todoFixture.Id;
             todoListFixture.AddTodo(todoFixture);
             _repositoryMock
-                .Setup(x => x.GetByBelongTodo(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                .Setup(x => x.GetForUserByTodoIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .ReturnsAsync(todoListFixture);
 
             await _handler.HandleAsync(commandFixture);
@@ -50,7 +50,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.Todos
         {
             var commandFixture = CreateCommandFixture();
             var expectedException = new TodoWithGivenIdDoesNotExistException(commandFixture.TodoId);
-            _repositoryMock.Setup(x => x.GetByBelongTodo(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            _repositoryMock.Setup(x => x.GetForUserByTodoIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .ReturnsAsync(() => null);
 
             var exception = await Assert.ThrowsAsync<TodoWithGivenIdDoesNotExistException>(() => _handler.HandleAsync(commandFixture));

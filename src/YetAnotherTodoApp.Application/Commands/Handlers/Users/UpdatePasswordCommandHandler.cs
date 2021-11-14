@@ -23,6 +23,9 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
         public async Task HandleAsync(UpdatePasswordCommand command)
         {
             var user = await _repository.GetByIdAsync(command.UserId);
+            if (user is null)
+                throw new UserNotExistException(command.UserId);
+
             var passwordHashWithUserSalt = _encrypter.GetHash(command.Password, user.Password.Salt);
 
             if (passwordHashWithUserSalt == user.Password.Hash)

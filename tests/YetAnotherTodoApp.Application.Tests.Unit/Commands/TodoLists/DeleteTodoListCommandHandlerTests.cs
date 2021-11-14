@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using YetAnotherTodoApp.Application.Commands.Handlers.TodoLists;
 using YetAnotherTodoApp.Application.Commands.Models.TodoLists;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Application.Tests.Unit.Fixtures;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Repositories;
@@ -41,6 +42,22 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoLists
                 .FirstOrDefault(x => x.Title == todoListFixture.Title)
                 .Should().BeNull();
             _repositoryMock.Verify(x => x.UpdateAsync(It.IsAny<User>()));
+        }
+
+        [Fact]
+        public async Task WhenUserNotExist_ShouldThrowCustomExcepion()
+        {
+            var commandFixture = new DeleteTodoListCommand(Guid.NewGuid(), Guid.NewGuid());
+            var expectedException = new UserNotExistException(commandFixture.UserId);
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(() => null);
+
+            var exception = await Assert.ThrowsAsync<UserNotExistException>(() => _handler.HandleAsync(commandFixture));
+
+            exception.Should().NotBeNull();
+            exception.Code.Should().Be(expectedException.Code);
+            exception.Message.Should().Be(expectedException.Message);
         }
     }
 }

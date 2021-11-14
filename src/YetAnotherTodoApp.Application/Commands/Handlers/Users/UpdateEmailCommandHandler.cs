@@ -21,7 +21,11 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Users
         {
             if (await _repository.CheckIfEmailIsInUseAsync(command.Email))
                 throw new EmailInUseException(command.Email);
+            
             var user = await _repository.GetByIdAsync(command.UserId);
+
+            if (user is null)
+                throw new UserNotExistException(command.UserId);
 
             user.UpdateEmail(command.Email);
 

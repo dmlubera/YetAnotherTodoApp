@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
+using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Domain.Enums;
 using YetAnotherTodoApp.Domain.Repositories;
@@ -27,6 +28,10 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.Todos
         {
             TodoList todoList;
             var user = await _repository.GetByIdAsync(command.UserId);
+            
+            if (user is null)
+                throw new UserNotExistException(command.UserId);
+
             var todo = new Todo(command.Title, command.FinishDate, command.Description,
                 command.Priority ?? TodoPriority.Normal);
             
