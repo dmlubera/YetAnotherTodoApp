@@ -36,7 +36,7 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
             todoFixture.AddTasks(new[] { todoTaskFixture });
             commandFixture.TaskId = todoTaskFixture.Id;
 
-            _repositoryMock.Setup(x => x.GetForUserAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            _repositoryMock.Setup(x => x.GetForUserByTodoTaskId(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .ReturnsAsync(todoFixture);
 
             await _handler.HandleAsync(commandFixture);
@@ -46,14 +46,14 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
         }
 
         [Fact]
-        public async Task WhenTodoDoesNotExist_ShouldThrowCustomException()
+        public async Task WhenTodoTaskDoesNotExist_ShouldThrowCustomException()
         {
             var commandFixture = CreateCommandFixture();
-            var expectedException = new TodoWithGivenIdDoesNotExistException(commandFixture.TodoId);
+            var expectedException = new TodoTaskWithGivenIdDoesNotExistException(commandFixture.TaskId);
             _repositoryMock.Setup(x => x.GetForUserAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .ReturnsAsync(() => null);
 
-            var exception = await Assert.ThrowsAsync<TodoWithGivenIdDoesNotExistException>(() => _handler.HandleAsync(commandFixture));
+            var exception = await Assert.ThrowsAsync<TodoTaskWithGivenIdDoesNotExistException>(() => _handler.HandleAsync(commandFixture));
 
             exception.Should().NotBeNull();
             exception.Code.Should().Be(expectedException.Code);
@@ -64,7 +64,6 @@ namespace YetAnotherTodoApp.Application.Tests.Unit.Commands.TodoTasks
             => new Faker<DeleteTodoTaskCommand>()
                 .CustomInstantiator(x => Activator.CreateInstance(typeof(DeleteTodoTaskCommand), nonPublic: true) as DeleteTodoTaskCommand)
                 .RuleFor(x => x.UserId, f => f.Random.Guid())
-                .RuleFor(x => x.TodoId, f => f.Random.Guid())
                 .RuleFor(x => x.TaskId, f => f.Random.Guid())
                 .Generate();
     }

@@ -16,13 +16,15 @@ namespace YetAnotherTodoApp.Application.Commands.Handlers.TodoTasks
 
         public async Task HandleAsync(DeleteTodoTaskCommand command)
         {
-            var todo = await _repository.GetForUserAsync(command.TodoId, command.UserId);
+            var todo = await _repository.GetForUserByTodoTaskId(command.TaskId, command.UserId);
 
             if (todo is null)
-                throw new TodoWithGivenIdDoesNotExistException(command.TodoId);
+                throw new TodoTaskWithGivenIdDoesNotExistException(command.TaskId);
 
             todo.DeleteTask(command.TaskId);
+
             await _repository.UpdateAsync(todo);
+            _logger.LogTrace($"Task with ID: {command.TaskId} has been deleted from Todo List with ID: {todo.Id}");
         }
     }
 }

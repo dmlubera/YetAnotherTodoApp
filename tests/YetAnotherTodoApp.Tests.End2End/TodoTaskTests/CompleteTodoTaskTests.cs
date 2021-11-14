@@ -10,12 +10,12 @@ using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
-namespace YetAnotherTodoApp.Tests.End2End.TodoTests
+namespace YetAnotherTodoApp.Tests.End2End.TodoTaskTests
 {
     public class CompleteTodoTaskTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid taskId)
-            => await TestClient.PutAsync($"api/todos/tasks/{taskId}/complete", null);
+            => await TestClient.PutAsync($"api/todoTasks/{taskId}/complete", null);
 
         [Fact]
         public async Task WhenTodoTaskExist_ShouldMarkTaskAsCompletedAndSaveChangesToDatabase()

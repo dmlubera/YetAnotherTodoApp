@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YetAnotherTodoApp.Api.Extensions;
 using YetAnotherTodoApp.Api.Models.Todos;
-using YetAnotherTodoApp.Api.Models.TodoTasks;
 using YetAnotherTodoApp.Application.Cache;
 using YetAnotherTodoApp.Application.Commands;
 using YetAnotherTodoApp.Application.Commands.Models.Todos;
-using YetAnotherTodoApp.Application.Commands.Models.TodoTasks;
 using YetAnotherTodoApp.Application.DTOs;
 using YetAnotherTodoApp.Application.Queries;
 using YetAnotherTodoApp.Application.Queries.Models.Todos;
@@ -161,80 +159,6 @@ namespace YetAnotherTodoApp.Api.Controllers
         public async Task<IActionResult> UpdateTodoPriorityAsync(Guid todoId, [FromBody] UpdateTodoPriorityRequest request)
         {
             var command = new UpdateTodoPriorityCommand(User.GetAuthenticatedUserId(), todoId, request.Priority);
-            await _commandDispatcher.DispatchAsync(command);
-
-            return Ok();
-        }
-
-        /// <summary>
-        /// Adds the task to the specified todo
-        /// </summary>
-        /// <response code="201">The task has been added to the specified todo</response>
-        /// <response code="400">An error occured while processing a request</response>
-        /// <response code="500">Internal Server Error</response>
-        [HttpPost("{todoId:guid}/tasks")]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(500)]
-        public async Task<IActionResult> AddTodoTaskAsync(Guid todoId, [FromBody] AddTodoTaskRequest request)
-        {
-            var command = new AddTodoTaskCommand(User.GetAuthenticatedUserId(), todoId, request.Title, request.Description);
-            await _commandDispatcher.DispatchAsync(command);
-
-            var resourceId = _cache.Get<Guid>(command.CacheTokenId.ToString());
-            return Created($"/api/todos/{resourceId}", null);
-        }
-
-
-        /// <summary>
-        /// Deletes the taks from the specified todo
-        /// </summary>
-        /// <response code="204">The task has been deleted from the specified todo</response>
-        /// <response code="400">An error occured while processing a request</response>
-        /// <response code="500">Internal Server Error</response>
-        [HttpDelete("{todoId:guid}/tasks/{taskId:guid}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(500)]
-        public async Task<IActionResult> DeleteTodoTaskAsync(Guid todoId, Guid taskId)
-        {
-            var command = new DeleteTodoTaskCommand(User.GetAuthenticatedUserId(), todoId, taskId);
-            await _commandDispatcher.DispatchAsync(command);
-
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Completes the specified task
-        /// </summary>
-        /// <response code="200">The task has been completed</response>
-        /// <response code="400">An error occured while processing a request</response>
-        /// <response code="500">Internal Server Error</response>
-        [HttpPut("tasks/{taskId:guid}/complete")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(500)]
-        public async Task<IActionResult> CompleteTodoTaskAsync(Guid taskId)
-        {
-            var command = new CompleteTodoTaskCommand(User.GetAuthenticatedUserId(), taskId);
-            await _commandDispatcher.DispatchAsync(command);
-
-            return Ok();
-        }
-
-        /// <summary>
-        /// Updates the specified task
-        /// </summary>
-        /// <response code="200">The task has been updated</response>
-        /// <response code="400">An error occured while processing a request</response>
-        /// <response code="500">Internal Server Error</response>
-        [HttpPut("tasks/{taskId:guid}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateTodoTaskAsync(Guid taskId, [FromBody] UpdateTodoTaskRequest request)
-        {
-            var command = new UpdateTodoTaskCommand(User.GetAuthenticatedUserId(), taskId, request.Title, request.Description);
             await _commandDispatcher.DispatchAsync(command);
 
             return Ok();

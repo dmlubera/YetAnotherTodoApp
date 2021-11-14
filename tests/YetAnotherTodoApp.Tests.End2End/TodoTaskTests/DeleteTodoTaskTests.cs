@@ -10,12 +10,12 @@ using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
-namespace YetAnotherTodoApp.Tests.End2End.TodoTests
+namespace YetAnotherTodoApp.Tests.End2End.TodoTaskTests
 {
     public class DeleteTodoTaskTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid todoId, Guid taskId)
-            => await TestClient.DeleteAsync($"api/todos/{todoId}/tasks/{taskId}");
+            => await TestClient.DeleteAsync($"api/todoTasks/{taskId}");
 
         [Fact]
         public async Task WhenTodoTaskExist_ShouldDeleteTodoTaskAndSaveChangesToDatabase()
@@ -37,11 +37,11 @@ namespace YetAnotherTodoApp.Tests.End2End.TodoTests
         [Fact]
         public async Task WhenTodoDoesNotExist_ShouldReturnCustomError()
         {
-            var todoId = Guid.NewGuid();
-            var expectedException = new TodoWithGivenIdDoesNotExistException(todoId);
+            var taskId = Guid.NewGuid();
+            var expectedException = new TodoTaskWithGivenIdDoesNotExistException(taskId);
 
             (var httpResponse, var errorResponse) =
-                await HandleRequestAsync<ErrorResponse>(() => ActAsync(todoId, Guid.NewGuid()));
+                await HandleRequestAsync<ErrorResponse>(() => ActAsync(Guid.NewGuid(), taskId));
 
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             errorResponse.Code.Should().Be(expectedException.Code);

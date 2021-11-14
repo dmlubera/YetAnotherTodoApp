@@ -11,12 +11,12 @@ using YetAnotherTodoApp.Application.Exceptions;
 using YetAnotherTodoApp.Domain.Entities;
 using YetAnotherTodoApp.Tests.End2End.Helpers;
 
-namespace YetAnotherTodoApp.Tests.End2End.TodoTests
+namespace YetAnotherTodoApp.Tests.End2End.TodoTaskTests
 {
     public class UpdateTodoTaskTests : IntegrationTestBase
     {
         private async Task<HttpResponseMessage> ActAsync(Guid taskId, object request)
-            => await TestClient.PutAsync($"api/todos/tasks/{taskId}", GetContent(request));
+            => await TestClient.PutAsync($"api/todoTasks/{taskId}", GetContent(request));
 
         [Fact]
         public async Task WithValidData_ShouldReturnOkAndUpdateTodoTaskInDatabase()

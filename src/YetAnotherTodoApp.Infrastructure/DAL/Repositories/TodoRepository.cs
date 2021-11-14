@@ -27,6 +27,11 @@ namespace YetAnotherTodoApp.Infrastructure.DAL.Repositories
                 .Include(x => x.Tasks)
                 .FirstOrDefaultAsync(x => x.Id == todoId && x.TodoList.User.Id == userId);
 
+        public async Task<Todo> GetForUserByTodoTaskId(Guid taskId, Guid userId)
+            => await _dbContext.Set<Todo>()
+                .Include(x => x.Tasks)
+                .FirstOrDefaultAsync(x => x.TodoList.User.Id == userId && x.Tasks.Any(x => x.Id == taskId));
+
         public async Task UpdateAsync(Todo todo)
         {
             _dbContext.Update(todo);
