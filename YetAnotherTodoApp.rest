@@ -1,34 +1,44 @@
-@api = https://localhost:5001/api
+@apiUrl = https://localhost:5001/api
 
-### Create account
-POST {{api}}/auth/sign-up
+################################################
+##################### AUTH #####################
+################################################
+@email = johndoe@yetanothertodoapp.com
+@password = super$ecret
+
+### Sign-up
+POST {{apiUrl}}/auth/sign-up
 Content-Type: application/json
 
 {
-    "username": "superUser",
-    "email": "superUser@test.com",
-    "password": "super$ecret"
+    "username": "johndoe",
+    "email": "{{email}}",
+    "password": "{{password}}"
 }
 
 ### Sign-in
 # @name sign_in
-POST {{api}}/auth/sign-in
+POST {{apiUrl}}/auth/sign-in
 Content-Type: application/json
 
 {
-    "email": "newSuperUser@test.com",
-    "password": "newSuper$ecret"
+    "email": "{{email}}",
+    "password": "{{password}}"
 }
 
 ###
 @accessToken = {{sign_in.response.body.$.token}}
 
+################################################
+#################### USERS #####################
+################################################
+
 ### Get user info
-GET {{api}}/users
+GET {{apiUrl}}/users
 Authorization: Bearer {{accessToken}}
 
 ### Update user info
-PUT {{api}}/users
+PUT {{apiUrl}}/users
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -38,58 +48,102 @@ Content-Type: application/json
 }
 
 ### Update user email
-PUT {{api}}/users/email
+PUT {{apiUrl}}/users/email
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "email": "newSuperUser@test.com"
+    "email": "johndoe2@yetanothertodoapp.com"
 }
 
 ### Update user password
-PUT {{api}}/users/password
+PUT {{apiUrl}}/users/password
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "password": "newSuper$ecret"
+    "password": "anotherSuper$ecret"
 }
 
+################################################
+################## TODO LISTS ##################
+################################################
+@todolistId = 
+
+### Get todolists
+GET {{apiUrl}}/todolists
+Authorization: Bearer {{accessToken}}
+
+### Get todolist
+GET {{apiUrl}}/todolists/{{todolistId}}
+Authorization: Bearer {{accessToken}}
+
+### Add todolist
+POST {{apiUrl}}/todolists
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "Work stuff"
+}
+
+### Update todolist
+PUT {{apiUrl}}/todolists/{{todolistId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "School stuff"
+}
+
+### Delete todolist
+DELETE {{apiUrl}}/todolists/{{todolistId}}
+Authorization: Bearer {{accessToken}}
+
+################################################
+#################### TODOS #####################
+################################################
+@todoId = 
+
 ### Get todos
-GET {{api}}/todo
+GET {{apiUrl}}/todos
+Authorization: Bearer {{accessToken}}
+
+### Get todo
+GET {{apiUrl}}/todos/{{todoId}}
 Authorization: Bearer {{accessToken}}
 
 ### Add todo
-POST {{api}}/todo
+POST {{apiUrl}}/todos
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "title": "test123",
-    "project": "totallynewproject",
-    "finishDate": "2021-10-11"
+    "title": "Something really important",
+    "description": "Must be done quickly",
+    "finishDate": "2030-12-11",
+    "priority": "high",
+    "todoList": "Personal stuff",
+    "tasks":
+    [
+        {"title": "First part", "description": "Should be done at the beginning"},
+        {"title": "Second part"}
+    ]
 }
 
-###
-@todoId = 695dea24-bb65-4300-b0e8-f7d7df93956a
-
-### Delete todo
-DELETE {{api}}/todo/{{todoId}}
-Authorization:  Bearer {{accessToken}}
-
 ### Update todo
-PUT {{api}}/todo/{{todoId}}
+PUT {{apiUrl}}/todos/{{todoId}}
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "title": "New name",
-    "description": "New description",
-    "finishDate": "2021-11-11"
+    "title": "Updated, but still really important",
+    "description": "Updated, but still must be done quickly",
+    "finishDate": "2030-12-12"
 }
 
 ### Update todo status
-PUT {{api}}/todo/{{todoId}}/status
+PUT {{apiUrl}}/todos/{{todoId}}/status
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -98,7 +152,7 @@ Content-Type: application/json
 }
 
 ### Update todo priority
-PUT {{api}}/todo/{{todoId}}/priority
+PUT {{apiUrl}}/todos/{{todoId}}/priority
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -106,24 +160,44 @@ Content-Type: application/json
     "priority": "low"
 }
 
-### Get todolists
-GET {{api}}/todolist
+### Delete todo
+DELETE {{apiUrl}}/todos/{{todoId}}
+Authorization:  Bearer {{accessToken}}
+
+################################################
+################# TODO TASKS ###################
+################################################
+@todoTaskId = 
+
+### Get task
+GET {{apiUrl}}/todoTasks/{{todoTaskId}}
 Authorization: Bearer {{accessToken}}
 
-
-
-
-@todolistId = c7050053-8b1a-44a5-bb61-122297f916a3
-
-### Update todolist
-PUT {{api}}/todolist/{{todolistId}}
+### Add task
+POST  {{apiUrl}}/todoTasks
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "title": "UpdatedTitle"
+    "todoId": "{{todoId}}",
+    "title": "Something to do",
+    "description": "Not important"
 }
 
-### Delete todolist
-DELETE {{api}}/todolist/{{todolistId}}
+### Complete task
+PUT {{apiUrl}}/todoTasks/{{todoTaskId}}/complete
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+### Update task
+PUT {{apiUrl}}/todoTasks/{{todoTaskId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "title": "Updated, but still to be done"
+}
+
+### Delete task
+DELETE {{apiUrl}}/todoTasks/{{todoTaskId}}
 Authorization: Bearer {{accessToken}}
